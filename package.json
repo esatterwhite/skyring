@@ -1,0 +1,18 @@
+{
+  "name": "node-timers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^15.2.0",
+    "joi": "^9.2.0",
+    "keef": "^1.1.1",
+    "ringpop": "^10.16.2",
+    "tchannel": "^3.9.0"
+  }
+}
