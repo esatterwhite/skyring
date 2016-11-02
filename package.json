@@ -9,9 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "boom": "^4.2.0",
     "hapi": "^15.2.0",
     "joi": "^9.2.0",
     "keef": "^1.1.1",
+    "node-uuid": "^1.4.7",
+    "request": "^2.76.0",
     "ringpop": "^10.16.2",
     "tchannel": "^3.9.0"
   }
