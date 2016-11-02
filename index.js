@@ -6,8 +6,10 @@ const conf = require('keef')
     , boom = require('boom')
     , uuid = require('node-uuid')
     , ring = require('./lib/ring')
+    , cache = require('./lib/cache')
+    , transports = require('./lib/transports')
     , server = new Hapi.Server()
-    , cache = {}
+    , debug = require('debug')('timer:server')
     ;
 
 
@@ -22,6 +24,7 @@ server.connection({
 
 const schema = joi.object().keys({
   timeout: joi.number().integer().min(1000).required()
+  ,data: joi.string().optional()
   ,callback: joi.object().keys({
     method:joi.string().valid('post','put','patch').required()
     ,transport:joi.string().valid('http','queue').required()
@@ -41,7 +44,6 @@ function proxy( req, reply ) {
 
 function payload(req, reply){
   if(!req.pre.handle) return reply(null);
-  console.log('handle', req.pre.handle)
   let data = ''
   req.payload.on('data', (chunk) => {
     data += chunk
@@ -51,9 +53,6 @@ function payload(req, reply){
     if( data ){
       data && JSON.parse( data )
       const result = schema.validate( data )
-      if(result.error){
-        console.error( result.error )
-      }
       return reply( result.error || result.value );
     }
     reply(null)
@@ -76,10 +75,27 @@ server.route(
     }
   , handler: function(req, reply){
       if( req.pre.handle ){
-        reply().code(204).location(`/timer/${req.headers['x-timer-id']}`)
-        return req.payload.pipe( process.stdout )
+        const id = req.headers['x-timer-id']
+        const payload = req.pre.payload;
+        const transport = transports[ payload.callback.transport ]
+        
+        if( cache.has(id) ) return reply( boom.badRequest('key exists') )
+        if( !transport) return reply( boom.badRequest('invalid transport') )
+
+        cache.set(
+            id
+          , setTimeout(
+                transport
+              , payload.timeout
+              , payload.callback.method
+              , payload.callback.uri
+              , payload.data
+              , id
+            )
+        )
+        return reply().code(204).location(`/timer/${req.headers['x-timer-id']}`)
       } 
-      console.log( 'forwarded')
+      debug( 'forwarded')
     }
   }, {
       path: '/timer/{timer_id}'
