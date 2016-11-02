@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "boom": "^4.2.0",
+    "debug": "^2.2.0",
     "hapi": "^15.2.0",
     "joi": "^9.2.0",
     "keef": "^1.1.1",
