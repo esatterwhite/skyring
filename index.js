@@ -1,51 +1,19 @@
 'use strict';
 
-const Ringpop = require('ringpop')
-    , TChannel = require('tchannel')
-    , conf = require('keef')
+const conf = require('keef')
     , Hapi = require('hapi')
-    , server = new Hapi.Server()
-    , host = conf.get('channel:host')
-    , port = ~~conf.get('channel:port')
     , joi = require('joi')
+    , boom = require('boom')
+    , uuid = require('node-uuid')
+    , ring = require('./lib/ring')
+    , server = new Hapi.Server()
+    , cache = {}
     ;
 
 
 server.connection({
     port:conf.get('PORT')
   , host: '0.0.0.0'
-});
-
-const tchannel = new TChannel();
-const ringpop = new Ringpop({
-    app: 'timers'
-  , hostPort:`${host}:${port}`
-  , channel: tchannel.makeSubChannel({
-      serviceName: 'ringpop'
-    , trace:false
-    })
-});
-
-ringpop.setupChannel();
-
-tchannel.listen(port, host, ()=> {
-  console.log('tchannel listening on ',host, port);
-
-  ringpop.bootstrap(conf.get('seed'),(err)=>{
-    if( err ){
-      console.error( err.stack );
-      process.exit(1)
-    }
-    console.log('ring bootstraped', conf.get('seed') )
-  })
-  ringpop.on('request',( req, res ) => {
-    
-    console.log(req.headers, '\n')
-    req.pipe(process.stdout)
-    res.writeHead(201)
-    res.write(process.hrtime().join(''))
-    res.end()
-  })
 });
 
 
@@ -56,34 +24,44 @@ const schema = joi.object().keys({
   timeout: joi.number().integer().min(1000).required()
   ,callback: joi.object().keys({
     method:joi.string().valid('post','put','patch').required()
+    ,transport:joi.string().valid('http','queue').required()
     ,uri: joi.string().required()
   }).required()
 })
 
+
 function proxy( req, reply ) {
-    reply(ringpop.handleOrProxy(req.id, req.raw.req, req.raw.res))
+  // we need to do this because requests are proxied using
+  // the tchannel connections, not http and skips routing, etc
+  // this just makes it easier
+  const timer_id = req.params.timer_id || uuid.v4();
+  req.headers['x-timer-id'] = timer_id;
+  reply(ring.handleOrProxy(timer_id, req.raw.req, req.raw.res))
 }
 
-function payload( req, reply){
+function payload(req, reply){
   if(!req.pre.handle) return reply(null);
-
+  console.log('handle', req.pre.handle)
   let data = ''
   req.payload.on('data', (chunk) => {
     data += chunk
   });
 
   req.payload.on('end',() => {
-    debugger;
-    console.log( data )
-    data = JSON.parse( data )
-    const result = schema.validate( data )
-    if(result.error){
-      console.error( result.error )
+    if( data ){
+      data && JSON.parse( data )
+      const result = schema.validate( data )
+      if(result.error){
+        console.error( result.error )
+      }
+      return reply( result.error || result.value );
     }
-    reply(result.error || result.value);
+    reply(null)
   })
 }
-server.route({
+
+server.route(
+  [{
     path:'/timer'
   , method: 'post'
   , config: {
@@ -97,17 +75,41 @@ server.route({
       ]
     }
   , handler: function(req, reply){
-      debugger;
       if( req.pre.handle ){
-        console.log('handled', req.pre.payload )
-        reply(process.hrtime().join('')).code(201)
-        // setTimeout( postBack, req.body.timeout )
+        reply().code(204).location(`/timer/${req.headers['x-timer-id']}`)
         return req.payload.pipe( process.stdout )
       } 
-      
       console.log( 'forwarded')
     }
-})
+  }, {
+      path: '/timer/{timer_id}'
+    , method: 'delete'
+    , config: {
+        pre:[
+            {method: proxy, assign: 'handle'}
+          , {method: payload, assign: 'payload'}
+        ]
+        , payload: {
+              parse: false
+            , output: 'stream'
+          }
+        , validate:{
+            params: {
+              timer_id: joi.string().uuid({ version:['uuidv4'] })
+            }
+          }
+      }
+
+    , handler: function( req, reply ){
+        const ref = cache[req.params.timer_id];
+        if(!ref) return reply(boom.notFound())
+
+        clearTimeout( ref )
+        cache[req.params.timer_id] = null
+        reply().code(204)
+      }
+  }]
+)
 
 if( require.main === module ){
   server.start(( err ) => {
@@ -119,5 +121,5 @@ if( require.main === module ){
   })
 }
 
-module.exports = { server, ringpop };
+module.exports = { server, ring };
 
