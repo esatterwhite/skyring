@@ -1,22 +1,27 @@
 {
   "name": "node-timers",
   "version": "1.0.0",
-  "description": "",
+  "description": "Distributed timers",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/esatterwhite/node-kronos"
+  },
   "dependencies": {
+    "body": "^5.1.0",
     "boom": "^4.2.0",
+    "call": "^3.0.3",
     "debug": "^2.2.0",
-    "hapi": "^15.2.0",
     "joi": "^9.2.0",
     "keef": "^1.1.1",
-    "node-uuid": "^1.4.7",
     "request": "^2.76.0",
     "ringpop": "^10.16.2",
-    "tchannel": "^3.9.0"
+    "tchannel": "^3.9.0",
+    "uuid": "^3.0.1"
   }
 }
