@@ -9,7 +9,7 @@ const conf = require('keef')
 const server = http.createServer( handler );
 
 if( require.main === module ){
-	server.listen(conf.get('PORT'))
+	server.listen(conf.get('PORT'));
 }
 
 module.exports = { server, ring };
