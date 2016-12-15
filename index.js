@@ -2,7 +2,6 @@
 
 const conf = require('keef')
     , http = require('http')
-    , handler = require('./lib/handler')
     , ring = require('./lib/ring')
 		, Router = require('./lib/server')
     , debug = require('debug')('kronos')
@@ -18,7 +17,6 @@ if( require.main === module ){
 }
 
 ring.on('request', (req, res) => {
-  debug('proxied'); 
   router.handle(req, res)
 });
 module.exports = { server, ring };
