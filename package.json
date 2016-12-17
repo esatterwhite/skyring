@@ -1,5 +1,5 @@
 {
-  "name": "node-timers",
+  "name": "skyring",
   "version": "1.0.0",
   "description": "Distributed timers",
   "main": "index.js",
