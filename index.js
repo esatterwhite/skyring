@@ -1,8 +1,7 @@
 'use strict';
-
+console.log(process.pid)
 const conf = require('keef')
     , http = require('http')
-    , Node = require('./lib/ring')
 		, Server = require('./lib/server')
     , debug = require('debug')('kronos')
     ;
@@ -16,3 +15,13 @@ if( require.main === module ){
   });
 }
 
+
+function onSignal() {
+  server.close(()=>{
+    debug('shutting down')
+    process.exit(0)
+  })
+}
+
+process.once('SIGINT', onSignal);
+process.once('SIGTERM', onSignal);
