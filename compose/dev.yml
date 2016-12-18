@@ -1,0 +1,41 @@
+version: '2'
+services:
+  node-1:
+    build: .
+    environment:
+      PORT: 3002
+      DEBUG: '*'
+      channel__host: 'node-1'
+      seeds: 'node-1:3455,node-2:3456'
+    ports:
+      - "3002:3002"
+  node-2:
+    build: .
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      DEBUG: '*'
+      seeds: 'node-1:3455,node-2:3456'
+      channel__host: 'node-2'
+      channel__port: 3456
+  node-3:
+    build: .
+    ports:
+      - "3004:3004"
+    environment:
+      PORT: 3004
+      DEBUG: '*'
+      seeds: 'node-1:3455,node-2:3456'
+      channel__host: 'node-3'
+      channel__port: 3457
+  node-4:
+    build: .
+    ports:
+      - "3005:3005"
+    environment:
+      PORT: 3005
+      DEBUG: '*'
+      seeds: 'node-1:3455,node-2:3456'
+      channel__host: 'node-4'
+      channel__port: 3458
