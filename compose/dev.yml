@@ -5,40 +5,64 @@ services:
     environment:
       DEBUG: '*'
       channel__host: 'node-1'
+      redis__hosts: 'redis:6379'
       seeds: 'node-1:3455,node-2:3456'
     networks:
       - skyring 
+    depends_on:
+      - redis
+
   node-2:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
+      redis__hosts: 'redis:6379'
       channel__host: 'node-2'
       channel__port: 3456
     networks:
       - skyring
+    depends_on:
+      - redis
+
   node-3:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
+      redis__hosts: 'redis:6379'
       channel__host: 'node-3'
     networks:
       - skyring
+    depends_on:
+      - redis
+
   node-4:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
+      redis__hosts: 'redis:6379'
       channel__host: 'node-4'
     networks:
       - skyring
+    depends_on:
+      - redis
+
   node-5:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
+      redis__hosts: 'redis:6379'
       channel__host: 'node-5'
+    networks:
+      - skyring
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
     networks:
       - skyring
 
