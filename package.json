@@ -1,28 +1,35 @@
 {
   "name": "skyring",
   "version": "1.0.0",
-  "description": "Distributed timers",
+  "description": "Distributed timers as a service",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bin": {
+    "skyring":"./bin/skyring.js"
   },
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compose:up": "docker-compose -f compose/dev.yml --build up",
+    "compose:down": "docker-compose -f compose/dev.yml --build down"
+  },
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/esatterwhite/node-kronos"
+    "url": "https://bitbucket.org/codedependant/node-skyring"
   },
   "dependencies": {
     "body": "^5.1.0",
-    "boom": "^4.2.0",
-    "call": "^3.0.3",
     "debug": "^2.2.0",
-    "joi": "^9.2.0",
     "keef": "^1.1.1",
     "path-to-regexp": "^1.7.0",
     "request": "^2.76.0",
     "ringpop": "^10.16.2",
+    "seeli": "^3.0.1",
     "tchannel": "^3.9.0",
     "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "supertest": "^2.0.1"
   }
 }
