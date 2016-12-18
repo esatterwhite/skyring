@@ -1,41 +1,47 @@
 version: '2'
 services:
   node-1:
-    build: .
+    build: ../
     environment:
-      PORT: 3002
       DEBUG: '*'
       channel__host: 'node-1'
       seeds: 'node-1:3455,node-2:3456'
-    ports:
-      - "3002:3002"
   node-2:
-    build: .
-    ports:
-      - "3003:3003"
+    build: ../
     environment:
-      PORT: 3003
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       channel__host: 'node-2'
       channel__port: 3456
   node-3:
-    build: .
-    ports:
-      - "3004:3004"
+    build: ../
     environment:
-      PORT: 3004
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       channel__host: 'node-3'
-      channel__port: 3457
   node-4:
-    build: .
-    ports:
-      - "3005:3005"
+    build: ../
     environment:
-      PORT: 3005
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       channel__host: 'node-4'
-      channel__port: 3458
+  node-5:
+    build: ../
+    environment:
+      DEBUG: '*'
+      seeds: 'node-1:3455,node-2:3456'
+      channel__host: 'node-5'
+
+  nginx:
+    image: 'nginx:latest'
+    volumes:
+      - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:80"
+    depends_on:
+      - node-1
+      - node-2
+      - node-3
+      - node-4
+      - node-5
+
