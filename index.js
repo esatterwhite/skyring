@@ -3,7 +3,7 @@ console.log(process.pid)
 const conf = require('keef')
     , http = require('http')
 		, Server = require('./lib/server')
-    , debug = require('debug')('kronos')
+    , debug = require('debug')('skyring')
     ;
 
 const server = new Server();
