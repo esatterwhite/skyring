@@ -7,5 +7,6 @@ module.exports = {
   , port: 3455
   }
 , PORT: 3000
-
-}
+, redis: {
+    hosts:'127.0.0.1:6379'
+  };
