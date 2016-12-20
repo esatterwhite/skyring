@@ -20,7 +20,7 @@ if( require.main === module ){
 function onSignal() {
   server.close(()=>{
     debug('shutting down')
-    process.exit(0)
+    setImmediate(process.exit)
   })
 }
 
