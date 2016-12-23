@@ -58,7 +58,7 @@ define({ "api": [
     "examples": [
       {
         "title": "curl:",
-        "content": "curl -XPOST -H \"Content-Type: application/json\" http://localhost:3000/timer  -d '{\n\"timeout\": 3000,\n\"data\": \"{\\\"name\\\":\\\"Bill\\\"}\",\n\"callback\": {\n  \"method\": \"post\",\n  \"uri\": \"http://mydomain.name/timer/callback\",\n  \"tranport:\"http\"\n}",
+        "content": "curl -XPOST -H \"Content-Type: application/json\" http://localhost:3000/timer  -d '{\n\"timeout\": 3000,\n\"data\": \"{\\\"name\\\":\\\"Bill\\\"}\",\n\"callback\": {\n  \"method\": \"post\",\n  \"uri\": \"http://mydomain.name/timer/callback\",\n  \"tranport\":\"http\"\n}",
         "type": "curl"
       },
       {
@@ -165,7 +165,7 @@ define({ "api": [
     "examples": [
       {
         "title": "curl:",
-        "content": "curl -XPUT -H \"Content-Type: application/json\" http://localhost:3000/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45  -d '{\n\"timeout\": 3000,\n\"data\": \"{\\\"name\\\":\\\"Bill\\\"}\",\n\"callback\": {\n  \"method\": \"post\",\n  \"uri\": \"http://mydomain.name/timer/callback\",\n  \"tranport:\"http\"\n}",
+        "content": "curl -XPUT -H \"Content-Type: application/json\" http://localhost:3000/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45  -d '{\n\"timeout\": 3000,\n\"data\": \"{\\\"name\\\":\\\"Bill\\\"}\",\n\"callback\": {\n  \"method\": \"post\",\n  \"uri\": \"http://mydomain.name/timer/callback\",\n  \"tranport\":\"http\"\n}",
         "type": "curl"
       },
       {
