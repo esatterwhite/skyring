@@ -37,7 +37,7 @@ For performance considerations, a body is not included in responses. Rather, HTT
 In the case of a `Create` request, the uri to the timer instance is returned in the `Location` header.
 
 ```
-HTTP/1.1 201 OK
+HTTP/1.1 201 CREATED
 location: /timer/4adb026b-6ef3-44a8-af16-4d6be0343ecf
 Date: Fri, 23 Dec 2016 00:19:13 GMT
 Connection: keep-alive
