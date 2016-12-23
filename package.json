@@ -1,6 +1,6 @@
 {
   "name": "skyring",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Distributed timers as a service",
   "main": "index.js",
   "bin": {
