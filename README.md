@@ -10,7 +10,7 @@ A distributed reliable timer service providing similar functionality to using `s
 A request can be issued to any active node in the cluster. If that node is not responsible for the timer in question,
 it will forward the request directly to the node that is keeping network latency to a minimum. This makes `Skyring` very
 suitable for high performance, stateless, and distributed enviroments.
-The minimum cluster size is 3 nodes, 2 of which being seed or bootstrapping nodes. A cluster of this size can average
+The minimum _recommended_ cluster size is 3 nodes, 2 of which being seed or bootstrapping nodes. A cluster of this size can average
 between 2K - 5K requests per second.
 
 ## Create a timer
