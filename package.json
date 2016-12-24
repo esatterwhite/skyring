@@ -10,8 +10,8 @@
     "test": "mocha ./test/**/*.spec.js",
     "test:ci":"docker-compose -f compose/test.yml up --abort-on-container-exit",
     "posttest:ci":"docker-compose -f compose/test.yml down",
-    "compose:up": "docker-compose -f compose/dev.yml --build up",
-    "compose:down": "docker-compose -f compose/dev.yml --build down"
+    "compose:up": "docker-compose -f compose/dev.yml up --build ",
+    "compose:down": "docker-compose -f compose/dev.yml down"
   },
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
