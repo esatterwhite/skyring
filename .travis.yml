@@ -2,7 +2,6 @@ sudo: required
 services:
   - docker
 
-install: npm install
 script: npm run test:ci
 language: node_js
 after_install:
