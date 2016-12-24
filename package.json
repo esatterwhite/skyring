@@ -1,6 +1,6 @@
 {
   "name": "skyring",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Distributed timers as a service",
   "main": "index.js",
   "bin": {
@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "mocha ./test/**/*.spec.js",
-    "test:ci":"docker-compose -f compose/test.yml up --abort-on-container-exit",
-    "posttest:ci":"docker-compose -f compose/test.yml down",
+    "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit",
+    "posttest:ci": "docker-compose -f compose/test.yml down",
     "compose:up": "docker-compose -f compose/dev.yml up --build ",
     "compose:down": "docker-compose -f compose/dev.yml down"
   },
