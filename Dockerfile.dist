@@ -1,0 +1,4 @@
+FROM  mhart/alpine-node:7
+ADD skyring.tgz /opt
+WORKDIR /opt/skyring
+CMD ["node", "index.js"] 
