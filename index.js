@@ -1,13 +1,13 @@
 'use strict';
-console.log(process.pid)
-const conf = require('keef')
-    , http = require('http')
+const conf   = require('keef')
+    , http   = require('http')
 		, Server = require('./lib/server')
-    , debug = require('debug')('skyring')
+    , debug  = require('debug')('skyring')
     ;
 
 const server = new Server();
-module.exports = {server};
+
+module.exports =  server;
 
 if( require.main === module ){
 	server.load().listen(conf.get('PORT'),null, null, (err) => {
