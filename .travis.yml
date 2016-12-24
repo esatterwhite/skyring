@@ -1,0 +1,8 @@
+install: npm install
+script: npm test
+language: node_js
+git:
+  depth: 3
+node_js:
+  - "6"
+  - "7"
