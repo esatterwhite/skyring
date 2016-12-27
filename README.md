@@ -46,6 +46,8 @@ Content-Length: 0
 
 ## Cancel A Timer
 
+#### **DELETE `/timer/:id`**
+
 **Request**
 
 ```bash
