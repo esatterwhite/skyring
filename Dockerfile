@@ -1,6 +1,6 @@
 FROM  mhart/alpine-node:7
-COPY . /opt/skyrim
-WORKDIR /opt/skyrim
+COPY . /opt/skyring
+WORKDIR /opt/skyring
 RUN apk update && \ 
     apk upgrade && \
     apk add python make g++ && \
