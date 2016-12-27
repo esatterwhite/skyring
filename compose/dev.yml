@@ -36,6 +36,8 @@ services:
       - skyring
     depends_on:
       - nats
+      - node-1
+      - node-2
 
   node-4:
     build: ../
@@ -48,6 +50,8 @@ services:
       - skyring
     depends_on:
       - nats
+      - node-1
+      - node-2
 
   node-5:
     build: ../

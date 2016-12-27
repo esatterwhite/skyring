@@ -7,7 +7,7 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "mocha ./test/**/*.spec.js",
+    "test": "mocha --recursive test/",
     "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
     "posttest:ci": "docker-compose -f compose/test.yml down",
     "compose:up": "docker-compose -f compose/dev.yml up --build ",
