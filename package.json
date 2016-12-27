@@ -8,6 +8,8 @@
   },
   "scripts": {
     "test": "mocha --recursive test/",
+    "start": "npm run compose:up",
+    "stop": "npm run compose:down",
     "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
     "posttest:ci": "docker-compose -f compose/test.yml down",
     "compose:up": "docker-compose -f compose/dev.yml up --build ",
