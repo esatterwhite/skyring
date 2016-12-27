@@ -3,6 +3,8 @@
 
 [![Travis](https://img.shields.io/travis/esatterwhite/skyring.svg?style=flat-square)](https://travis-ci.org/esatterwhite/skyring)
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
+[![npm](https://img.shields.io/npm/l/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
+[![David](https://img.shields.io/david/esatterwhite/skyring.svg)](https://david-dm.org/esatterwhite/skyring)
 
 # Skyring
 A distributed reliable timer service providing similar functionality to using `setTimeout`.
