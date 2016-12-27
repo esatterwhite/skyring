@@ -7,8 +7,10 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "mocha ./test/**/*.spec.js",
-    "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit",
+    "test": "mocha --recursive test/",
+    "start": "npm run compose:up",
+    "stop": "npm run compose:down",
+    "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
     "posttest:ci": "docker-compose -f compose/test.yml down",
     "compose:up": "docker-compose -f compose/dev.yml up --build ",
     "compose:down": "docker-compose -f compose/dev.yml down"
@@ -23,11 +25,11 @@
     "body": "^5.1.0",
     "debug": "^2.2.0",
     "keef": "^1.1.1",
+    "nats": "^0.6.8",
     "path-to-regexp": "^1.7.0",
     "request": "^2.76.0",
     "ringpop": "^10.16.2",
     "seeli": "^3.0.1",
-    "ioredis": "^2.4.0",
     "tchannel": "^3.9.0",
     "uuid": "^3.0.1"
   },

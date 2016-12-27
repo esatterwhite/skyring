@@ -1,0 +1,34 @@
+version: '2'
+services:
+  nats-a:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/a.conf -D
+    networks:
+      - nats
+  nats-b:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/b.conf -D
+    depends_on:
+      - nats-a
+    networks:
+      - nats
+  nats-c:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    depends_on:
+      - nats-a
+    command: >
+      -c /tmp/c.conf -D
+    networks:
+      - nats
+
+networks:
+  nats:
+    driver: bridge

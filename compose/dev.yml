@@ -5,64 +5,102 @@ services:
     environment:
       DEBUG: '*'
       channel__host: 'node-1'
-      redis__hosts: 'redis:6379'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       seeds: 'node-1:3455,node-2:3456'
     networks:
-      - skyring 
+      - skyring
     depends_on:
-      - redis
+      - nats-a
+      - nats-b
+      - nats-c
 
   node-2:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
-      redis__hosts: 'redis:6379'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-2'
       channel__port: 3456
     networks:
       - skyring
     depends_on:
-      - redis
+      - nats-a
+      - nats-b
+      - nats-c
 
   node-3:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
-      redis__hosts: 'redis:6379'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-3'
     networks:
       - skyring
     depends_on:
-      - redis
+      - nats-a
+      - nats-b
+      - nats-c
+      - node-1
+      - node-2
 
   node-4:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
-      redis__hosts: 'redis:6379'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-4'
     networks:
       - skyring
     depends_on:
-      - redis
+      - nats-a
+      - nats-b
+      - nats-c
+      - node-1
+      - node-2
 
   node-5:
     build: ../
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
-      redis__hosts: 'redis:6379'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
     networks:
       - skyring
     depends_on:
-      - redis
+      - nats-a
+      - nats-b
+      - nats-c
 
-  redis:
-    image: redis:latest
+  nats-a:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/a.conf -D
+    networks:
+      - skyring
+  nats-b:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/b.conf -D
+    depends_on:
+      - nats-a
+    networks:
+      - skyring
+  nats-c:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    depends_on:
+      - nats-a
+    command: >
+      -c /tmp/c.conf -D
     networks:
       - skyring
 
