@@ -1,6 +1,9 @@
 
 ![skyring](./assets/skyring.png)
 
+[![Travis](https://img.shields.io/travis/esatterwhite/skyring.svg?style=flat-square)](https://travis-ci.org/esatterwhite/skyring)
+[![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
+
 # Skyring
 A distributed reliable timer service providing similar functionality to using `setTimeout`.
 `Skyring` servers are clustered  into a *hashring* using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API That allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )

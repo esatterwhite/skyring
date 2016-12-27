@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/codedependant/node-skyring"
+    "url": "hhttps://github.com/esatterwhite/skyring"
   },
   "dependencies": {
     "body": "^5.1.0",
