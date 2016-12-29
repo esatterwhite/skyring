@@ -1,12 +1,24 @@
 const assert = require('assert')
     , uuid   = require('uuid')
-    , timer  = require('../lib/timer');
+    , Timer  = require('../lib/timer');
 
 describe('timers', () => {
+  let timers;
+  beforeEach(() => {
+    timers = new Timer();
+  })
+
+  afterEach(() => {
+    for(var t of timers.values()){
+      clearTimeout(t.timer);
+    }
+    timers.clear();
+  });
+
   describe('create', () => {
     it('Execute the transport on a delay', (done) => {
       const id = uuid.v4()
-      timer.create(
+      timers.create(
         id
       , {
           timeout: 250
@@ -39,7 +51,7 @@ describe('timers', () => {
       }
       const id = uuid.v4();
 
-      timer.create(
+      timers.create(
         id
       , {
           timeout: 100
@@ -52,7 +64,7 @@ describe('timers', () => {
         }
       , () => {
 
-        timer.update(
+        timers.update(
           id
         , {
             timeout: 150
@@ -70,11 +82,11 @@ describe('timers', () => {
     })
   });
 
-  describe('delete', () => {
+  describe('remove', () => {
     it('should cancel an existing timer', (done) => {
       const id = uuid.v4()
       let called = false
-      timer.create(
+      timers.create(
         id
       , {
           timeout: 1000
@@ -92,7 +104,7 @@ describe('timers', () => {
         }
       , () => {
           setTimeout(() => {
-            timer.delete(id, () => {
+            timers.remove(id, () => {
               assert.equal(called, false)
               done()
             })

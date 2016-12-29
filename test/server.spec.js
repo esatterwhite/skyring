@@ -9,15 +9,23 @@ const assert = require('assert')
 
 describe('server', () => {
   let sone, stwo, sthree
-
+  var os = require('os')
+  var hostname;
+  if(!process.env.TEST_HOST) {
+    hostname =  os.hostname()
+    console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
+  } else {
+    hostname = process.env.TEST_HOST;
+  }
+  console.log('hostname', hostname)
   before((done) => {
     sone = new Server({
       node: {
         port: 4444
-      , host: '127.0.0.1'
+      , host: hostname
       , app: 'spec'
       }
-      , seeds: ['127.0.0.1:4444', '127.0.0.1:4445']
+      , seeds: [`${hostname}:4444`, `${hostname}:4445`]
     })
     .load()
     .listen(5555);
@@ -25,10 +33,10 @@ describe('server', () => {
     stwo = new Server({
       node:{
         port: 4445
-      , host: '127.0.0.1'
+      , host: hostname
       , app: 'spec'
       }
-      , seeds: ['127.0.0.1:4444', '127.0.0.1:4445']
+      , seeds: [`${hostname}:4444`, `${hostname}:4445`]
     })
     .load()
     .listen(5556);
@@ -36,15 +44,13 @@ describe('server', () => {
     sthree = new Server({
       node: {
         port: 4446
-      , host: '127.0.0.1'
+      , host: hostname
       , app: 'spec'
       }
-      , seeds: ['127.0.0.1:4444', '127.0.0.1:4445']
+      , seeds: [`${hostname}:4444`, `${hostname}:4445`]
     })
     .load()
-    .listen(5557, null, null, () => {
-      done();
-    });
+    .listen(5557, null, null, done);
 
   })
 
@@ -63,8 +69,9 @@ describe('server', () => {
     done();
   })
 
-  describe('rebalance', () => {
-    let max = 50, count = 0, postback
+  describe('rebalance', function() {
+    this.timeout(10000)
+    let max = 20, count = 0, postback
     before((done) => {
       postback = http.createServer((req, res) => {
         count++;
@@ -75,10 +82,10 @@ describe('server', () => {
     })
 
     after(( done ) => {
-      postback.close( done );
+      postback.close(done);
     })
     
-    it('should service a lost node', ( done ) => {
+    it('should survive a lost node', ( done ) => {
       async.until(
         () => { return !max},
         (callback) => {
@@ -86,7 +93,7 @@ describe('server', () => {
           request
             .post('/timer')
             .send({
-              timeout: 250
+              timeout: 1000
             , data: 'data'
             , callback: {
                 uri: 'http://localhost:2222'
@@ -103,21 +110,27 @@ describe('server', () => {
         },
         ( err ) => {
           assert.ifError(err);
-          sthree.close( () => {
-            async.until(
-              function(){
-                return count === 50;
-              },
-              function(cb){
-                setImmediate(cb)
-              },
-              function(err){
-                assert.equal(max, 0, 'max should be 0');
-                assert.equal(count, 50, 'count should be 50')
-                done();
-              }
-            ) 
-          })
+
+          setTimeout(function(args){
+            console.log('closing node')
+            sthree.close(() => {
+              async.until(
+                function(){
+                  return count === 20;
+                },
+                function(cb){
+                  setImmediate(cb)
+                },
+                function(err){
+                  assert.equal(max, 0, 'max should be 0');
+                  assert.equal(count, 20, 'count should be 20')
+                  console.log("done!")
+                  done();
+                }
+              ) 
+            })
+          },50);
+
         }
       );
     });
