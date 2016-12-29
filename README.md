@@ -66,3 +66,57 @@ Date: Fri, 23 Dec 2016 00:22:12 GMT
 Connection: keep-alive
 Content-Length: 0
 ```
+
+## Run via Docker Compose
+
+The easiest way to run a small cluster is to use the included compose files.
+
+- Install [Docker Compose](https://docs.docker.com/compose/install/)
+
+```bash
+$ npm start
+```
+
+That is it! You have a 5 node **Skyring** cluster with a 3 node `nats` cluster behind an `nginx` proxy listening on port `8080`
+
+## Run A Local Cluster
+
+#### Start a nats instance
+Down load the [nats binary](https://github.com/nats-io/gnatsd/releases) and start it using the defaults
+
+```bash
+$ gnats -D -V
+```
+To verify that it is working, you can `telnet` directly to the server and ping it.
+
+```bash
+$ telnet localhost 42222
+> ping
+PONG
+```
+
+#### Clone Skyring
+
+```bash
+$ git clone https://github.com/esatterwhite/skyring.git
+$ cd skyring
+$ npm install
+```
+
+The default settings expect a minimum of 2 servers on port `3455` and `3456` respectively. Start each server in it a different terminal session
+
+```bash
+# Seed node 1
+$ DEBUG=skyring:* node index.js --channel:port=3455 -p 3000
+```
+
+```bash
+# Seed node 2
+$ DEBUG=skyring:* node index --channel:port=3456 -p 3001
+```
+
+If all goes well you should see a message like this
+```
+skyring:ring ring bootstraped [ '127.0.0.1:3455', '127.0.0.1:3456' ] +1ms
+```
+Thats it, you have 2 instances running w/ HTTP servers running on ports `3000` and `3001`
