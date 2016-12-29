@@ -3,7 +3,6 @@ services:
   node-1:
     build: ../
     environment:
-      DEBUG: '*'
       channel__host: 'node-1'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       seeds: 'node-1:3455,node-2:3456'
@@ -17,7 +16,6 @@ services:
   node-2:
     build: ../
     environment:
-      DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-2'
@@ -32,7 +30,6 @@ services:
   node-3:
     build: ../
     environment:
-      DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-3'
@@ -48,7 +45,6 @@ services:
   node-4:
     build: ../
     environment:
-      DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-4'
@@ -65,7 +61,6 @@ services:
     build: ../
     hostname: node-5
     environment:
-      DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
