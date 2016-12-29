@@ -103,7 +103,7 @@ $ cd skyring
 $ npm install
 ```
 
-The default settings expect a minimum of 2 servers on port `3455` and `3456` respectively. Start each server in it a different terminal session
+The default settings expect a minimum of 2 servers on port `3455` and `3456` respectively. Start each server in a different terminal session
 
 ```bash
 # Seed node 1
