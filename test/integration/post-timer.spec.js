@@ -6,7 +6,8 @@ const http = require('http')
     , Server = require('../../lib')
     ;
 
-describe('skyring:api', () => {
+describe('skyring:api', function() {
+  this.timeout(4000)
   let request, server
   before(( done ) => {
     server = new Server();

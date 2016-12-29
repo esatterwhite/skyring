@@ -56,6 +56,7 @@ services:
   node-5:
     build: ../
     environment:
+      DEBUG: 'skyring:*'
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats:4222'
       channel__host: 'node-5'
