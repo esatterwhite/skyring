@@ -53,7 +53,34 @@ define({ "api": [
             "description": "<p>A full uri the transport should send data to</p>"
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "request:",
+          "content": "{\n \"timeout\": 3000,\n \"data\": \"Hello world\",\n \"callback\": {\n   \"method\": \"put\",\n   \"uri\": \"http://mydomain.name/timer/callback\",\n   \"tranport\":\"http\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Response Headers": [
+          {
+            "group": "Response Headers",
+            "type": "String",
+            "optional": false,
+            "field": "location",
+            "description": "<p>URI of the created timer which can be used to modify or cancel the timer</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Response Headers:",
+          "content": "HTTP/1.1 201 CREATED\nLOCATION: /timer/489ea3df-c583-4325-8fb0-0f1ec8301bd9\nDate: Fri, 23 Dec 2016 00:19:13 GMT\nConnection: keep-alive\nContent-Length: 0",
+          "type": "text"
+        }
+      ]
     },
     "examples": [
       {
@@ -71,7 +98,7 @@ define({ "api": [
     "groupTitle": "timer"
   },
   {
-    "description": "<p>Deletes a timer</p>",
+    "description": "<p>Deletes a Timer by id from the ring. A request can be issued to any server in the ring.</p>",
     "group": "timer",
     "name": "delete_timer",
     "type": "delete",
@@ -88,7 +115,14 @@ define({ "api": [
             "description": "<p>Users unique ID.</p>"
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Example id:",
+          "content": "'8c66a779-9c74-4e30-b5e8-f32d60909d45'",
+          "type": "text"
+        }
+      ]
     },
     "version": "1.0.0",
     "examples": [
