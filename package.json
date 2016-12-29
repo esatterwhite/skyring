@@ -34,6 +34,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "async": "^2.1.4",
     "mocha": "^3.2.0",
     "supertest": "^2.0.1"
   }
