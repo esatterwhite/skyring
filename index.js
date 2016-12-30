@@ -1,7 +1,10 @@
 'use strict';
+process.title = 'skyring';
+process.chdir(__dirname);
+
 const conf   = require('keef')
     , http   = require('http')
-		, Server = require('./lib/server')
+    , Server = require('./lib/server')
     , debug  = require('debug')('skyring')
     ;
 

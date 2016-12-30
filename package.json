@@ -3,6 +3,9 @@
   "version": "3.0.1",
   "description": "Distributed timers as a service",
   "main": "index.js",
+  "bin": {
+    "skyring": "./bin/skyring.js"
+  },
   "scripts": {
     "test": "node ./test.js",
     "coverage": "istanbul cover _mocha -- -R spec --recursive test/",
@@ -35,7 +38,8 @@
     "path-to-regexp": "^1.7.0",
     "request": "^2.76.0",
     "ringpop": "^10.16.2",
-    "tchannel": "^3.9.0",
+    "seeli": "^3.0.1",
+    "tchannel": "^3.9.9",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
