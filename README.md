@@ -5,6 +5,7 @@
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![npm](https://img.shields.io/npm/l/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![David](https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square)](https://david-dm.org/esatterwhite/skyring)
+[![Code Climate](https://codeclimate.com/github/esatterwhite/skyring/badges/gpa.svg)](https://codeclimate.com/github/esatterwhite/skyring)
 [![Docker Repository on Quay](https://quay.io/repository/esatterwhite/skyring/status "Docker Repository on Quay")](https://quay.io/repository/esatterwhite/skyring)
 
 # Skyring
