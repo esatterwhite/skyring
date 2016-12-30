@@ -1,2 +1,5 @@
 node_modules/
 compose/
+docs/
+*.save
+npm-debug.log
