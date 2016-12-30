@@ -5,7 +5,7 @@
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![npm](https://img.shields.io/npm/l/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![David](https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square)](https://david-dm.org/esatterwhite/skyring)
-[![Code Climate](https://codeclimate.com/github/esatterwhite/skyring/badges/gpa.svg)](https://codeclimate.com/github/esatterwhite/skyring)
+[![Code Climate](https://img.shields.io/codeclimate/github/esatterwhite/skyring.svg?style=flat-square)](https://codeclimate.com/github/esatterwhite/skyring)
 [![Docker Repository on Quay](https://quay.io/repository/esatterwhite/skyring/status "Docker Repository on Quay")](https://quay.io/repository/esatterwhite/skyring)
 
 # Skyring
@@ -16,7 +16,7 @@ A distributed reliable timer service providing similar functionality to using `s
 
 A request can be issued to any active node in the cluster. If that node is not responsible for the timer in question,
 it will forward the request directly to the node that is keeping network latency to a minimum. This makes `Skyring` very
-suitable for high performance, stateless, and distributed enviroments.
+suitable for high performance, stateless, and distributed environments.
 The minimum _recommended_ cluster size is 3 nodes, 2 of which being seed or bootstrapping nodes. A cluster of this size can average
 between 2K - 5K requests per second.
 
