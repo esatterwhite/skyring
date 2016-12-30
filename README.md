@@ -4,7 +4,8 @@
 [![Travis](https://img.shields.io/travis/esatterwhite/skyring.svg?style=flat-square)](https://travis-ci.org/esatterwhite/skyring)
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![npm](https://img.shields.io/npm/l/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
-[![David](https://img.shields.io/david/esatterwhite/skyring.svg)](https://david-dm.org/esatterwhite/skyring)
+[![David](https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square)](https://david-dm.org/esatterwhite/skyring)
+[![Docker Repository on Quay](https://quay.io/repository/esatterwhite/skyring/status "Docker Repository on Quay")](https://quay.io/repository/esatterwhite/skyring)
 
 # Skyring
 A distributed reliable timer service providing similar functionality to using `setTimeout`.
@@ -82,7 +83,7 @@ That is it! You have a 5 node **Skyring** cluster with a 3 node `nats` cluster b
 ## Run A Local Cluster
 
 #### Start a nats instance
-Down load the [nats binary](https://github.com/nats-io/gnatsd/releases) and start it using the defaults
+Download the [nats binary](https://github.com/nats-io/gnatsd/releases) and start it using the defaults
 
 ```bash
 $ gnats -D -V

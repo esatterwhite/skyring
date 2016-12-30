@@ -3,9 +3,6 @@
   "version": "2.0.1",
   "description": "Distributed timers as a service",
   "main": "index.js",
-  "bin": {
-    "skyring": "./bin/skyring.js"
-  },
   "scripts": {
     "test": "node ./test.js",
     "start": "npm run compose:up",
@@ -21,6 +18,13 @@
     "type": "git",
     "url": "hhttps://github.com/esatterwhite/skyring"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "bugs": {
+    "email": "esatterwhite@wi.rr.com",
+    "url": "https://github.com/esatterwhite/skyring/issues"
+  },
   "dependencies": {
     "body": "^5.1.0",
     "debug": "^2.2.0",
@@ -29,7 +33,6 @@
     "path-to-regexp": "^1.7.0",
     "request": "^2.76.0",
     "ringpop": "^10.16.2",
-    "seeli": "^3.0.1",
     "tchannel": "^3.9.0",
     "uuid": "^3.0.1"
   },
