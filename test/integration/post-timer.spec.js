@@ -1,9 +1,9 @@
 'user strict';
-const http = require('http')
-    , assert = require('assert')
+const http      = require('http')
+    , assert    = require('assert')
     , supertest = require('supertest')
-    , nats = require('../../lib/nats')
-    , Server = require('../../lib')
+    , nats      = require('../../lib/nats')
+    , Server    = require('../../lib')
     ;
 
 function toServer(port, expect = 'hello', method = 'post', time = 1000, cb){
@@ -150,6 +150,40 @@ describe('skyring:api', function() {
           .send({
             timeout:1000
           , data: 'hello'
+          })
+          .expect(400)
+          .end((err, res) => {
+            done()
+          });
+      });
+
+      it('should not allow request with no uri - (400)', (done) => {
+        request
+          .post('/timer')
+          .send({
+            timeout:1000
+          , data: 'hello'
+          , callback: {
+              transport: 'http'
+            , method: 'post'
+            }
+          })
+          .expect(400)
+          .end((err, res) => {
+            done()
+          });
+      });
+      
+      it('should not allow request with no transport - (400)', (done) => {
+        request
+          .post('/timer')
+          .send({
+            timeout:1000
+          , data: 'hello'
+          , callback: {
+              uri: 'http://foo.com'
+            , method: 'post'
+            }
           })
           .expect(400)
           .end((err, res) => {

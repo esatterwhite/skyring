@@ -17,7 +17,6 @@ describe('server', () => {
   } else {
     hostname = process.env.TEST_HOST;
   }
-  console.log('hostname', hostname)
   before((done) => {
     sone = new Server({
       node: {
@@ -112,7 +111,6 @@ describe('server', () => {
           assert.ifError(err);
 
           setTimeout(function(args){
-            console.log('closing node')
             sthree.close(() => {
               async.until(
                 function(){
@@ -124,7 +122,6 @@ describe('server', () => {
                 function(err){
                   assert.equal(max, 0, 'max should be 0');
                   assert.equal(count, 20, 'count should be 20')
-                  console.log("done!")
                   done();
                 }
               ) 
