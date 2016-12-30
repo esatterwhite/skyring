@@ -1,4 +1,4 @@
-'user strict'
+'user strict';
 const http = require('http')
     , assert = require('assert')
     , supertest = require('supertest')
@@ -106,7 +106,7 @@ describe('skyring:api', function() {
           .expect(400)
           .end((err, res) => {
             assert.equal(typeof res.headers['x-skyring-reason'], 'string')
-            done()            
+            done()
           });
       });
 
@@ -124,7 +124,7 @@ describe('skyring:api', function() {
           .expect(400)
           .end((err, res) => {
             assert.equal(typeof res.headers['x-skyring-reason'], 'string')
-            done()            
+            done()
           });
       });
 
@@ -141,7 +141,19 @@ describe('skyring:api', function() {
           .expect(400)
           .end((err, res) => {
             assert.equal(typeof res.headers['x-skyring-reason'], 'string')
-            done()            
+            done()
+          });
+      });
+      it('should not allow request with no callback - (400)', (done) => {
+        request
+          .post('/timer')
+          .send({
+            timeout:1000
+          , data: 'hello'
+          })
+          .expect(400)
+          .end((err, res) => {
+            done()
           });
       });
 
