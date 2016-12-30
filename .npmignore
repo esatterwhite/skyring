@@ -4,3 +4,4 @@ payload.txt
 *.save
 compose/
 assets
+*.tgz
