@@ -15,7 +15,7 @@ reporter = process.stdout;
 mocha = child_process.spawn("mocha", [
   "--recursive"
 , '--reporter=spec'
-, 'test/*.spec.js'
+, 'test/'
 ],{env:env})
 mocha.on('exit', function( code ){
     process.exit( code );
