@@ -3,3 +3,4 @@ compose/
 docs/
 *.save
 npm-debug.log
+coverage/
