@@ -64,6 +64,7 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
+      CODECLIMATE_REPO_TOKEN: '248135f96061f77d2e5f78526432fd096785d2914d8f5a73a04c061000939d5d'
     networks:
       - skyring
     depends_on:
