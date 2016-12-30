@@ -1,5 +1,6 @@
 'use strict';
 const http = require('http')
+    , os = require('os')
     , assert = require('assert')
     , uuid = require('uuid')
     , supertest = require('supertest')
