@@ -11,3 +11,6 @@ git:
 node_js:
   - "6"
   - "7"
+addons:
+  code_climate:
+    repo_token: 248135f96061f77d2e5f78526432fd096785d2914d8f5a73a04c061000939d5d

@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./test.js",
+    "coverage": "istanbul cover _mocha -- -R spec --recursive test/",
+    "postcoverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter",
     "start": "npm run compose:up",
     "stop": "npm run compose:down",
     "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
@@ -38,6 +40,8 @@
   },
   "devDependencies": {
     "async": "^2.1.4",
+    "codeclimate-test-reporter": "^0.4.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "supertest": "^2.0.1"
   }
