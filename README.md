@@ -1,5 +1,5 @@
 
-![skyring](./assets/skyring.png)
+![skyring](https://github.com/esatterwhite/skyring/raw/master/assets/skyring.png)
 
 [![Travis](https://img.shields.io/travis/esatterwhite/skyring.svg?style=flat-square)](https://travis-ci.org/esatterwhite/skyring)
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
@@ -7,6 +7,9 @@
 [![David](https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square)](https://david-dm.org/esatterwhite/skyring)
 [![Code Climate](https://img.shields.io/codeclimate/github/esatterwhite/skyring.svg?style=flat-square)](https://codeclimate.com/github/esatterwhite/skyring)
 [![Docker Repository on Quay](https://quay.io/repository/esatterwhite/skyring/status "Docker Repository on Quay")](https://quay.io/repository/esatterwhite/skyring)
+
+* [Module Docs](https://esatterwhite.github.io/skyring/)
+* [API Docs](https://esatterwhite.github.io/skyring/api)
 
 # Skyring
 A distributed reliable timer service providing similar functionality to using `setTimeout`.
@@ -18,31 +21,11 @@ A distributed reliable timer service providing similar functionality to using `s
 npm install -s skyring
 ```
 
-### Skyring CLI
-
-If you intend to run skyring as is, it may easiest to use the included binary
-
-```
-npm install -g skyring
-
-DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455
-```
-
-## Run via Docker Compose
-
-The easiest way to run a small cluster is to use the included compose files.
-
-- Install [Docker Compose](https://docs.docker.com/compose/install/)
-
-```bash
-$ npm start
-```
+## Run A Local Cluster
 
 That is it! You have a 5 node **Skyring** cluster with a 3 node `nats` cluster behind an `nginx` proxy listening on port `8080`
 
-## Run A Local Cluster
-
-#### Start a nats instance
+### Start a nats instance
 Download the [nats binary](https://github.com/nats-io/gnatsd/releases) and start it using the defaults
 
 ```bash
@@ -57,12 +40,36 @@ $ telnet localhost 42222
 PONG
 ```
 
-#### Clone Skyring
+### Skyring CLI
+
+If you intend to run skyring as is, it may be preferable to use the included binary over cloning the project.
+
+```
+npm install -g skyring
+
+DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455
+```
+
+
+### Clone Skyring
+
+Alternatively to the CLI, you can clone and install the project manually
 
 ```bash
 $ git clone https://github.com/esatterwhite/skyring.git
 $ cd skyring
 $ npm install
+$ DEBUG=* node index.js
+```
+
+#### Run via Docker Compose
+
+The Easiest way to run a small cluster is to use the included [compose files](https://github.com/esatterwhite/skyring/blob/jsdocs/compose/dev.yml). It is also a good way to see how to quickly configure a cluster
+
+- Install [Docker Compose](https://docs.docker.com/compose/install/)
+
+```bash
+$ npm start
 ```
 
 The default settings expect a minimum of 2 servers on port `3455` and `3456` respectively. Start each server in a different terminal session
@@ -124,7 +131,7 @@ Content-Length: 0
 
 ## Cancel A Timer
 
-#### **DELETE `/timer/:id`**
+##### **DELETE `/timer/:id`**
 
 **Request**
 

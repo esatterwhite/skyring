@@ -1,0 +1,31 @@
+{
+    "source":{
+       "excludePattern":"\\.spec*",
+       "include": [
+            "./README.md"
+          , "./index.js"
+          , "./lib"
+      ],
+       "exclude":["test/", "./**/node_modules/", "./lib/server/api/"]
+    }
+    ,"tags":{
+        "allowUnknownTags":true
+    }
+    ,"opts":{
+        "recurse":true
+        ,"template":"node_modules/ink-docstrap/template"
+        ,"destination":"docs"
+    }
+    ,"plugins":["plugins/markdown", "plugins/partial"]
+    ,"markdown":{"parser":"gfm", "hardwrap":false}
+    ,"templates": {
+        "systemName"            : "Skyring",
+        "syntaxTheme"           : "dark",
+        "copyright"             :  "Eric Satterwhite &copy; 2016",
+        "theme"                 : "slate",
+        "outputSourceFiles"     : true ,
+        "outputSourcePath"      : true,
+        "highlightTutorialCode" : true,
+        "linenums"              : false
+    }
+}

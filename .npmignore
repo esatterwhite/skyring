@@ -5,3 +5,5 @@ payload.txt
 compose/
 assets
 *.tgz
+jsdoc.json
+docs/
