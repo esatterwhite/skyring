@@ -78,7 +78,7 @@ Thats it, you have 2 instances running w/ HTTP servers running on ports `3000` a
 
 #### Run via Docker Compose
 
-The Easiest way to run a small cluster is to use the included [compose files](https://github.com/esatterwhite/skyring/blob/jsdocs/compose/dev.yml). It is also a good way to see how to quickly configure a cluster
+The Easiest way to run a small cluster is to use the included [compose files](https://github.com/esatterwhite/skyring/blob/master/compose/dev.yml). It is also a good way to see how to quickly configure a cluster
 
 - Install [Docker Compose](https://docs.docker.com/compose/install/)
 
