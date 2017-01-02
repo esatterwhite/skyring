@@ -86,7 +86,7 @@
 
 
     <section class="readme-section">
-        <article><p><img src="https://github.com/esatterwhite/skyring/raw/master/assets/skyring-inverted.png" alt="skyring"></p>
+        <article><p><img src="https://github.com/esatterwhite/skyring/raw/master/assets/skyring.png" alt="skyring"></p>
 <p><a href="https://travis-ci.org/esatterwhite/skyring"><img src="https://img.shields.io/travis/esatterwhite/skyring.svg?style=flat-square" alt="Travis"></a>
 <a href="https://www.npmjs.com/package/skyring"><img src="https://img.shields.io/npm/v/skyring.svg?style=flat-square" alt="npm"></a>
 <a href="https://www.npmjs.com/package/skyring"><img src="https://img.shields.io/npm/l/skyring.svg?style=flat-square" alt="npm"></a>
@@ -99,8 +99,7 @@
 </ul>
 <h1>Skyring</h1><p>A distributed reliable timer service providing similar functionality to using <code>setTimeout</code>.
 <code>Skyring</code> servers are clustered  into a <em>hashring</em> using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API That allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )</p>
-<h1>Install</h1><pre class="prettyprint source"><code>npm install -s skyring</code></pre><h2>Run A Local Cluster</h2><p>That is it! You have a 5 node <strong>Skyring</strong> cluster with a 3 node <code>nats</code> cluster behind an <code>nginx</code> proxy listening on port <code>8080</code></p>
-<h3>Start a nats instance</h3><p>Download the <a href="https://github.com/nats-io/gnatsd/releases">nats binary</a> and start it using the defaults</p>
+<h1>Install</h1><pre class="prettyprint source"><code>npm install -s skyring</code></pre><h2>Run A Local Cluster</h2><h3>Start a nats instance</h3><p>Download the <a href="https://github.com/nats-io/gnatsd/releases">nats binary</a> and start it using the defaults</p>
 <pre class="prettyprint source lang-bash"><code>$ gnats -D -V</code></pre><p>To verify that it is working, you can <code>telnet</code> directly to the server and ping it.</p>
 <pre class="prettyprint source lang-bash"><code>$ telnet localhost 42222
 > ping
@@ -111,15 +110,16 @@ DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455</code></
 <pre class="prettyprint source lang-bash"><code>$ git clone https://github.com/esatterwhite/skyring.git
 $ cd skyring
 $ npm install
-$ DEBUG=* node index.js</code></pre><h4>Run via Docker Compose</h4><p>The Easiest way to run a small cluster is to use the included <a href="https://github.com/esatterwhite/skyring/blob/jsdocs/compose/dev.yml">compose files</a>. It is also a good way to see how to quickly configure a cluster</p>
+$ DEBUG=* node index.js</code></pre><p>The default settings expect a minimum of 2 servers on port <code>3455</code> and <code>3456</code> respectively. Start each server in a different terminal session</p>
+<pre class="prettyprint source lang-bash"><code># Seed node 1
+$ DEBUG=skyring:* node index.js --channel:port=3455 -p 3000</code></pre><pre class="prettyprint source lang-bash"><code># Seed node 2
+$ DEBUG=skyring:* node index.js --channel:port=3456 -p 3001</code></pre><p>If all goes well you should see a message like this</p>
+<pre class="prettyprint source"><code>skyring:ring ring bootstraped [ '127.0.0.1:3455', '127.0.0.1:3456' ] +1ms</code></pre><p>Thats it, you have 2 instances running w/ HTTP servers running on ports <code>3000</code> and <code>3001</code></p>
+<h4>Run via Docker Compose</h4><p>The Easiest way to run a small cluster is to use the included <a href="https://github.com/esatterwhite/skyring/blob/jsdocs/compose/dev.yml">compose files</a>. It is also a good way to see how to quickly configure a cluster</p>
 <ul>
 <li>Install <a href="https://docs.docker.com/compose/install/">Docker Compose</a></li>
 </ul>
-<pre class="prettyprint source lang-bash"><code>$ npm start</code></pre><p>The default settings expect a minimum of 2 servers on port <code>3455</code> and <code>3456</code> respectively. Start each server in a different terminal session</p>
-<pre class="prettyprint source lang-bash"><code># Seed node 1
-$ DEBUG=skyring:* node index.js --channel:port=3455 -p 3000</code></pre><pre class="prettyprint source lang-bash"><code># Seed node 2
-$ DEBUG=skyring:* node index --channel:port=3456 -p 3001</code></pre><p>If all goes well you should see a message like this</p>
-<pre class="prettyprint source"><code>skyring:ring ring bootstraped [ '127.0.0.1:3455', '127.0.0.1:3456' ] +1ms</code></pre><p>Thats it, you have 2 instances running w/ HTTP servers running on ports <code>3000</code> and <code>3001</code></p>
+<pre class="prettyprint source lang-bash"><code>$ npm start</code></pre><p>That is it! You have a 5 node <strong>Skyring</strong> cluster with a 3 node <code>nats</code> cluster behind an <code>nginx</code> proxy listening on port <code>8080</code></p>
 <h1>Timer API</h1><p>A request can be issued to any active node in the cluster. If that node is not responsible for the timer in question,
 it will forward the request directly to the node that is keeping network latency to a minimum. This makes <code>Skyring</code> very
 suitable for high performance, stateless, and distributed environments.
@@ -196,7 +196,7 @@ Content-Length: 0</code></pre></article>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-02T16:18:15-06:00
+		on 2017-01-02T16:24:53-06:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
