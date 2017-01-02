@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Module: skyring/lib/json</title>
+	<title>Skyring Source: lib/server/router.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -60,402 +60,191 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: skyring/lib/json</h1>
+		<h1 class="page-title">Source: lib/server/router.js</h1>
+    
 <section>
-
-<header>
-    
-        
-            
-        
-    
-</header>
-
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>JSON helpers</p></div>
-        
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="module:skyring/lib/json"><span class="type-signature"></span>(require("skyring/lib/json"))(json)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Wrpper around try/catch of JSON parsing</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>json</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A JSON string to parse</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_json.js.html">lib/json.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Result</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        <dl>
-                
-<hr>
-<dt class="name" id="~Result">
-    <h4 id="~Result">Result</h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Composite JSON ojbect</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Object</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    <dl>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Error</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                    &lt;nullable><br>
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last"><p>An error if json parsing faile</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>the result of Json parsing</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-</dl>
-
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_json.js.html">lib/json.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-            </dl>
-    
-
-    
-</article>
-
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
+'use strict';
+/**
+ * Simple router class for directing requests
+ * @module skyring/lib/server/router
+ * @author Eric Satterwhite
+ * @since 1.0.0
+ * @requires skyring/lib/server/route
+ * @requires skyring/lib/server/request
+ * @requires skyring/lib/server/response
+ */
+
+const Route    = require('./route')
+    , Request  = require('./request')
+    , Response = require('./response')
+    ;
+
+/**
+ * @constructor
+ * @alias module:skyring/lib/server/router
+ * @param {module:skyring/lib/server/node} node The node linked to the application hashring
+ * @example var x = new Router(node)
+ */
+function Router( node, timers ) {
+  this.routes        = new Map();
+  this.route_options = new Map();
+  this.node          = node;
+  this.timers        = timers
+};
+
+/**
+ * Adds a new get handler to the router a new get handler to the router
+ * @param {String} The url path to route on
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.get = function get( path, fn ) {
+  this.route( path, 'GET', fn );
+};
+
+/**
+ * Adds a new put handler to the router
+ * @param {String} The url path to route on
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.put = function put( path, fn ) {
+  this.route( path, 'PUT', fn);
+};
+
+/**
+ * Adds a new post handler to the router
+ * @param {String} The url path to route on
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.post = function post( path, fn ) {
+  this.route( path, 'POST', fn);
+};
+
+/**
+ * Adds a new patch handler to the router
+ * @param {String} The url path to route on
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.patch = function patch( path, fn ) {
+  this.route( path, 'PATCH', fn);
+};
+
+/**
+ * Adds a new delete handler to the router
+ * @param {String} The url path to route on
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.delete = function( path, fn ) {
+  this.route( path, 'DELETE', fn );
+};
+
+/**
+ * Adds a new opts handler to the router
+ * @param {String} The url path to route on
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.options = function options( path, fn ) {
+  this.route( path, 'OPTIONS', fn );
+};
+
+/**
+ * Adds a new route handler to the router
+ * @param {String} The url path to route on
+ * @param {String} method The http method to associate to the route
+ * @param {Function} The handler function to call when the route is matched
+ **/
+Router.prototype.route = function route( path, method, fn ) {
+  const _method = method.toUpperCase();
+  const map = this.routes.get(_method) || new Map();
+
+  if ( map.has( path ) ) {
+    const route = map.get( path );
+    route.use( fn );
+    return route;
+  }
+
+  const route = new Route( path, _method);
+  route.use( fn );
+  map.set( path, route );
+  this.routes.set( _method, map );
+	return route;
+};
+
+/**
+ * Entrypoint for an incoming request 
+ * Customer properties are attached to an `$` object on the request rather than the request
+ * itself to avoid V8 deopts / perf penalties
+ * @param {http.IncomingMessage} req
+ * @param {http.ServerResponse} res
+ * @example
+http.createServer((req, res) => {
+  router.handle(req, res)
+})
+ **/
+Router.prototype.handle = function handle( req, res ) {
+  req.$ = new Request( req );
+  res.$ = new Response( res );
+  req.$.timers = this.timers;
+  
+  const path = req.$.path;
+  const method = req.method.toUpperCase();
+  const map = this.routes.get( method );
+
+  if( map ) {
+    let rte = map.get( path );
+    if ( rte ) {
+      req.$.params = Object.create(null);
+      return this.handleRoute( rte, req, res );
+    }
+
+    for ( const route of map.values() ){
+      const params = route.match( path );
+      if ( params ) {
+        req.$.params = params;
+        return this.handleRoute( route, req, res );
+      }
+    }
+  }
+
+  return notFound( req, res );
+};
+
+/**
+ * Responsible for executing the middleware stack on the route ( including the end handler )
+ * @param {module:skyring/lib/server/route} route
+ * @param {http.IncomingMessage} req
+ * @param {http.ServerResponse} res
+ **/
+Router.prototype.handleRoute = function handleRoute( route, req, res ) {
+  route.process(req, res, this.node, ( err ) => {
+    if ( err ) return res.$.error( err );
+
+    if ( res.$.body ) return res.$.json( res.$.body );
+
+    return res.$.end();
+  });
+};
+
+function notFound( req, res ) {
+  res.writeHead(404,{
+    'Content-Type': 'application/json'
+  });
+  res.end( JSON.stringify({message: 'Not Found' }) );
+}
+
+module.exports = Router;
+
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -465,10 +254,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

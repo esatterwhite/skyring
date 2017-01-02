@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Skyring Source: lib/server/node.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Skyring</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: lib/server/node.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
+/**
+ * Represents a participant in the Hashring
+ * @module skyring/lib/server/node
+ * @author Eric Satterwhite
+ * @since 1.0.0
+ * @requires events
+ * @requires nds
+ * @requires ringpop
+ * @requires tchannel
+ * @requires debug
+ * @requires keef
+ */
+
+const EventEmitter   = require('events').EventEmitter
+    , dns            = require('dns')
+    , Ringpop        = require('ringpop')
+    , TChannel       = require('tchannel')
+    , debug          = require('debug')('skyring:ring')
+    , conf           = require('keef')
+    , host           = conf.get('channel:host')
+    , port           = ~~conf.get('channel:port')
+    ;
+
+let ring_seeds = conf.get('seeds');
+ring_seeds     = !Array.isArray(ring_seeds) ? ring_seeds.split(',') : ring_seeds;
+
+function resolve( tasks, cb ){
+  const results = [];
+  
+  ;(function next(){
+    if(!tasks.length) return cb(null, results);
+    const task = tasks.shift();
+    let [h, p] = task.split(':');
+    dns.lookup(h, (err, addr) => {
+      if (err) return cb(err)
+      results.push(`${addr}${p ? ':' + p : ''}`);
+      next()
+    })
+  })()
+}
+
+/**
+ * @constructor
+ * @alias module:skyring/lib/server/node
+ * @param {String} [host] host name for the node to listen on - 127.0.0.1 must be used for localhost ( not 0.0.0.0)
+ * @param {Number} [port] Port number for the node to listen on in the ring
+ * @param {String} [name='ringpop'] name of the active ring to join
+ * @param {String} [app=timers] app name of the active ring
+ */
+class Node extends EventEmitter {
+  constructor(h = host, p = port, name = 'ringpop', app = 'timers' ) {
+    super()
+    this._port = p;
+    this._host = host;
+    this._name = name;
+    this._app  = app;
+    this._tchannel = new TChannel();
+    this._ring = null
+  }
+
+  /**
+   * Does the work of configuring tchannel and joining itself into a ringpop ring
+   * @method module:skyring/lib/server/node#join
+   * @param {String[]} [seeds] An array of node addresses to use as boot strapping nodes
+   * @param {Function} callback Function to call when the node has completed the bootstrap process
+   * @example node.join(['node-1:5555', '172.10.0.4:4563'], (err) => {
+if (err) throw err
+ })
+   **/
+  join(seed_arr, cb){
+    const nodes = seed_arr || ring_seeds
+    if(!Array.isArray(nodes)) {
+      const err = new TypeError('seeds must be and array')
+      return cb(err)
+    }
+
+    let addrs = [this._host].concat(nodes);
+    resolve(addrs, (err, seeds) => {
+      if( err ) return cb( err );
+      const host = seeds.shift();
+      this._ring = new Ringpop({
+          app: this._app
+        , hostPort:`${host}:${this._port}`
+        , channel: this._tchannel.makeSubChannel({
+            serviceName: this._name
+          , trace:false
+          })
+      });
+      this._ring.setupChannel();
+      this._ring.on('ringChanged', ( evt ) => {
+        const added = evt.added;
+        if(!added.length) return;
+        if(added.length === 1 &amp;&amp; added.indexOf(`${host}:${this._port}`) !== -1) return;
+        debug('node added', added)
+        this.emit('ringchange', evt);
+      })
+      this._tchannel.listen( this._port, host, (er)=> {
+        if(er) return cb(er)
+        debug('tchannel listening on ', host, this._port);
+        this._ring.bootstrap(seeds, ( er ) => {
+          if( er ) return cb(er);
+          debug( 'ring bootstraped', seeds);
+          this.emit('bootstrap', seeds)
+          cb(null);
+        });
+      });
+
+    })
+  } 
+
+  /**
+   * Removes itself from the active ring and destroys existing connections
+   * @method module:skyring/lib/server/node#leave
+   * @param {Function} callback Callback function to call when the eviction process is complete
+   **/
+  leave(cb){
+    this._ring.selfEvict((err)=>{
+      if( err ) return cb( err );
+      this._ring.destroy();
+      cb();
+    })
+  }
+
+  /**
+   * Adds a request handler to the active ringpop instance
+   * @method module:skyring/lib/server/node#handle
+   * @param {Function} handler A request handler for incoming requests from the ring
+   **/
+  handle(cb) {
+    return this._ring.on('request', cb)
+  }
+
+  /**
+   * Determines if this instance is responsible for a specific key. 
+   * proxies the request if it is not
+   * @method module:skyring/lib/server/node#handleOrProxy
+   * @param {String} Key The key to use to do a node lookup in the ring
+   * @param {http.IncomingMessage} req an http request object
+   * @param {http.ServerResponse} res an http response object
+   * @example const handle = node.handleOrProxy('foobar', req, res)
+if (!handle) return;
+// deal with request
+   * @return {Boolean}
+   **/
+  handleOrProxy(key, req, res) {
+    return this._ring.handleOrProxy(key, req, res);
+  }
+
+  /**
+   * Determines if this node is responsible for a specific key
+   * @method module:skyring/lib/server/node#owns
+   * @param {String} key The key to use
+   * @return {Boolean}
+   **/
+  owns( key ){
+    return this._ring.lookup( key ) == this._ring.whoami()
+  }
+
+  /**
+   * Lookup the address of the server responsible for a given key
+   * @method module:skyring/lib/server/node#lookup
+   * @param {String} key The key to look up
+   * @return {String} A server address
+   **/  
+  lookup( key ) {
+    return this._ring.lookup(key);
+  }
+
+  /**
+   * Removes itself from the ring and closes and connections
+   * @method module:skyring/lib/server/node#close
+   * @param {Function} A callback function to call when the ring is closed
+   **/  
+  close( cb ) {
+    debug('node close')
+    this._ring.selfEvict(() => {
+      debug('destroying ring');
+      this._ring.once('destroyed',()=>{
+        setTimeout(cb, 100)
+      });
+      this._ring.destroy();
+    })
+  }
+
+
+}
+
+Object.defineProperty(Node.prototype, 'name', {
+  get: function() {
+    return this._app;
+  }
+})
+module.exports = Node;
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Eric Satterwhite &copy; 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on 2017-01-02T16:15:36-06:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

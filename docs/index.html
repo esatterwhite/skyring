@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -93,7 +93,10 @@
 <a href="https://david-dm.org/esatterwhite/skyring"><img src="https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square" alt="David"></a>
 <a href="https://codeclimate.com/github/esatterwhite/skyring"><img src="https://img.shields.io/codeclimate/github/esatterwhite/skyring.svg?style=flat-square" alt="Code Climate"></a>
 <a href="https://quay.io/repository/esatterwhite/skyring"><img src="https://quay.io/repository/esatterwhite/skyring/status" alt="Docker Repository on Quay" title="Docker Repository on Quay"></a></p>
-<p><a href="https://esatterwhite.github.io/skyring/">API Docs</a> <a href="https://esatterwhite.github.io/skyring/module/">Module Docs</a></p>
+<ul>
+<li><a href="https://esatterwhite.github.io/skyring/">Module Docs</a></li>
+<li><a href="https://esatterwhite.github.io/skyring/api">API Docs</a></li>
+</ul>
 <h1>Skyring</h1><p>A distributed reliable timer service providing similar functionality to using <code>setTimeout</code>.
 <code>Skyring</code> servers are clustered  into a <em>hashring</em> using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API That allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )</p>
 <h1>Install</h1><pre class="prettyprint source"><code>npm install -s skyring</code></pre><h2>Run A Local Cluster</h2><p>That is it! You have a 5 node <strong>Skyring</strong> cluster with a 3 node <code>nats</code> cluster behind an <code>nginx</code> proxy listening on port <code>8080</code></p>
@@ -101,12 +104,14 @@
 <pre class="prettyprint source lang-bash"><code>$ gnats -D -V</code></pre><p>To verify that it is working, you can <code>telnet</code> directly to the server and ping it.</p>
 <pre class="prettyprint source lang-bash"><code>$ telnet localhost 42222
 > ping
-PONG</code></pre><h3>Skyring CLI</h3><p>If you intend to run skyring as is, it may easiest to use the included binary</p>
+PONG</code></pre><h3>Skyring CLI</h3><p>If you intend to run skyring as is, it may be preferable to use the included binary over cloning the project.</p>
 <pre class="prettyprint source"><code>npm install -g skyring
 
-DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455</code></pre><h3>Clone Skyring</h3><pre class="prettyprint source lang-bash"><code>$ git clone https://github.com/esatterwhite/skyring.git
+DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455</code></pre><h3>Clone Skyring</h3><p>Alternatively to the CLI, you can clone and install the project manually</p>
+<pre class="prettyprint source lang-bash"><code>$ git clone https://github.com/esatterwhite/skyring.git
 $ cd skyring
-$ npm install</code></pre><h4>Run via Docker Compose</h4><p>The easiest way to run a small cluster is to use the included compose files.</p>
+$ npm install
+$ DEBUG=* node index.js</code></pre><h4>Run via Docker Compose</h4><p>The Easiest way to run a small cluster is to use the included <a href="https://github.com/esatterwhite/skyring/blob/jsdocs/compose/dev.yml">compose files</a>. It is also a good way to see how to quickly configure a cluster</p>
 <ul>
 <li>Install <a href="https://docs.docker.com/compose/install/">Docker Compose</a></li>
 </ul>
@@ -191,7 +196,7 @@ Content-Length: 0</code></pre></article>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-02T15:15:30-06:00
+		on 2017-01-02T16:15:36-06:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

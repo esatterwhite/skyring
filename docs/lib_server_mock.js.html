@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Module: skyring/lib/json</title>
+	<title>Skyring Source: lib/server/mock.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -60,402 +60,193 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: skyring/lib/json</h1>
+		<h1 class="page-title">Source: lib/server/mock.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
+'use strict';
+/**
+ * Mock http request / response object for use when proxing requests through TChannel
+ * @module skyring/lib/server/mock
+ * @author Eric satterwhite
+ * @since 1.0.0
+ * @requires stream
+ * @requires events
+ * @requires url
+ * @requires util
+ * @requires http
+ */
 
-<header>
+const stream       = require('stream')
+    , EventEmitter = require('events').EventEmitter
+    , url          = require('url')
+    , util         = require('util')
+    , http         = require('http')
+    ;
+
+
+
+exports.Request = class Request extends stream.Readable {
+  constructor ( options ){
+    super();
+    this.body = '';
+    this.httpVersion = '1.1';
+    this.payload = options.payload
+    this.url = options.url || '/';
+    this.query = url.parse(this.url, true).query;
+    this.headers = options.headers || {};
+    this.method = options.method;
+    this._headerNames = {};
+    this._removedHeader = {};
+    this.setHeader('transfer-encoding', 'chunked');
+
+  }
+  setHeader(name, value) {
+    this.headers[name.toLowerCase()] = value;
+  }
+  getHeader(name){
+    return this.headers[name];
+  }
+
+  _read(){
+
+    if(this.payload){
+      this.push(this.payload)
+      this.payload = null
+      return;
+    }
+
+    this.push(null);
+
+  }
+}
+
+exports.Response = class Response extends EventEmitter {
+
+  constructor(callback){
+    super();
+    this.buffer = [];
+    this.statusCode = 200;
+    this._headers = {};
+    this.on('data', function (chunk) {
+      this.buffer.push(chunk);
+    });
+    this.on('pipe', function (src) {
+      var buffer = this.buffer;
+
+      src.on('data', function (chunk) {
+        buffer.push(chunk);
+      })
+    });
+    this.on('close', function () {});
+
+    if (callback) {
+      var self = this;
+      var cleanup = function () {
+        self.removeListener('error', cleanup)
+        self.removeListener('response', cleanup)
+
+        callback.apply(this, arguments)
+      }
+      this.once('error', cleanup);
+      this.once('response', cleanup);
+    }
+
+    // necessary for mocking a real request.
+    this._headerNames = {};
+    this._removedHeader = {};
+  }
+  writeHead(){
+    var that = this;
+
+    this.statusCode = statusCode;
+    Object.keys(headers || {}).forEach(function (k) {
+      that.setHeader(k, headers[k]);
+    });
+  }
+  
+  setHeader(name, value, clobber){
+    if (http.ServerResponse) {
+      var ret = http.ServerResponse.prototype.setHeader.call(this, name, value, clobber);
+      this.headers = this._headers;
+      return ret;
+    } else if (clobber || !this.headers.hasOwnProperty(name)) {
+      this.headers[name] = value;
+    } else {
+      this.headers[name] += ',' + value;
+    }
+
+  }
+  
+  getHeader(){
+    if (http.ServerResponse) {
+      return http.ServerResponse.prototype.getHeader.call(this, name);
+    } else {
+      return this.headers[name];
+    }
+
+  }
+  
+  end(str){
+    if (this.finished) {
+      return;
+    }
+
+    if (str) {
+      this.buffer.push(str);
+    }
     
-        
-            
-        
-    
-</header>
-
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>JSON helpers</p></div>
-        
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="module:skyring/lib/json"><span class="type-signature"></span>(require("skyring/lib/json"))(json)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Wrpper around try/catch of JSON parsing</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>json</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A JSON string to parse</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_json.js.html">lib/json.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Result</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        <dl>
-                
-<hr>
-<dt class="name" id="~Result">
-    <h4 id="~Result">Result</h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Composite JSON ojbect</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Object</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    <dl>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Error</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                    &lt;nullable><br>
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last"><p>An error if json parsing faile</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>the result of Json parsing</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-</dl>
-
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_json.js.html">lib/json.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-            </dl>
-    
-
-    
-</article>
-
+    var body = this._buildBody();
+
+    this.emit('close');
+    this.emit('finish');
+    this.emit('end', null, { // deprecate me
+      statusCode: this.statusCode,
+      body: body,
+      headers: this._headers
+    });
+    this.emit('response', null, {
+      statusCode: this.statusCode,
+      body: body,
+      headers: this._headers
+    });
+    this.finished = true
+
+    // Cleanup any listeners that are 'hanging' around.
+    this.removeAllListeners();
+  }
+  
+  _buildBody(){
+    if (this.buffer.length === 1) {
+      return this.buffer[0];
+    }
+
+    var isBuffers = true;
+    for (var i = 0; i &lt; this.buffer.length; i++) {
+      if (!Buffer.isBuffer(this.buffer[i])) {
+        isBuffers = false;
+      }
+    }
+
+    if (!isBuffers) {
+      return this.buffer.join('');
+    }
+
+    return Buffer.concat(this.buffer);
+  }
+  
+}
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -465,10 +256,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
