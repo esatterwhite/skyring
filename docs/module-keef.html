@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Module: skyring/lib/transports/timer</title>
+	<title>Skyring Module: keef</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,7 +65,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: skyring/lib/transports/timer</h1>
+	<h1 class="page-title">Module: keef</h1>
 <section>
 
 <header>
@@ -77,7 +77,60 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>A noop function transport for testing</p></div>
+            <div class="description"><p>The conf package reads configurations options in an overriding fashion from a number of sources. In order of importance:</p>
+<ol>
+<li>System level overrides</li>
+<li>Command line arguments</li>
+<li>Environment variables</li>
+<li>A configuration file(s)</li>
+<li>System specified defaults</li>
+</ol>
+<h3>Overrides</h3><p>Overrides can not be overriden or changed at any point in time. The are defined in <code>conf/lib/overrides.js</code> and should be reserved for static run time properties. Conf serves as a central place to get that information. </p>
+<p>For example, the full path to the packages directory is resolved at run time and loaded in to the conf loader. It won't / can't change during run time, but may change in the future. By getting the information from conf, application logic does not need to change between restarts or releases.</p>
+<p>If overrides need to be change or added the <code>overrides.js</code> file must be changed</p>
+<h3>Command Line Arguments</h3><p>Command line arguments are the highest level of maliable values. The can be used to set specific and nested values in the configuration JSON document but using a <code>:</code> spearator between keys. For example, using the flag: <code>--foo:bar=1</code>, would create an object like</p>
+<pre class="prettyprint source lang-js"><code>{
+   &quot;foo&quot;:{
+      &quot;bar&quot;: 1
+   }
+}</code></pre><h3>Environment Variables</h3><p>Environment variables work much the same as command line arguments. However, most bash implenetations don't read <code>:</code>'s very well, so the double underscore ( <code>__</code> ) is used in its place <code>foo__bar=1</code> npm start</p>
+<pre class="prettyprint source lang-js"><code>{
+   &quot;foo&quot;:{
+      &quot;bar&quot;: 1
+   }
+}</code></pre><h3>Conf File</h3><p>The <code>conf</code> options can be set to read specific configuration from a file(s). The value should be a full path. If the path points to a directory, the conf loader will read all json files, sort them and load their values in an overriding order. Sorting is done in a descending, lexigraphical order.</p>
+<pre class="prettyprint source lang-sh"><code>└── conf
+    ├── 20-keef.json
+    ├── 10-keef.json
+    └── 30-keef.json</code></pre><p>Given the above directory of conf files, the server can be configured by pointing the <code>conf</code> arguments at the directory</p>
+<pre class="prettyprint source lang-sh"><code>node server --conf=$HOME/conf</code></pre><p>The configruation would be read in the following priority
+<code>10-keef.json &lt; 20-keef.json &lt; 30-keef.json</code></p>
+<p>where 20 overrides 10, and 30 overrides 20.</p>
+<h3>System defaults</h3><p>defaults are what they sound like. Sane defaults for values that are needed to get the application running. They are located in the Defaults module and are used only as fallback values.</p>
+<h3>Option Shorthands</h3><p>Top level options can be aliased. Short hand aliases can be found and defined in the Shorthands module of <code>keef-conf</code></p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th style="text-align:center">Shorthand</th>
+<th style="text-align:left">Description </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PORT</td>
+<td style="text-align:center">p</td>
+<td style="text-align:left">Specifies the port the server will bind to</td>
+</tr>
+<tr>
+<td>logger</td>
+<td style="text-align:center">l</td>
+<td style="text-align:left">specify the type(s) of logging transports for the server to use</td>
+</tr>
+</tbody>
+</table>
+<p>the following invocations are treated the same</p>
+<pre class="prettyprint source lang-sh"><code>node server --PORT=3001 --logger=stdout --logger=file</code></pre><pre class="prettyprint source lang-sh"><code>PORT=3001 logger=stdout nodeserver -l file</code></pre><pre class="prettyprint source lang-sh"><code>node server -p 3001 -l stdout -l file</code></pre></div>
         
 
         
@@ -90,7 +143,7 @@
 	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
 	<dd class="tag-since">
 		<ul class="dummy">
-			<li>1.0.4</li>
+			<li>0.1.0</li>
 		</ul>
 	</dd>
 	
@@ -129,7 +182,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="lib_transports_callback.js.html">lib/transports/callback.js</a>
+				<a href="node_modules_keef_index.js.html">node_modules/keef/index.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -149,6 +202,26 @@
 
     
 
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:nconf</li>
+        
+            <li>module:path</li>
+        
+            <li>module:os</li>
+        
+            <li>module:debug</li>
+        
+            <li>module:fs</li>
+        
+            <li>module:keef-conf/lib/shorthands</li>
+        
+            <li>module:keef-conf/lib/defaults</li>
+        
+            <li>module:keef-conf/lib/overrides</li>
+        </ul>
     
 
     

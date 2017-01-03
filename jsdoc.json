@@ -5,6 +5,7 @@
             "./README.md"
           , "./index.js"
           , "./lib"
+          , "node_modules/keef/index.js"
       ],
        "exclude":["test/", "./**/node_modules/", "./lib/server/api/"]
     }
