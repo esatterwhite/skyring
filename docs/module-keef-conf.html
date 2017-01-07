@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: lib/server/router.js</title>
+	<title>Skyring Module: keef-conf</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -60,191 +60,186 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: lib/server/router.js</h1>
-    
+	<h1 class="page-title">Module: keef-conf</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
-'use strict';
-/**
- * Simple router class for directing requests
- * @module skyring/lib/server/router
- * @author Eric Satterwhite
- * @since 1.0.0
- * @requires skyring/lib/server/route
- * @requires skyring/lib/server/request
- * @requires skyring/lib/server/response
- */
 
-const Route    = require('./route')
-    , Request  = require('./request')
-    , Response = require('./response')
-    ;
+<header>
+    
+</header>
 
-/**
- * @constructor
- * @alias module:skyring/lib/server/router
- * @param {module:skyring/lib/server/node} node The node linked to the application hashring to pass with each request
- * @param {module:skyring/lib/timers} timers A timer instance associated with the application hashring to pass with each request
- * @example var x = new Router(node, timers)
-router.handle(req, res)
- */
-function Router( node, timers ) {
-  this.routes        = new Map();
-  this.route_options = new Map();
-  this.node          = node;
-  this.timers        = timers
-};
 
-/**
- * Adds a new get handler to the router a new get handler to the router
- * @param {String} path The url path to route on
- * @param {Function} handler The handler function to call when the route is matched
- **/
-Router.prototype.get = function get( path, fn ) {
-  this.route( path, 'GET', fn );
-};
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>The conf package reads configurations options in an overriding fashion from a number of sources. In order of importance:</p>
+<ol>
+<li>System level overrides</li>
+<li>Command line arguments</li>
+<li>Environment variables</li>
+<li>A configuration file(s)</li>
+<li>System specified defaults</li>
+</ol>
+<h3>Overrides</h3><p>Overrides can not be overriden or changed at any point in time. The are defined in <code>conf/lib/overrides.js</code> and should be reserved for static run time properties. Conf serves as a central place to get that information. </p>
+<p>For example, the full path to the packages directory is resolved at run time and loaded in to the conf loader. It won't / can't change during run time, but may change in the future. By getting the information from conf, application logic does not need to change between restarts or releases.</p>
+<p>If overrides need to be change or added the <code>overrides.js</code> file must be changed</p>
+<h3>Command Line Arguments</h3><p>Command line arguments are the highest level of maliable values. The can be used to set specific and nested values in the configuration JSON document but using a <code>:</code> spearator between keys. For example, using the flag: <code>--foo:bar=1</code>, would create an object like</p>
+<pre class="prettyprint source lang-js"><code>{
+   &quot;foo&quot;:{
+      &quot;bar&quot;: 1
+   }
+}</code></pre><h3>Environment Variables</h3><p>Environment variables work much the same as command line arguments. However, most bash implenetations don't read <code>:</code>'s very well, so the double underscore ( <code>__</code> ) is used in its place <code>foo__bar=1</code> npm start</p>
+<pre class="prettyprint source lang-js"><code>{
+   &quot;foo&quot;:{
+      &quot;bar&quot;: 1
+   }
+}</code></pre><h3>Conf File</h3><p>The <code>conf</code> options can be set to read specific configuration from a file(s). The value should be a full path. If the path points to a directory, the conf loader will read all json files, sort them and load their values in an overriding order. Sorting is done in a descending, lexigraphical order.</p>
+<pre class="prettyprint source lang-sh"><code>└── conf
+    ├── 20-keef.json
+    ├── 10-keef.json
+    └── 30-keef.json</code></pre><p>Given the above directory of conf files, the server can be configured by pointing the <code>conf</code> arguments at the directory</p>
+<pre class="prettyprint source lang-sh"><code>node server --conf=$HOME/conf</code></pre><p>The configruation would be read in the following priority
+<code>10-keef.json &lt; 20-keef.json &lt; 30-keef.json</code></p>
+<p>where 20 overrides 10, and 30 overrides 20.</p>
+<h3>System defaults</h3><p>defaults are what they sound like. Sane defaults for values that are needed to get the application running. They are located in the Defaults module and are used only as fallback values.</p>
+<h3>Option Shorthands</h3><p>Top level options can be aliased. Short hand aliases can be found and defined in the Shorthands module of <code>keef-conf</code></p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th style="text-align:center">Shorthand</th>
+<th style="text-align:left">Description </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PORT</td>
+<td style="text-align:center">p</td>
+<td style="text-align:left">Specifies the port the server will bind to</td>
+</tr>
+<tr>
+<td>logger</td>
+<td style="text-align:center">l</td>
+<td style="text-align:left">specify the type(s) of logging transports for the server to use</td>
+</tr>
+</tbody>
+</table>
+<p>the following invocations are treated the same</p>
+<pre class="prettyprint source lang-sh"><code>node server --PORT=3001 --logger=stdout --logger=file</code></pre><pre class="prettyprint source lang-sh"><code>PORT=3001 logger=stdout nodeserver -l file</code></pre><pre class="prettyprint source lang-sh"><code>node server -p 3001 -l stdout -l file</code></pre></div>
+        
 
-/**
- * Adds a new put handler to the router
- * @param {String} path The url path to route on
- * @param {Function} handler The handler function to call when the route is matched
- **/
-Router.prototype.put = function put( path, fn ) {
-  this.route( path, 'PUT', fn);
-};
+        
+<dl class="details">
+    
 
-/**
- * Adds a new post handler to the router
- * @param {String} path The url path to route on
- * @param {Function} handler The handler function to call when the route is matched
- **/
-Router.prototype.post = function post( path, fn ) {
-  this.route( path, 'POST', fn);
-};
+	
 
-/**
- * Adds a new patch handler to the router
- * @param {String} path The url path to route on
- * @param {Function} handler The handler function to call when the route is matched
- **/
-Router.prototype.patch = function patch( path, fn ) {
-  this.route( path, 'PATCH', fn);
-};
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.1.0</li>
+		</ul>
+	</dd>
+	
 
-/**
- * Adds a new delete handler to the router
- * @param {String} path The url path to route on
- * @param {Function} handler The handler function to call when the route is matched
- **/
-Router.prototype.delete = function( path, fn ) {
-  this.route( path, 'DELETE', fn );
-};
+	
 
-/**
- * Adds a new opts handler to the router
- * @param {String} path The url path to route on
- * @param {Function} handler The handler function to call when the route is matched
- **/
-Router.prototype.options = function options( path, fn ) {
-  this.route( path, 'OPTIONS', fn );
-};
+    
 
-/**
- * Adds a new route handler to the router
- * @param {String} path The url path to route on
- * @param {String} m handlerethod The http method to associate to the route
- * @param {Function} The handler function to call when the route is matched
- **/
-Router.prototype.route = function route( path, method, fn ) {
-  const _method = method.toUpperCase();
-  const map = this.routes.get(_method) || new Map();
+    
 
-  if ( map.has( path ) ) {
-    const route = map.get( path );
-    route.use( fn );
-    return route;
-  }
+    
 
-  const route = new Route( path, _method);
-  route.use( fn );
-  map.set( path, route );
-  this.routes.set( _method, map );
-	return route;
-};
+    
 
-/**
- * Entrypoint for an incoming request 
- * Customer properties are attached to an `$` object on the request rather than the request
- * itself to avoid V8 deopts / perf penalties
- * @param {http.IncomingMessage} req
- * @param {http.ServerResponse} res
- * @example
-http.createServer((req, res) => {
-  router.handle(req, res)
-})
- **/
-Router.prototype.handle = function handle( req, res ) {
-  req.$ = new Request( req );
-  res.$ = new Response( res );
-  req.$.timers = this.timers;
-  
-  const path = req.$.path;
-  const method = req.method.toUpperCase();
-  const map = this.routes.get( method );
+	
 
-  if( map ) {
-    let rte = map.get( path );
-    if ( rte ) {
-      req.$.params = Object.create(null);
-      return this.handleRoute( rte, req, res );
-    }
+	
+	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
+	<dd class="tag-author">
+		<ul>
+			<li>Eric Satterwhite</li>
+			</ul>
+	</dd>
+	
 
-    for ( const route of map.values() ){
-      const params = route.match( path );
-      if ( params ) {
-        req.$.params = params;
-        return this.handleRoute( route, req, res );
-      }
-    }
-  }
+	
 
-  return notFound( req, res );
-};
+	
 
-/**
- * Responsible for executing the middleware stack on the route ( including the end handler )
- * @param {module:skyring/lib/server/route} route
- * @param {http.IncomingMessage} req
- * @param {http.ServerResponse} res
- **/
-Router.prototype.handleRoute = function handleRoute( route, req, res ) {
-  route.process(req, res, this.node, ( err ) => {
-    if ( err ) return res.$.error( err );
-    if ( res.$.body ) return res.$.json( res.$.body );
-    return res.$.end();
-  });
-};
+	
 
-function notFound( req, res ) {
-  res.writeHead(404,{
-    'Content-Type': 'application/json'
-  });
-  res.end( JSON.stringify({message: 'Not Found' }) );
-}
 
-module.exports = Router;
 
-</pre>
-    </article>
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="node_modules_keef_index.js.html">node_modules/keef/index.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:nconf</li>
+        
+            <li>module:path</li>
+        
+            <li>module:os</li>
+        
+            <li>module:debug</li>
+        
+            <li>module:fs</li>
+        
+            <li>module:keef-conf/lib/shorthands</li>
+        
+            <li>module:keef-conf/lib/defaults</li>
+        
+            <li>module:keef-conf/lib/overrides</li>
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -254,6 +249,10 @@ module.exports = Router;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
