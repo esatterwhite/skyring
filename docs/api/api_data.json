@@ -76,7 +76,7 @@
       },
       "examples": [
         {
-          "title": "Response Headers:",
+          "title": "Headers Example:",
           "content": "HTTP/1.1 201 CREATED\nLOCATION: /timer/489ea3df-c583-4325-8fb0-0f1ec8301bd9\nDate: Fri, 23 Dec 2016 00:19:13 GMT\nConnection: keep-alive\nContent-Length: 0",
           "type": "text"
         }
@@ -92,6 +92,11 @@
         "title": "Node.js:",
         "content": "const http = require('http')\nconst data = JSON.stringify({\n  timeout: 5000,\n  data: {foo: 'bar', bar: 'baz'},\n  callback: {\n    transport: 'http',\n    method: 'post',\n    uri: 'http://mydomain.name/timer/callback\n  }\n})\nconst options = {\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer',\n   method: 'POST',\n   headers: {\n     'Content-Type': 'application/json',\n     'Content-Length': Buffer.byteLength(data)\n   }\n };\nconst req = http.request(options, (res) => {\n  let data = '';\n  res.on('data', (chunk) => {\n    data += chunk;\n  });\n\n  res.on('end', () => {\n    // done\n  });\n})\nreq.write(data);\nreq.end();",
         "type": "js"
+      },
+      {
+        "title": "python:",
+        "content": "import json\nfrom urlib.request import Request, urlopen\ndata = {\n  'timeout': 5000\n, 'data': {'foo':'bar'}\n, 'callback': {\n     'transport': 'http'\n   , 'method': 'post'\n   , 'uri': 'http://mydomain.name/timer/callback'\n   }\n}\nreq = Request(url='http://localhost:3000/timer', data=bytes(json.dumps(data),'ascii'), method='POST')\nres = urlopen(req)\nprint(res.status)\nprint(res.headers['location'])",
+        "type": "python"
       }
     ],
     "filename": "lib/server/api/post_timer.js",
