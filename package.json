@@ -10,7 +10,7 @@
     "test": "node ./test.js",
     "coverage": "istanbul cover _mocha -- -R spec --recursive test/",
     "postcoverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter",
-    "docs": "jsdoc -c jsdoc.json",
+    "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",
     "start": "npm run compose:up",
     "stop": "npm run compose:down",
     "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
@@ -44,6 +44,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "apidoc": "^0.16.1",
     "async": "^2.1.4",
     "codeclimate-test-reporter": "^0.4.0",
     "ink-docstrap": "^1.3.0",
