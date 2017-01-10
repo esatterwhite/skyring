@@ -71,13 +71,20 @@ define({ "api": [
             "optional": false,
             "field": "location",
             "description": "<p>URI of the created timer which can be used to modify or cancel the timer</p>"
+          },
+          {
+            "group": "Response Headers",
+            "type": "String",
+            "optional": true,
+            "field": "x-skyring-reason",
+            "description": "<p>An err message if an error occured</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Headers Example:",
-          "content": "HTTP/1.1 201 CREATED\nLOCATION: /timer/489ea3df-c583-4325-8fb0-0f1ec8301bd9\nDate: Fri, 23 Dec 2016 00:19:13 GMT\nConnection: keep-alive\nContent-Length: 0",
+          "content": "HTTP/1.1 201 CREATED\nLocation: /timer/489ea3df-c583-4325-8fb0-0f1ec8301bd9\nDate: Fri, 23 Dec 2016 00:19:13 GMT\nConnection: keep-alive\nContent-Length: 0",
           "type": "text"
         }
       ]
@@ -95,8 +102,13 @@ define({ "api": [
       },
       {
         "title": "python:",
-        "content": "import json\nfrom urlib.request import Request, urlopen\ndata = {\n  'timeout': 5000\n, 'data': {'foo':'bar'}\n, 'callback': {\n     'transport': 'http'\n   , 'method': 'post'\n   , 'uri': 'http://mydomain.name/timer/callback'\n   }\n}\nreq = Request(url='http://localhost:3000/timer', data=bytes(json.dumps(data),'ascii'), method='POST')\nres = urlopen(req)\nprint(res.status)\nprint(res.headers['location'])",
+        "content": "import json\nfrom urllib.request import Request, urlopen\ndata = {\n  'timeout': 5000\n, 'data': {'foo':'bar'}\n, 'callback': {\n     'transport': 'http'\n   , 'method': 'post'\n   , 'uri': 'http://mydomain.name/timer/callback'\n   }\n}\nreq = Request(url='http://localhost:3000/timer', data=bytes(json.dumps(data),'ascii'), method='POST')\nres = urlopen(req)\nprint(res.status)\nprint(res.headers['location'])",
         "type": "python"
+      },
+      {
+        "title": "ruby:",
+        "content": "\nrequire 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer')\npayload = {\n timeout: 3000, \n data: \"hello world\", \n callback: {\n   method: 'post',\n   transport: 'http',\n   uri: 'http://localhost:4000'\n }\n}\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/json'})\nrequest.body = payload.to_json\nresponse = http.request(request)\nprint response.code",
+        "type": "ruby"
       }
     ],
     "filename": "lib/server/api/post_timer.js",
@@ -211,6 +223,16 @@ define({ "api": [
         "title": "Node.js:",
         "content": "const http = require('http')\nconst data = JSON.stringify({\n  timeout: 5000,\n  data: {foo: 'bar', bar: 'baz'},\n  callback: {\n    transport: 'http',\n    method: 'post',\n    uri: 'http://mydomain.name/timer/callback\n  }\n})\nconst options = {\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45',\n   method: 'POST',\n   headers: {\n     'Content-Type': 'application/json',\n     'Content-Length': Buffer.byteLength(data)\n   }\n };\nconst req = http.request(options, (res) => {\n  let data = '';\n  res.on('data', (chunk) => {\n    data += chunk;\n  });\n\n  res.on('end', () => {\n    // done\n  });\n})\nreq.write(data);\nreq.end();",
         "type": "js"
+      },
+      {
+        "title": "python:",
+        "content": "import json\nfrom urllib.request import Request, urlopen\ndata = {\n  'timeout': 5000\n, 'data': {'foo':'bar'}\n, 'callback': {\n     'transport': 'http'\n   , 'method': 'post'\n   , 'uri': 'http://mydomain.name/timer/callback'\n   }\n}\nreq = Request(url='http://localhost:3000/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45', data=bytes(json.dumps(data),'ascii'), method='PUT')\nres = urlopen(req)\nprint(res.status)\nprint(res.headers['location'])",
+        "type": "python"
+      },
+      {
+        "title": "ruby:",
+        "content": "\nrequire 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45')\npayload = {\n timeout: 3000, \n data: \"hello world\", \n callback: {\n   method: 'post',\n   transport: 'http',\n   uri: 'http://localhost:4000'\n }\n}\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Put.new(uri.request_uri, {'Content-Type': 'application/json'})\nrequest.body = payload.to_json\nresponse = http.request(request)\nprint response.code",
+        "type": "ruby"
       }
     ],
     "filename": "lib/server/api/put_timer.js",
