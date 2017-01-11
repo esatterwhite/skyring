@@ -75,7 +75,7 @@ services:
       - node-2
       - node-3
       - node-4
-    command: /bin/sh -c "npm test && npm run coverage" 
+    command: npm run coverage
 
   nats-a:
     image: nats:latest
