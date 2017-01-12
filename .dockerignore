@@ -1,6 +1,8 @@
 node_modules/
 compose/
+assets/
 docs/
 *.save
 npm-debug.log
+payload.txt
 coverage/

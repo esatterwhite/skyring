@@ -1,3 +1,8 @@
+v3.3.0
+------
+* fixes a bug where http transports would fail if not cased
+* Updated documentation
+
 v3.0.0
 ------
 * Migrates the timer module into a class - can run multiple servers in isolated clusters
