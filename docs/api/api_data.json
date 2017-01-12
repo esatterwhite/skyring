@@ -213,6 +213,26 @@
         ]
       }
     },
+    "header": {
+      "fields": {
+        "Response Headers": [
+          {
+            "group": "Response Headers",
+            "type": "String",
+            "optional": false,
+            "field": "location",
+            "description": "<p>URI of the created timer which can be used to modify or cancel the timer</p>"
+          },
+          {
+            "group": "Response Headers",
+            "type": "String",
+            "optional": true,
+            "field": "x-skyring-reason",
+            "description": "<p>An err message if an error occured</p>"
+          }
+        ]
+      }
+    },
     "examples": [
       {
         "title": "curl:",
