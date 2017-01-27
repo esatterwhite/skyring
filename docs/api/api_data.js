@@ -97,7 +97,7 @@ define({ "api": [
       },
       {
         "title": "Node.js:",
-        "content": "const http = require('http')\nconst data = JSON.stringify({\n  timeout: 5000,\n  data: {foo: 'bar', bar: 'baz'},\n  callback: {\n    transport: 'http',\n    method: 'post',\n    uri: 'http://mydomain.name/timer/callback\n  }\n})\nconst options = {\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer',\n   method: 'POST',\n   headers: {\n     'Content-Type': 'application/json',\n     'Content-Length': Buffer.byteLength(data)\n   }\n };\nconst req = http.request(options, (res) => {\n  let data = '';\n  res.on('data', (chunk) => {\n    data += chunk;\n  });\n\n  res.on('end', () => {\n    // done\n  });\n})\nreq.write(data);\nreq.end();",
+        "content": "const http = require('http')\nconst data = JSON.stringify({\n  timeout: 5000,\n  data: {foo: 'bar', bar: 'baz'},\n  callback: {\n    transport: 'http',\n    method: 'post',\n    uri: 'http://mydomain.name/timer/callback'\n  }\n})\nconst options = {\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer',\n   method: 'POST',\n   headers: {\n     'Content-Type': 'application/json',\n     'Content-Length': Buffer.byteLength(data)\n   }\n };\nconst req = http.request(options, (res) => {\n  let data = '';\n  res.on('data', (chunk) => {\n    data += chunk;\n  });\n\n  res.on('end', () => {\n    // done\n  });\n})\nreq.write(data);\nreq.end();",
         "type": "js"
       },
       {
