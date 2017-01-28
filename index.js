@@ -34,7 +34,7 @@ if( require.main === module ){
 function onSignal() {
   server.close(()=>{
     debug('shutting down')
-    setImmediate(process.exit)
+    process.statusCode = 0
   })
 }
 
