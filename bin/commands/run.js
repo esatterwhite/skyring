@@ -1,4 +1,4 @@
-'use string';
+'use strict';
 
 const child = require('child_process')
     , path = require('path')
