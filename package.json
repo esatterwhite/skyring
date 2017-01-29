@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "body": "^5.1.0",
-    "cli-table": "^0.3.1",
     "debug": "^2.2.0",
     "keef": "^2.0.0",
     "nats": "^0.6.8",
