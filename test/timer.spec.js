@@ -1,10 +1,15 @@
 const assert = require('assert')
+    , crypto = require('crypto')
     , uuid   = require('uuid')
-    , Timer  = require('../lib/timer');
+    , conf   = require('keef')
+    , Timer  = require('../lib/timer')
+    , Plan   = require('./plan')
 
 describe('timers', () => {
   let timers;
   beforeEach(() => {
+    var bits = crypto.randomBytes(10).toString('hex')
+    conf.set('storage:path', bits)
     timers = new Timer();
   })
 
@@ -41,13 +46,13 @@ describe('timers', () => {
 
   describe('update', () => {
     it('should replace a timer in place', (done) => {
+      const plan = new Plan(1, done)
       function one(){
         throw new Error();
       }
 
       function two(){
-        assert.ok(1)
-        done()
+        plan.ok(1)
       }
       const id = uuid.v4();
 
@@ -86,27 +91,28 @@ describe('timers', () => {
     it('should cancel an existing timer', (done) => {
       const id = uuid.v4()
       let called = false
+      const plan = new Plan(1, done)
+      debugger;
       timers.create(
         id
       , {
-          timeout: 1000
+          timeout: 2000
         , data: {
-            foo: (uri, guid) => {
-              assert.equal( uri, 'helloworld')
+            "fake 2": (uri, guid) => {
+              assert.equal(uri, 'helloworld')
               assert.equal(guid, id)
             }
           }
         , callback: {
             transport: 'callback'
-          , method: 'foo'
-          , uri: 'helloworld'
+          , method: 'fake 2'
+          , uri: 'fake 2'
           }
         }
       , () => {
           setTimeout(() => {
             timers.remove(id, () => {
-              assert.equal(called, false)
-              done()
+              plan.ok(!called)
             })
           }, 50)
         })

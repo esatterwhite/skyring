@@ -5,6 +5,8 @@
  * @author Eric Satterwhite
  * @since 1.0.0
  **/
+const os = require('os')
+const path = require('path')
 
 module.exports = {
 /**
@@ -17,6 +19,10 @@ module.exports = {
  * @property {String|String[]} [nats.hosts=127.0.0.1:4222] host:port of instances of a nats cluster. One is usually enough.
  **/
   seeds: ['127.0.0.1:3455', '127.0.0.1:3456']
+, storage: {
+    backend: 'memdown'
+  , path: path.join(os.tmpdir(), `skyring-${process.pid}`)
+  }
 , channel: {
     host:'127.0.0.1'
   , port: 3455

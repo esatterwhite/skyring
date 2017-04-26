@@ -7,6 +7,8 @@ services:
       channel__host: 'node-1'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       seeds: 'node-1:3455,node-2:3456'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -22,6 +24,8 @@ services:
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-2'
       channel__port: 3456
+      storage__backend: 'memdown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -36,6 +40,8 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-3'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -52,6 +58,8 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-4'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -68,6 +76,8 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
