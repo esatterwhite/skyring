@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Module: skyring/lib/server/response</title>
+	<title>Skyring Source: conf/index.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -60,119 +60,48 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: skyring/lib/server/response</h1>
+		<h1 class="page-title">Source: conf/index.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">'use strict'
+/**
+ * Configuration options for skyring. See {@link module:keef} on ways to pass configuration
+ * @module skyring/conf
+ * @author Eric Satterwhite
+ * @since 1.0.0
+ **/
 
-<header>
-    
-</header>
-
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>Simple wrapper around the http response object to avoid deopts</p></div>
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.0.0</li>
-		</ul>
-	</dd>
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
-	<dd class="tag-author">
-		<ul>
-			<li>Eric Satterwhite</li>
-			</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_server_response.js.html">lib/server/response.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-        <h3 class="subsection-title">Requires</h3>
-
-        <ul>
-            <li>module:debug</li>
-        </ul>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+module.exports = {
+/**
+ * @property {String|String[]} [seeds=127.0.0.1:3455,127.0.0.1:3456] A list of seed nodes to use for bootstrapping a ring cluster
+ * @property {Object} channel
+ * @property {String} [channel.host=127.0.0.1] hostname or ip addres for tchannel to listen on
+ * @property {Number} [channel.port=3455] Port number for tchannel to bind to
+ * @property {Number} [PORT=3000] The port number for the http API server to bind to
+ * @property {Object} nats Nats queue specific configuration
+ * @property {String|String[]} [nats.hosts=127.0.0.1:4222] host:port of instances of a nats cluster. One is usually enough.
+ **/
+  seeds: ['127.0.0.1:3455', '127.0.0.1:3456']
+, channel: {
+    host:'127.0.0.1'
+  , port: 3455
+  }
+, PORT: 3000
+, nats: {
+    hosts:'127.0.0.1:4222'
+  }
+}
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -182,10 +111,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
