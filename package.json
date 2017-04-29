@@ -7,9 +7,8 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "node ./test.js",
-    "coverage": "istanbul cover _mocha -- -R progress --recursive test/",
-    "postcoverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter",
+    "test": "tap --cov -Rtap test",
+    "posttest": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",
     "start": "npm run compose:up",
     "stop": "npm run compose:down",
@@ -50,9 +49,8 @@
     "async": "^2.1.4",
     "codeclimate-test-reporter": "^0.4.0",
     "ink-docstrap": "^1.3.0",
-    "istanbul": "^0.4.5",
     "jsdoc": "^3.4.3",
-    "mocha": "^3.2.0",
-    "supertest": "^2.0.1"
+    "supertest": "^2.0.1",
+    "tap": "^10.3.2"
   }
 }

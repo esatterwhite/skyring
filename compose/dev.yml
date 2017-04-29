@@ -2,6 +2,7 @@ version: '2'
 services:
   node-1:
     build: ../
+    hostname: node-1
     environment:
       DEBUG: '*'
       channel__host: 'node-1'
@@ -18,6 +19,7 @@ services:
 
   node-2:
     build: ../
+    hostname: node-2
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
@@ -35,6 +37,7 @@ services:
 
   node-3:
     build: ../
+    hostname: node-3
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
@@ -53,6 +56,7 @@ services:
 
   node-4:
     build: ../
+    hostname: node-4
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
@@ -71,6 +75,7 @@ services:
 
   node-5:
     build: ../
+    hostname: node-5
     environment:
       DEBUG: '*'
       seeds: 'node-1:3455,node-2:3456'
@@ -84,6 +89,10 @@ services:
       - nats-a
       - nats-b
       - nats-c
+      - node-1
+      - node-2
+      - node-3
+      - node-4
 
   nats-a:
     image: nats:latest

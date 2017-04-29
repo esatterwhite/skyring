@@ -1,12 +1,24 @@
 'user strict';
 const http      = require('http')
-    , assert    = require('assert')
+    , os        = require('os')
+    , tap       = require('tap')
     , supertest = require('supertest')
     , nats      = require('../../lib/nats')
     , Server    = require('../../lib')
+    , test      = tap.test
     ;
 
-function toServer(port, expect = 'hello', method = 'post', time = 1000, cb){
+
+let hostname = null;
+
+if(!process.env.TEST_HOST) {
+  hostname =  os.hostname()
+  console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
+} else {
+  hostname = process.env.TEST_HOST;
+}
+
+function toServer(port, expect = 'hello', method = 'post', time = 1000, t){
   const start = Date.now()
   const s = http.createServer((req, res) => {
     let data = ''
@@ -15,183 +27,180 @@ function toServer(port, expect = 'hello', method = 'post', time = 1000, cb){
 
     res.writeHead(200);
     res.end('ok');
-    assert.equal(req.method.toLowerCase(), method);
+    t.equal(req.method.toLowerCase(), method, 'request method');
     req.on('data', (chunk) => {
       data += chunk
     });
     req.on('end', () => {
-      assert.ok(now - start > time, `expected > ${time} got ${now-start}`)
-      assert.equal(data, expect);
-      s.close( cb )
+      t.ok(now - start > time, `expected > ${time} got ${now-start}`)
+      t.equal(data, expect);
+      s.close(() => {
+        t.pass('server close')
+      })
     });
   }).listen(port);
   return s
 }
 
-describe('skyring:api', function() {
-  this.timeout(4000)
+test('skyring:api', (t) => {
   let request, server
-  before(( done ) => {
+  t.test('setup skyring server', (tt) => {
     server = new Server();
     request = supertest('http://localhost:3333');
-    server.load().listen(3333, null, null, done)
+    server.load().listen(3333, null, null, tt.end)
   });
 
-  after((done) => {
-    server.close(done)
-  });
-
-  describe('#POST /timer', function(){
+  t.test('#POST /timer', (tt) => {
     let sone, stwo, sthree
-    var os = require('os')
-    var hostname;
-    if(!process.env.TEST_HOST) {
-      hostname =  os.hostname()
-      console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
-    } else {
-      hostname = process.env.TEST_HOST;
-    }
-    describe('valid request', function(){
-      this.timeout(3000);
-      it('should set a timer postback (201)', ( done ) => {
-        toServer(9999, 'hello', 'post', 1000, done)
-        request
-          .post('/timer')
-          .send({
-            timeout: 1000
-          , data: 'hello'
-          , callback: {
-              uri: `http://${hostname}:9999`
-            , method: 'post'
-            , transport: 'http'
-            }
-          })
-          .expect(201)
-          .end((err, res) => {
-            assert.ifError(err);
-            assert.ok(res.headers.location)
-          });
-      });
 
-      it('should allow request with no data - (201)', (done) => {
-        toServer(9999, '', 'post', 2000, done)
-        request
-          .post('/timer')
-          .send({
-            timeout: 2000
-          , callback: {
-              uri: `http://${hostname}:9999`
-            , method: 'post'
-            , transport: 'http'
-            }
-          })
-          .expect(201)
-          .end((err, res) => {
-            assert.ifError(err);
-            assert.ok(res.headers.location)
-          });
-      });
+    tt.test('should set a timer postback (201)', (ttt) => {
+      ttt.plan(6)
+      toServer(8989, 'hello', 'post', 1000, ttt)
+      request
+        .post('/timer')
+        .send({
+          timeout: 1000
+        , data: 'hello'
+        , callback: {
+            uri: `http://${hostname}:8989`
+          , method: 'post'
+          , transport: 'http'
+          }
+        })
+        .expect(201)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.ok(res.headers.location, 'location header')
+        });
+    });
 
-      it('should allow request with timeout - (400)', (done) => {
-        request
-          .post('/timer')
-          .send({
-            callback: {
-              uri: `http://${hostname}:9999`
-            , data: 'fake'
-            , method: 'post'
-            , transport: 'http'
-            }
-          })
-          .expect(400)
-          .end((err, res) => {
-            assert.equal(typeof res.headers['x-skyring-reason'], 'string')
-            done()
-          });
-      });
+    tt.test('should allow request with no data - (201)', (ttt) => {
+      ttt.plan(6)
+      toServer(8989, '', 'post', 2000, ttt)
+      request
+        .post('/timer')
+        .send({
+          timeout: 2000
+        , callback: {
+            uri: `http://${hostname}:8989`
+          , method: 'post'
+          , transport: 'http'
+          }
+        })
+        .expect(201)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.ok(res.headers.location, 'location header')
+        });
+    });
 
-      it('should allow request with no callback uri - (400)', (done) => {
-        request
-          .post('/timer')
-          .send({
-            callback: {
-              timeout: 3000
-            , data: 'fake'
-            , method: 'post'
-            , transport: 'http'
-            }
-          })
-          .expect(400)
-          .end((err, res) => {
-            assert.equal(typeof res.headers['x-skyring-reason'], 'string')
-            done()
-          });
-      });
+    tt.test('should allow request with timeout - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          callback: {
+            uri: `http://${hostname}:8989`
+          , data: 'fake'
+          , method: 'post'
+          , transport: 'http'
+          }
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.equal(typeof res.headers['x-skyring-reason'], 'string')
+          ttt.end()
+        });
+    });
 
-      it('should allow request with no transport - (400)', (done) => {
-        request
-          .post('/timer')
-          .send({
-            callback: {
-              timeout: 3000
-            , data: 'fake'
-            , method: 'post'
-            }
-          })
-          .expect(400)
-          .end((err, res) => {
-            assert.equal(typeof res.headers['x-skyring-reason'], 'string')
-            done()
-          });
-      });
-      it('should not allow request with no callback - (400)', (done) => {
-        request
-          .post('/timer')
-          .send({
-            timeout:1000
-          , data: 'hello'
-          })
-          .expect(400)
-          .end((err, res) => {
-            done()
-          });
-      });
+    tt.test('should allow request with no callback uri - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          callback: {
+            timeout: 3000
+          , data: 'fake'
+          , method: 'post'
+          , transport: 'http'
+          }
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.equal(typeof res.headers['x-skyring-reason'], 'string')
+          ttt.end()
+        });
+    });
 
-      it('should not allow request with no uri - (400)', (done) => {
-        request
-          .post('/timer')
-          .send({
-            timeout:1000
-          , data: 'hello'
-          , callback: {
-              transport: 'http'
-            , method: 'post'
-            }
-          })
-          .expect(400)
-          .end((err, res) => {
-            done()
-          });
-      });
-      
-      it('should not allow request with no transport - (400)', (done) => {
-        request
-          .post('/timer')
-          .send({
-            timeout:1000
-          , data: 'hello'
-          , callback: {
-              uri: 'http://foo.com'
-            , method: 'post'
-            }
-          })
-          .expect(400)
-          .end((err, res) => {
-            done()
-          });
-      });
+    tt.test('should allow request with no transport - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          callback: {
+            timeout: 3000
+          , data: 'fake'
+          , method: 'post'
+          }
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.equal(typeof res.headers['x-skyring-reason'], 'string')
+          ttt.end()
+        });
+    });
+    tt.test('should not allow request with no callback - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          timeout:1000
+        , data: 'hello'
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.end()
+        });
+    });
 
-    })
+    tt.test('should not allow request with no uri - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          timeout:1000
+        , data: 'hello'
+        , callback: {
+            transport: 'http'
+          , method: 'post'
+          }
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.end()
+        });
+    });
 
+    tt.test('should not allow request with no transport - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          timeout:1000
+        , data: 'hello'
+        , callback: {
+            uri: 'http://foo.com'
+          , method: 'post'
+          }
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.end()
+        });
+    });
+    tt.end()
   });
+  t.test('close server', (tt) => {
+    server.close(tt.end)
+  })
+  t.end()
 });

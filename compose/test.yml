@@ -2,10 +2,13 @@ version: '2'
 services:
   node-1:
     build: ../
+    hostname: node-1
     environment:
       channel__host: 'node-1'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       seeds: 'node-1:3455,node-2:3456'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring 
     depends_on:
@@ -15,11 +18,14 @@ services:
 
   node-2:
     build: ../
+    hostname: node-2
     environment:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-2'
       channel__port: 3456
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -29,10 +35,13 @@ services:
 
   node-3:
     build: ../
+    hostname: node-3
     environment:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-3'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -44,10 +53,13 @@ services:
 
   node-4:
     build: ../
+    hostname: node-4
     environment:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-4'
+      storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
     networks:
       - skyring
     depends_on:
@@ -64,6 +76,7 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
+      storage__backend: 'leveldown'
       CODECLIMATE_REPO_TOKEN: '248135f96061f77d2e5f78526432fd096785d2914d8f5a73a04c061000939d5d'
     networks:
       - skyring
@@ -75,7 +88,7 @@ services:
       - node-2
       - node-3
       - node-4
-    command: npm run coverage
+    command: npm test
 
   nats-a:
     image: nats:latest

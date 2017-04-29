@@ -1,121 +1,148 @@
-const assert = require('assert')
+'use strict';
+
+const os = require('os')
+    , path = require('path')
     , crypto = require('crypto')
+    , tap = require('tap')
     , uuid   = require('uuid')
     , conf   = require('keef')
     , Timer  = require('../lib/timer')
-    , Plan   = require('./plan')
+    , test   = tap.test
+    ;
 
-describe('timers', () => {
-  let timers;
-  beforeEach(() => {
-    var bits = crypto.randomBytes(10).toString('hex')
-    conf.set('storage:path', bits)
-    timers = new Timer();
+function clearAll(timers, cb) {
+  for(var t of timers.values()){
+    clearTimeout(t.timer);
+  }
+  timers.clear();
+  timers.nats.quit(()=>{
+    timers.close(cb)
   })
+}
 
-  afterEach(() => {
-    for(var t of timers.values()){
-      clearTimeout(t.timer);
-    }
-    timers.clear();
-  });
+test('timers', (t) => {
+  t.test('create', (tt) => {
+    let timers = null
 
-  describe('create', () => {
-    it('Execute the transport on a delay', (done) => {
-      const id = uuid.v4()
-      timers.create(
-        id
-      , {
-          timeout: 250
-        , data: {
-            foo: (uri, guid) => {
-              assert.equal( uri, 'helloworld')
-              assert.equal(guid, id)
-              done()
-            }
-          }
-        , callback: {
-            transport: 'callback'
-          , method: 'foo'
-          , uri: 'helloworld'
-          }
+    tt.test('set up timer cache', (ttt) => {
+      timers = new Timer({
+        storage: {
+          backend: 'memdown'
+        , path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
         }
-      , () => {})
-    });
-  });
-
-  describe('update', () => {
-    it('should replace a timer in place', (done) => {
-      const plan = new Plan(1, done)
-      function one(){
-        throw new Error();
-      }
-
-      function two(){
-        plan.ok(1)
-      }
-      const id = uuid.v4();
-
-      timers.create(
-        id
-      , {
-          timeout: 100
-        , data: { one }
-        , callback: {
-            transport: 'callback'
-          , method: 'one'
-          , uri: 'helloworld'
-          }
-        }
-      , () => {
-
-        timers.update(
-          id
-        , {
-            timeout: 150
-          , data: { two }
-          , callback: {
-              transport: 'callback'
-            , method: 'two'
-            , uri: 'helloworld'
-            }
-          }
-        , () => {})
-
-        }
-      )
+      }, ttt.end)
     })
+
+    tt.test('Execute the transport on a delay', (ttt) => {
+      const id = uuid.v4()
+      const foo = (uri, guid) => {
+        ttt.equal( uri, 'helloworld')
+        ttt.equal(guid, id)
+        clearAll(timers, ttt.end)
+      }
+
+      timers.create(id, {
+        timeout: 250
+      , data: { foo: foo }
+      , callback: {
+          transport: 'callback'
+        , method: 'foo'
+        , uri: 'helloworld'
+        }
+      }, (err, id) => {
+        ttt.error(err)
+      })
+    });
+
+    tt.end()
   });
 
-  describe('remove', () => {
-    it('should cancel an existing timer', (done) => {
+  t.test('update', (tt) => {
+    let timers = null
+
+    tt.test('set up timer cache', (ttt) => {
+      timers = new Timer({
+        storage: {
+          backend: 'memdown'
+        , path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+        }
+      }, ttt.end)
+    })
+
+    tt.test('should replace a timer in place', (ttt) => {
+      const id = uuid.v4();
+      const one = () => {
+        ttt.fail('function one called')
+      }
+
+      const two = () => {
+        ttt.ok('function two called')
+        clearAll(timers, ttt.end)
+      }
+
+      timers.create(id, {
+        timeout: 100
+      , data: { one: one }
+      , callback: {
+          transport: 'callback'
+        , method: 'one'
+        , uri: 'helloworld'
+        }
+      }, (err) => {
+        ttt.error(err)
+        timers.update(id, {
+          timeout: 150
+        , data: { two: two }
+        , callback: {
+            transport: 'callback'
+          , method: 'two'
+          , uri: 'helloworld'
+          }
+        }, (err) => {
+          ttt.error(err)
+        })
+      });
+    });
+    tt.end()
+  });
+
+  t.test('remove', (tt) => {
+    let timers = null
+    tt.test('set up timer cache', (ttt) => {
+      timers = new Timer({
+        storage: {
+          backend: 'memdown'
+        , path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+        }
+      }, ttt.end)
+    })
+
+    tt.test('should cancel an existing timer', (ttt) => {
       const id = uuid.v4()
       let called = false
-      const plan = new Plan(1, done)
-      debugger;
-      timers.create(
-        id
-      , {
-          timeout: 2000
-        , data: {
-            "fake 2": (uri, guid) => {
-              assert.equal(uri, 'helloworld')
-              assert.equal(guid, id)
-            }
-          }
-        , callback: {
-            transport: 'callback'
-          , method: 'fake 2'
-          , uri: 'fake 2'
+      timers.create(id, {
+        timeout: 2000
+      , data: {
+          "fake 2": (uri, guid) => {
+            ttt.fail('timer callback called')
           }
         }
-      , () => {
-          setTimeout(() => {
-            timers.remove(id, () => {
-              plan.ok(!called)
-            })
-          }, 50)
-        })
+      , callback: {
+          transport: 'callback'
+        , method: 'fake 2'
+        , uri: 'fake 2'
+        }
+      }, (err) => {
+        setTimeout(() => {
+          timers.remove(id, () => {
+            ttt.ok(!called)
+            clearAll(timers, ttt.end)
+          })
+        }, 50)
+      })
     });
+    tt.end()
   });
+  t.end();
 });
+
