@@ -1,30 +1,37 @@
 'use strict';
 const http = require('http')
     , os = require('os')
-    , assert = require('assert')
+    , tap = require('tap')
     , uuid = require('uuid')
     , supertest = require('supertest')
     , Server = require('../../lib')
+    , test = tap.test
+    ;
 
+let hostname = null;
 
-describe('skyring:api', function() {
-  this.timeout(4000);
-  let server, request, hostname;
-  before(( done ) => {
-    const HOST = process.env.TEST_HOST
-    hostname = HOST ? HOST : os.hostname();
+if(!process.env.TEST_HOST) {
+  hostname =  os.hostname()
+  console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
+} else {
+  hostname = process.env.TEST_HOST;
+}
+
+test('skyring:api', (t) => {
+  let server, request;
+  t.test('set up ring server', ( tt ) => {
     server = new Server();
     request = supertest('http://localhost:5544');
-    server.load().listen(5544, null, null, done);
+    server.load().listen(5544, null, null, tt.end);
   });
 
-  after(( done ) => {
+  t.on('end', ( done ) => {
     server.close( done );
   });
 
-  describe('#PUT /timer/:id', () => {
+  t.test('#PUT /timer/:id', (tt) => {
     let url, callback_server, created;
-    beforeEach(( done ) => {
+    tt.beforeEach(( done ) => {
       request
         .post('/timer')
         .send({
@@ -39,13 +46,11 @@ describe('skyring:api', function() {
         .expect(201)
         .end(( err, res ) => {
           created = Date.now();
-          assert.ifError( err );
-          assert.ok( res.headers.location );
           url = res.headers.location;
           done( err );
         });
     });
-    afterEach(( done ) => {
+    tt.afterEach(( done ) => {
       if ( callback_server ) {
         return callback_server.close(() => {
           done();
@@ -54,22 +59,21 @@ describe('skyring:api', function() {
       done();
     });
 
-    it('should modify an existing timer by id', ( done ) => {
+    tt.test('should modify an existing timer by id', ( ttt ) => {
       callback_server = http.createServer((req, res) => {
         const now = Date.now();
         let data = '';
-        assert.ok( now - created > 2000 )
+        ttt.ok( now - created > 2000 )
         req.on('data', (chunk) => {
           data += chunk;
         });
         req.once('end', () => {
+          ttt.equal(data, 'put 1');
           res.writeHead(200);
           res.end();
-          assert.equal(data, 'put 1');
-          done()
         });
-      }).listen(9999, (err) => {
-        if (err) return done(err);
+      }).listen(9898, (err) => {
+        ttt.error(err);
       })
       request
         .put(url)
@@ -84,11 +88,12 @@ describe('skyring:api', function() {
         })
         .expect(200)
         .end(( err, res ) => {
-          assert.ifError(err);
+          ttt.error(err);
+          ttt.end()
         });
     });
 
-    it('should 404 for a timer that does not exist', ( done ) => {
+    tt.test('should 404 for a timer that does not exist', ( ttt ) => {
       request
         .put(`/timer/${uuid.v4()}`)
         .send({
@@ -102,9 +107,11 @@ describe('skyring:api', function() {
         })
         .expect(404)
         .end(( err, res ) => {
-          assert.ifError(err);
-          done();
+          ttt.error(err);
+          ttt.end();
         });
     });
+    tt.end()
   });
+  t.end()
 })

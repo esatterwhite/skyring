@@ -123,7 +123,7 @@ curl -i -XPOST http://localhost:8080/timer -d '{
 For performance considerations, a body is not included in responses. Rather, HTTP headers are used to relay information about timer status.
 In the case of a `Create` request, the uri to the timer instance is returned in the `Location` header.
 
-```
+```http
 HTTP/1.1 201 CREATED
 location: /timer/4adb026b-6ef3-44a8-af16-4d6be0343ecf
 Date: Fri, 23 Dec 2016 00:19:13 GMT
@@ -149,3 +149,15 @@ Connection: keep-alive
 Content-Length: 0
 ```
 
+# Crash Recovery
+
+Each Skyring node uses an internal [levelup]() instance to record timers that it owns.
+When a node starts, it will check the configured database for any existing timers, and will
+immediately load them back into memory. By default, the [memdown]() backend is used, and wil not
+persists between starts. To enable full persistence and recovery, you must configure skyring to use a 
+persistent backend for `levelup`. [Leveldown]() is installed by default.
+
+
+```js
+skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
+```
