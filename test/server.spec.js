@@ -1,6 +1,8 @@
 'use strict'
 
 const crypto    = require('crypto')
+    , os        = require('os')
+    , path      = require('path')
     , http      = require('http')
     , supertest = require('supertest')
     , async     = require('async')
@@ -32,7 +34,7 @@ test('server', (t) => {
           }
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
-            path: crypto.randomBytes(19).toString('hex')
+            path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
           }
         })
         .load()
@@ -47,7 +49,7 @@ test('server', (t) => {
           }
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
-            path: crypto.randomBytes(19).toString('hex')
+            path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
           }
         })
         .load()
@@ -62,7 +64,7 @@ test('server', (t) => {
           }
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
-            path: crypto.randomBytes(19).toString('hex')
+            path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
           }
         })
         .load()
