@@ -82,18 +82,25 @@
  * @requires skyring/lib/nats
  * @requires skyring/lib/json
  */
-const transports = require('./transports')
+const os         = require('os')
+    , crypto     = require('crypto')
+    , path       = require('path')
+    , levelup    = require('levelup')
+    , conf       = require('keef')
+    , transports = require('./transports')
     , nats       = require('./nats')
     , json       = require('./json')
     , debug      = require('debug')('skyring:timer')
     , rebalance  = require('debug')('skyring:rebalance')
-    , noop       = function(){}
+    , store      = require('debug')('skyring:store')
+    , storage    = Symbol('storage')
+    , noop       = () => {}
     ;
 
 /**
  * Node style callback
  * @typedef {Function} Nodeback
- * @property {?Error} [err] An error instance. If not null, the results should not be trusted 
+ * @property {?Error} [err] An error instance. If not null, the results should not be trusted
  * @property {Object} result The results of the function execution
  **/
 
@@ -103,17 +110,49 @@ const transports = require('./transports')
  * @param {Object} [options]
  * @param {Object} [options.nats] Nats connection information
  * @param {String[]} [options.nats.servers] A list of nats `host:port` to connect to
+ * @param {Object} [options.storage] Storage config options for level db
+ * @param {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend
+ * `leveldown` and `memdown` are installed by default
+ * @param {String} options.storage.path A directory path to a leveldb instance. One will be created if it doesn't already exist.
+ * If the backend is memdown, this is optional and randomly generated per timer instance
+ * @param {Function} [onReady=()=>{}] A callback function to call after initial recovery has completed
  * If not specified, configuration values will be used
  **/
 class Timer extends Map {
-  constructor(options = {}) {
+  constructor(options = {}, cb = () => {}) {
     super();
     this.options = Object.assign({}, {
       nats: null
+    , storage: null
     }, options);
     this._sid = null;
     this._bail = false;
     this.nats = nats.createClient( this.options.nats );
+    const store_opts = conf.get('storage');
+    const opts = Object.assign(store_opts, this.options.storage);
+    if (!opts.path) {
+      if (opts.backend === 'memdown') {
+        opts.path = path.join(
+          os.tmpdir()
+        , `skyring-${crypto.randomBytes(10).toString('hex')}`
+        );
+      } else {
+        const err = new Error('storage.path must be set with non memdown backends');
+        err.code = 'ENOSTORAGE';
+        throw err;
+      }
+    }
+    debug('storage path', opts);
+    this[storage] = levelup(opts.path, {
+      valueEncoding: 'json'
+    , db: require( opts.backend )
+    , cacheSize: opts.cache
+    });
+
+    this[storage].once('ready', () => {
+      debug('storage backend ready', conf.get('storage'));
+      this.recover(cb);
+    });
   }
 
   /**
@@ -127,7 +166,7 @@ class Timer extends Map {
    * @param {Object} callback Options for the outbound transport for the timer when it executes
    * @param {String} callback.transport The transport type ( http, etc )
    * @param {String} transport.method The method the transport should use when executing the timer
-   * @param {String} transport.uri The target uri for the transport when the timer executes 
+   * @param {String} transport.uri The target uri for the transport when the timer executes
    * @param {Nodeback} callback
    * @example
 const crypto = require('crypto')
@@ -170,25 +209,34 @@ timers.create(id, options, (err) => {
         , id
         , this
       );
-      return cb(null, id)
+
+      return cb(null, id);
     }
 
-    debug('setting timer', id);
-    this.set( id, {
-      payload: payload
-    , created: Date.now()
+    const data = {
+      created: Date.now()
     , id: id
-    , timer: setTimeout(
-              transport
-            , payload.timeout - elapsed
-            , payload.callback.method
-            , payload.callback.uri
-            , payload.data
-            , id
-            , this
-            ).unref()
+    , payload: payload
+    , timer: null
+    };
+
+    this[storage].put(id, data, (err) => {
+      debug('setting timer', id);
+      //TODO(esatterwhite):
+      // what should happen if leveldb fails.
+      if (err) console.error(err);
+      data.timer = setTimeout(
+        transport
+      , payload.timeout - elapsed
+      , payload.callback.method
+      , payload.callback.uri
+      , payload.data
+      , id
+      , this
+      ).unref();
+      this.set( id, data );
+      cb(null, id);
     });
-    setImmediate(cb, null, id);
   }
 
   /**
@@ -198,6 +246,10 @@ timers.create(id, options, (err) => {
    * @param {Nodeback} callback Node style callback to execute
    **/
   remove(id, cb) {
+    this[storage].del(id, (err) => {
+      if (err) return console.error('unable to purge %s', id, err);
+      store('%s purged from storage', id, this.options.storage);
+    });
     const t = this.get(id);
     if( !t ) {
       const err = new Error('Not Found');
@@ -207,7 +259,7 @@ timers.create(id, options, (err) => {
     clearTimeout(t.timer);
     this.delete(id);
     debug('timer cleared', id);
-    cb &amp;&amp; setImmediate(cb, null);
+    return cb &amp;&amp; setImmediate(cb);
   }
 
   rebalance(opts, node, cb) {
@@ -233,6 +285,27 @@ timers.create(id, options, (err) => {
       run( record );
     }
   }
+
+  recover(cb) {
+    const fn = (data) => {
+      store('recover', data.key);
+      const out = Object.assign({}, data.value.payload, {
+        id: data.value.id
+      , created: data.value.created
+      });
+      this.create(data.key, out, debug);
+    };
+
+    const stream = this[storage].createReadStream();
+
+    stream
+    .on('data', fn)
+    .once('close', function () {
+      debug('recover stream close');
+      stream.removeListener('data', fn);
+      cb &amp;&amp; cb();
+    });
+  }
   /**
    * Updates a timer inplace
    * @method module:skyring/lib/timer#update
@@ -243,7 +316,7 @@ timers.create(id, options, (err) => {
    * @param {Object} callback Options for the outbound transport for the timer when it executes
    * @param {String} callback.transport The transport type ( http, etc )
    * @param {String} transport.method The method the transport should use when executing the timer
-   * @param {String} transport.uri The target uri for the transport when the timer executes 
+   * @param {String} transport.uri The target uri for the transport when the timer executes
    * @param {Nodeback} callback
    **/
   update(id, body, cb){
@@ -262,11 +335,12 @@ timers.create(id, options, (err) => {
   shutdown(cb) {
     const size = this.size;
     const client = this.nats;
+
+    this[storage].close();
+    if( !size ) return this.nats.quit(cb);
+
     let sent = 0;
     let acks = 0;
-
-    if( !size ) return nats.quit(cb);
-
     client.unsubscribe( this._sid );
     this._sid = null;
 
@@ -279,8 +353,8 @@ timers.create(id, options, (err) => {
       });
 
       this.nats.publish('skyring', JSON.stringify( data ), () => {
-        if( ++acks === size ) return setImmediate( nats.quit, cb );
-        rebalance( '%s of %s processed', data.count, acks);
+        if( ++acks === size ) return setImmediate(this.nats.quit, cb);
+        rebalance( '%s of %s processed', data.count, acks, data.id);
       });
     };
 
@@ -288,6 +362,10 @@ timers.create(id, options, (err) => {
       run( record );
     }
     this.clear();
+  }
+
+  close(cb){
+    this[storage].close(cb);
   }
 
   /**
@@ -302,7 +380,6 @@ timers.create(id, options, (err) => {
     this._sid = this.nats.subscribe('skyring', opts, ( data ) => {
       if( this._bail ) return;
       const value = json.parse( data );
-      rebalance( 'received %s', value.value.count );
       cb( value.error, value.value );
     });
     return this._sid;
@@ -355,7 +432,7 @@ module.exports = Timer;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-04-26T21:37:05-05:00
+		on 2017-04-29T22:03:37-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
