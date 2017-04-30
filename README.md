@@ -151,11 +151,11 @@ Content-Length: 0
 
 # Crash Recovery
 
-Each Skyring node uses an internal [levelup]() instance to record timers that it owns.
+Each Skyring node uses an internal [levelup](https://www.npmjs.com/package/levelup) instance to record timers that it owns.
 When a node starts, it will check the configured database for any existing timers, and will
-immediately load them back into memory. By default, the [memdown]() backend is used, and wil not
+immediately load them back into memory. By default, the [memdown](https://www.npmjs.com/package/memdown) backend is used, and wil not
 persists between starts. To enable full persistence and recovery, you must configure skyring to use a 
-persistent backend for `levelup`. [Leveldown]() is installed by default.
+persistent backend for `levelup`. [Leveldown](https://www.npmjs.com/package/leveldown) is installed by default.
 
 
 ```js
