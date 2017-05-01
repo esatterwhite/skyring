@@ -11,14 +11,12 @@
  * @requires skyring/lib/server
  **/
 
-const http   = require('http')
-    , path   = require('path')
-    , conf   = require('./conf')
+const conf   = require('./conf')
     , Server = require('./lib/server')
     , debug  = require('debug')('skyring')
     ;
 
-module.exports = Server
+module.exports = Server;
 
 if( require.main === module ){
   process.title = 'skyring';
@@ -27,19 +25,21 @@ if( require.main === module ){
   const server = new Server();
 
   server.load().listen(conf.get('PORT'),null, null, (err) => {
-    if(err) return console.log(err) || process.exit(1)
-    debug('server listening')
+    if(err) {
+      process.exitCode = 1;
+      console.error(err);
+      throw err;
+    }
+    debug('server listening');
   });
 
   function onSignal() {
     server.close(()=>{
-      debug('shutting down')
-      process.statusCode = 0
-    })
+      debug('shutting down');
+    });
   }
   process.once('SIGINT', onSignal);
   process.once('SIGTERM', onSignal);
-
 }
 
 
