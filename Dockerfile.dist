@@ -1,4 +1,7 @@
 FROM  mhart/alpine-node:7
 ADD skyring.tgz /opt
 WORKDIR /opt/skyring
-CMD ["node", "index.js"] 
+ENV storage__path /var/data/skyring
+RUN mkdir -p /var/data/skyring
+VOLUME /var/data/skyring
+CMD ["node", "index.js"]
