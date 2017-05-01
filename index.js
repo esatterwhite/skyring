@@ -13,40 +13,36 @@
 
 const http   = require('http')
     , path   = require('path')
-    , conf   = require('keef')
-    ;
-
-if( require.main !== module ){
-  conf.defaults(require(path.join(__dirname, 'conf/index.json')))
-  module.exports = require('./lib/server');
-  return;
-}
-
-
-const Server = require('./lib/server')
+    , conf   = require('./conf')
+    , Server = require('./lib/server')
     , debug  = require('debug')('skyring')
     ;
 
-process.title = 'skyring';
-process.chdir(__dirname);
+module.exports = Server
 
-const server = new Server();
+if( require.main === module ){
+  process.title = 'skyring';
+  process.chdir(__dirname);
 
-module.exports =  server;
+  const server = new Server();
 
-server.load().listen(conf.get('PORT'),null, null, (err) => {
-  if(err) return console.log(err) || process.exit(1)
-  debug('server listening')
-});
+  server.load().listen(conf.get('PORT'),null, null, (err) => {
+    if(err) return console.log(err) || process.exit(1)
+    debug('server listening')
+  });
 
-function onSignal() {
-  server.close(()=>{
-    debug('shutting down')
-    process.statusCode = 0
-  })
+  function onSignal() {
+    server.close(()=>{
+      debug('shutting down')
+      process.statusCode = 0
+    })
+  }
+  process.once('SIGINT', onSignal);
+  process.once('SIGTERM', onSignal);
+
 }
-process.once('SIGINT', onSignal);
-process.once('SIGTERM', onSignal);
+
+
 
 
 /**
