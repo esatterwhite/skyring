@@ -5,3 +5,4 @@ npm-debug.log
 *.tgz
 coverage/
 *.save
+.test

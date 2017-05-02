@@ -7,3 +7,4 @@ assets
 *.tgz
 jsdoc.json
 docs/
+.test
