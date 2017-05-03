@@ -1,6 +1,6 @@
 FROM  mhart/alpine-node:7
 ENV storage__path /var/data/skyring
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 COPY . /opt/skyring
 WORKDIR /opt/skyring
 RUN apk update && \
