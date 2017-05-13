@@ -57,6 +57,16 @@ module.exports = new seeli.Command({
     , description: 'The port this node should bind on'
     }
 
+  , 'storage:backend': {
+      type: String
+    , default: 'memdown'
+    , description: 'A levelup compatible module for levelup. Must be requirable'
+    }
+  , 'storage:path': {
+      type: String
+    , description: 'A directory path where data can be stored. '
+      + 'Required for persistent storage backends'
+    }
   , port: {
       shorthand: 'p'
     , type: Number

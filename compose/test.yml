@@ -9,8 +9,9 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       storage__backend: 'leveldown'
       storage__path: /var/data/skyring
+      NODE_ENV: test
     networks:
-      - skyring 
+      - skyring
     depends_on:
       - nats-a
       - nats-b
@@ -26,6 +27,7 @@ services:
       channel__port: 3456
       storage__backend: 'leveldown'
       storage__path: /var/data/skyring
+      NODE_ENV: test
     networks:
       - skyring
     depends_on:
@@ -42,6 +44,7 @@ services:
       channel__host: 'node-3'
       storage__backend: 'leveldown'
       storage__path: /var/data/skyring
+      NODE_ENV: test
     networks:
       - skyring
     depends_on:
@@ -60,6 +63,7 @@ services:
       channel__host: 'node-4'
       storage__backend: 'leveldown'
       storage__path: /var/data/skyring
+      NODE_ENV: test
     networks:
       - skyring
     depends_on:
