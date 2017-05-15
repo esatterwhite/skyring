@@ -39,7 +39,7 @@
     "nats": "^0.6.8",
     "path-to-regexp": "^1.7.0",
     "request": "^2.76.0",
-    "ringpop": "^10.16.2",
+    "ringpop": "^10.19.0",
     "seeli": "^3.0.1",
     "tchannel": "^3.9.9",
     "uuid": "^3.0.1"
