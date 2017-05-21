@@ -1,0 +1,35 @@
+{
+  "name": "skyring-tcp-transport",
+  "version": "1.0.0",
+  "description": "A TCP transport for skyring service",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap --cov -Rtap test"
+  },
+  "keywords": [
+    "skyring",
+    "timers",
+    "distributed",
+    "tcp",
+    "webhook"
+  ],
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "repository": {
+    "type":"git",
+    "url": "https://github.com/esatterwhite/skyring-tcp-transport"
+  },
+  "bugs": {
+    "email": "esatterwhite@wi.rr.com",
+    "url":"https://github.com/esatterwhite/skyring-tcp-transport/issues"
+  },
+  "dependencies": {
+    "debug": "^2.6.8",
+    "generic-pool": "^3.1.7"
+  },
+  "devDependencies": {
+    "skyring": "^4.0.4",
+    "supertest": "^3.0.0",
+    "tap": "^10.3.2"
+  }
+}
