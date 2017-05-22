@@ -17,6 +17,7 @@
         "recurse":true
         ,"template":"node_modules/ink-docstrap/template"
         ,"destination":"docs"
+        ,"tutorials": "tutorials"
     }
     ,"plugins":["plugins/markdown", "plugins/partial"]
     ,"markdown":{"parser":"gfm", "hardwrap":false}
