@@ -61,5 +61,6 @@ if( require.main === module ){
  * @property {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend
  * `leveldown` and `memdown` are installed by default
  * @property {String} options.storage.path A directory path to a leveldb instance. One will be created if it doesn't already exist.
+ * @param {String[]|Function[]} [optsion.transport] an array of custom transport functions, or requireable paths that resolve to functions. All transport function must be named functions
  * If the backend is memdown, this is optional and randomly generated per timer instance
  **/

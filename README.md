@@ -158,6 +158,38 @@ persists between starts. To enable full persistence and recovery, you must confi
 persistent backend for `levelup`. [Leveldown](https://www.npmjs.com/package/leveldown) is installed by default.
 
 
-```js
+```bash
 skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
+```
+
+# Custom Transports
+
+Skyring ships with a single HTTP transport, but support custom transports. A `transport` is a named function
+that can be executed when a timer triggers. To register a transport, you can pass an array of named functions, or
+requireable paths to the skyring server constructor via via the `transports` option
+
+```javascript
+const path = require('path')
+const Skyring = require('skyring')
+
+function fizzbuz(method, uri, payload, id, timer_cache) {
+ ...
+}
+const server = new Skyring({
+  transports: [
+    'my-transport-module'
+  , fizzbuz
+  , path.resolve(__dirname, '../transports/fake-transport')
+  ]
+})
+```
+
+The same can be achieved through CLI arguments or ENV vars via the `transport` key
+
+```bash
+transport=foobar,fizzbuz node index.js
+```
+
+```bash
+node index --transport=foobar --transport=fizzbuz --transport=$PWD/../path/to/my-transport
 ```
