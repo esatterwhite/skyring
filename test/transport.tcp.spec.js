@@ -17,17 +17,117 @@ if(!process.env.TEST_HOST) {
   hostname = process.env.TEST_HOST;
 }
 
-test('transports:tcp', (t) => {
-  let request, server
+test('timeouts', (t) => {
+  let request, server, handler
+  t.on('end', (done) => {
+    handler.close()
+    server.close()
+  })
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
-      transports: [path.resolve('../')]
+      transports: [path.resolve(__dirname, '../')]
+    , seeds: [`${hostname}:3455`]
     });
     request = supertest('http://localhost:3333')
     server.load().listen(3333, null, null, tt.end)
   })
 
-  tt.
+  t.test('success - should deliver payload', (tt) => {
+    tt.plan(3)
+    handler = net.createServer((socket) => {
+      socket.setEncoding('utf8')
+      socket.once('data', (data) => {
+        const payload = JSON.parse(data)
+        tt.match(payload, {
+          text: 'hello world'
+        , status: 200
+        })
+        socket.end()
+        tt.pass('timeout executed')
+      })
+    }).listen(5555).unref()
 
+    request
+      .post('/timer')
+      .send({
+        timeout: 500
+      , data: JSON.stringify({
+          text: 'hello world'
+        , status: 200
+        })
+      , callback: {
+          uri: `tcp://${hostname}:5555`
+        , method: 'post'
+        , transport: 'tcp'
+        }
+      })
+      .expect(201)
+      .end((err, res) => {
+        tt.error(err)
+      })
+  })
+  t.end()
 })
+
+test('pool', (t) => {
+  let request, server, handler
+  const req = supertest('http://localhost:3333')
+  function doRequest(t) {
+    req
+      .post('/timer')
+      .send({
+        timeout: 500
+      , data: 'fake'
+      , callback: {
+          transport: 'tcp'
+        , uri: `http://${hostname}:5555`
+        , method: 'post'
+        }
+      })
+      .expect(201)
+      .end((err, res) => {
+        t.error(err)
+      })
+  }
+  t.on('end', (done) => {
+    handler.close()
+    server.close()
+  })
+  t.test('set up skyring server', (tt) => {
+    server = new Skyring({
+      transports: [require(path.resolve(__dirname, '../'))]
+    , seeds: [`${hostname}:3455`]
+    });
+    request = supertest('http://localhost:3333')
+    server.load().listen(3333, null, null, tt.end)
+  })
+
+  t.test('start saturate pool - no connection', (tt) => {
+    tt.plan(151)
+    for (var x = 0; x < 150; x++ ) {
+      doRequest(tt)
+    }
+    setTimeout(() => {
+      tt.pass('saturated')
+    }, 2000)
+  })
+  t.test('success - should deliver payload', (tt) => {
+    tt.plan(150)
+    handler = net.createServer((socket) => {
+      console.log('connection')
+      socket.setEncoding('utf8')
+      socket.once('data', (data) => {
+        tt.match(data, /fake/)
+        tt.pass('timeout executed')
+      })
+    }).listen(5555).unref()
+
+    for (var x = 0; x < 150; x++ ) {
+      doRequest({error: () => {}})
+    }
+  })
+  t.end()
+})
+
+
 
