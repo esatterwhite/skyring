@@ -1,5 +1,5 @@
 # skyring-tcp-transport
-A TCP based transport with connection pooling for Skyring
+A TCP based transport with connection pooling for Skyring.
 
 ## Installation
 
@@ -9,7 +9,8 @@ $ npm install @skyring/tcp-transport --save
 
 ## Usage
 
-Skyring accepts an array property `transports`
+Skyring accepts an array property `transports`. Each entry can be a string or a named function.
+If given a string, skyring will pass it to `require` which must resolve to a named function
 
 ```js
 const Skyring = require('skyring')
