@@ -34,6 +34,10 @@ test('server', (t) => {
         , app: 'spec'
         }
       , seeds: [`${hostname}:6543`]
+      , storage: {
+          backend: 'leveldown'
+          , path: '/tmp/sk111'
+        }
       , transports: [foobar]
       })
       .load()
@@ -87,14 +91,12 @@ test('server', (t) => {
       })
       .load()
       .listen(5555, null, null, (err) => {
-        console.log('ending')
         ttt.error(err)
         ttt.end()
       })
     })
 
     tt.test('tap transport', (ttt) => {
-      console.log('requesting')
       supertest('http://localhost:5555')
         .post('/timer')
         .send({
@@ -108,7 +110,6 @@ test('server', (t) => {
         })
         .expect(201)
         .end((err, res) => {
-          console.log('response')
           ttt.error(err)
           ttt.type(server._timers.transports.test, 'function')
           ttt.end()
