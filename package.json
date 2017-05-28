@@ -15,6 +15,9 @@
   ],
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">= 6.0.0"
+  },
   "repository": {
     "type":"git",
     "url": "https://github.com/esatterwhite/skyring-tcp-transport"
