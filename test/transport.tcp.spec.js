@@ -91,9 +91,8 @@ test('pool', (t) => {
       })
   }
   t.on('end', (done) => {
-    console.log("shutting down")
     handler.close()
-    server.shutdown()
+    server.close()
   })
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
