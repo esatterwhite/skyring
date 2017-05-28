@@ -1,6 +1,7 @@
 'use strict'
 
 const net = require('net')
+    , os = require('os')
     , path = require('path')
     , tap = require('tap')
     , supertest = require('supertest')
@@ -90,8 +91,9 @@ test('pool', (t) => {
       })
   }
   t.on('end', (done) => {
+    console.log("shutting down")
     handler.close()
-    server.close()
+    server.shutdown()
   })
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
@@ -112,19 +114,18 @@ test('pool', (t) => {
     }, 2000)
   })
   t.test('success - should deliver payload', (tt) => {
-    tt.plan(150)
+    tt.plan(151)
     handler = net.createServer((socket) => {
-      console.log('connection')
       socket.setEncoding('utf8')
       socket.once('data', (data) => {
         tt.match(data, /fake/)
-        tt.pass('timeout executed')
       })
-    }).listen(5555).unref()
-
-    for (var x = 0; x < 150; x++ ) {
-      doRequest({error: () => {}})
-    }
+    }).listen(5555, (err) => {
+      tt.error(err)
+      for (var x = 0; x < 150; x++ ) {
+        doRequest({error: () => {}})
+      }
+    })
   })
   t.end()
 })
