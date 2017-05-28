@@ -4,7 +4,7 @@
   "description": "A TCP transport for skyring service",
   "main": "index.js",
   "scripts": {
-    "test": "tap --cov -Rtap test"
+    "test": "TEST_HOST=localhost tap --cov -Rtap test"
   },
   "keywords": [
     "skyring",
