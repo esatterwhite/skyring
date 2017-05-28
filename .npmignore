@@ -1,0 +1,12 @@
+Dockerfile*
+.dockerignore
+payload.txt
+*.save
+compose/
+assets
+*.tgz
+jsdoc.json
+docs/
+.test
+tutorials/
+echo.js
