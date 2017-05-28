@@ -169,11 +169,8 @@ that can be executed when a timer triggers. To register a transport, you can pas
 requireable paths to the skyring server constructor via via the `transports` option
 
 Optionally, for transports that need to perform some clean up work, a function property `shutdown` may be defined
-<<<<<<< ce183811b4fac9c8e4a42d83477318aa026d3bac
-on the transport 
-=======
 on the transport
->>>>>>> update docs
+
 ```javascript
 const path = require('path')
 const Skyring = require('skyring')
@@ -184,12 +181,8 @@ function fizzbuz(method, uri, payload, id, timer_store) {
 }
 
 fuzzbuz.shutdown(cb) {
-<<<<<<< ce183811b4fac9c8e4a42d83477318aa026d3bac
-  // do some work
-=======
   // drain connections...
   // free up event loop
->>>>>>> update docs
   cb()
 }
 
