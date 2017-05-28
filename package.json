@@ -1,6 +1,6 @@
 {
   "name": "@skyring/tcp-trasport",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A TCP transport for skyring service",
   "main": "index.js",
   "scripts": {
@@ -19,19 +19,19 @@
     "node": ">= 6.0.0"
   },
   "repository": {
-    "type":"git",
+    "type": "git",
     "url": "https://github.com/esatterwhite/skyring-tcp-transport"
   },
   "bugs": {
     "email": "esatterwhite@wi.rr.com",
-    "url":"https://github.com/esatterwhite/skyring-tcp-transport/issues"
+    "url": "https://github.com/esatterwhite/skyring-tcp-transport/issues"
   },
   "dependencies": {
     "debug": "^2.6.8",
     "generic-pool": "^3.1.7"
   },
   "peerDependencies": {
-    "skyring":">=4.2.0"
+    "skyring": ">=4.2.0"
   },
   "devDependencies": {
     "skyring": "^4.2.0",
