@@ -37,7 +37,10 @@ test('server', (t) => {
       , transports: [foobar]
       })
       .load()
-      .listen(5555, null, null, ttt.end)
+      .listen(5555, null, null, (err) => {
+        ttt.error(err)
+        ttt.end()
+      })
     })
 
     tt.test('tap transport', (ttt) => {
@@ -76,28 +79,38 @@ test('server', (t) => {
         , app: 'spec'
         }
       , seeds: [`${hostname}:6543`]
-      , transports: [path.resolve(__dirname, 'tap.transport')]
+      , storage: {
+          backend: 'leveldown'
+        , path: '/tmp/sk22'
+        }
+      , transports: [require.resolve(path.join(__dirname, 'test.transport'))]
       })
       .load()
-      .listen(5555, null, null, ttt.end)
+      .listen(5555, null, null, (err) => {
+        console.log('ending')
+        ttt.error(err)
+        ttt.end()
+      })
     })
 
     tt.test('tap transport', (ttt) => {
+      console.log('requesting')
       supertest('http://localhost:5555')
         .post('/timer')
         .send({
           timeout: 250
-        , data: { put: ttt.ok, foobar: 1}
+        , data: 'hello world'
         , callback: {
-            transport: 'tap'
+            transport: 'http'
           , method: 'put'
-          , uri: 'doesn\'t matter'
+          , uri: 'http://localhost:4444'
           }
         })
         .expect(201)
         .end((err, res) => {
+          console.log('response')
           ttt.error(err)
-          ttt.type(server._timers.transports.tap, 'function')
+          ttt.type(server._timers.transports.test, 'function')
           ttt.end()
         })
     })
