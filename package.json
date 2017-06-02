@@ -1,5 +1,5 @@
 {
-  "name": "@skyring/tcp-trasport",
+  "name": "@skyring/tcp-transport",
   "version": "1.0.0",
   "description": "A TCP transport for skyring service",
   "main": "index.js",
