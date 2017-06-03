@@ -2,15 +2,18 @@ sudo: required
 services:
   - docker
 
-script: npm run test:ci
+script: npm test
 language: node_js
-after_install:
-  - docker-compose -f compose/test.yml down
+before_script:
+  - docker-compose -f compose/nats.yml up -d
+after_script:
+  - docker-compose -f compose/nats.yml down
 git:
   depth: 3
 node_js:
   - "6"
   - "7"
+  - "8"
 addons:
   code_climate:
     repo_token: 248135f96061f77d2e5f78526432fd096785d2914d8f5a73a04c061000939d5d

@@ -8,7 +8,7 @@ const crypto    = require('crypto')
     , async     = require('async')
     , conf      = require('keef')
     , tap       = require('tap')
-    , Server    = require('../lib/server')
+    , Server    = require('../../lib/server')
     , test      = tap.test
 
 

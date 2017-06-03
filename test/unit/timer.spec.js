@@ -6,7 +6,7 @@ const os = require('os')
     , tap = require('tap')
     , uuid   = require('uuid')
     , conf   = require('keef')
-    , Timer  = require('../lib/timer')
+    , Timer  = require('../../lib/timer')
     , test   = tap.test
     ;
 

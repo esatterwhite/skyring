@@ -20,7 +20,9 @@ if (!process.env.TEST_HOST) {
 test('skyring:api', (t) => {
   let server, request;
   t.test('set up skyring server', (tt) => {
-    server = new Server();
+    server = new Server({
+      seeds: [`${hostname}:3455`]
+    });
     request = supertest('http://localhost:4444')
     server.load().listen(4444, null, null, tt.end);
   });
