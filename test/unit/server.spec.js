@@ -1,6 +1,8 @@
 'use strict'
 
-const crypto    = require('crypto')
+const url       = require('url')
+    , qs        = require('querystring')
+    , crypto    = require('crypto')
     , os        = require('os')
     , path      = require('path')
     , http      = require('http')
@@ -30,7 +32,7 @@ test('server', (t) => {
           node: {
             port: 4444
           , host: hostname
-          , app: 'spec'
+          , app: 'rebalance'
           }
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
@@ -45,7 +47,7 @@ test('server', (t) => {
           node:{
             port: 4445
           , host: hostname
-          , app: 'spec'
+          , app: 'rebalance'
           }
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
@@ -60,7 +62,7 @@ test('server', (t) => {
           node: {
             port: 4446
           , host: hostname
-          , app: 'spec'
+          , app: 'rebalance'
           }
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
@@ -94,66 +96,45 @@ test('server', (t) => {
   })
 
   t.test('rebalance', function(tt) {
-    let max = 50, count = 0, postback
+    let count = 0, postback
 
     tt.on('end',(done) => {
       postback && postback.close(done);
     })
 
     tt.test('should survive a lost node', ( ttt ) => {
+      ttt.plan(101)
+      const request = supertest('http://localhost:5557');
+      const requests = Array.from(Array(50).keys())
       postback = http.createServer((req, res) => {
-        count++;
+        const parsed = url.parse(req.url)
+        const q = qs.parse(parsed.query)
+        ttt.pass(`${q.idx} idx`)
         res.writeHead(200)
         res.end();
       }).listen( 2222 );
 
-      async.until(
-        () => {
-          return !max
-        }
-
-        , (callback) => {
-          const request = supertest('http://localhost:5557');
-          request
-            .post('/timer')
-            .send({
-              timeout: 500
-            , data: 'data'
-            , callback: {
-                uri: 'http://localhost:2222'
-              , method: 'post'
-              , transport: 'http'
-              }
-            })
-            .expect(201)
-            .end((err, res) => {
-              ttt.error(err)
-              max--;
-              callback();
-            })
-        }
-
-        , ( err ) => {
-          ttt.error(err)
-          setTimeout(function(args){
-            sthree.close(() => {
-              async.until(
-                function(){
-                  return count === 50;
-                },
-                function(cb){
-                  setTimeout(cb, 1)
-                },
-                function(err){
-                  ttt.equal(max, 0, 'max should be 0');
-                  ttt.equal(count, 50, 'count should be 50')
-                  ttt.end();
-                }
-              ) 
-            })
-          },50);
-        }
-      );
+      async.each(requests, (idx, cb) => {
+        request
+          .post('/timer')
+          .send({
+            timeout: 5000
+          , data: 'data'
+          , callback: {
+              uri: `http://localhost:2222?idx=${idx}`
+            , method: 'post'
+            , transport: 'http'
+            }
+          })
+          .expect(201)
+          .end((err, res) => {
+            ttt.error(err)
+            cb()
+          })
+      }, (err) => {
+        ttt.error(err)
+        sthree.close()
+      })
     });
     tt.end()
   });
