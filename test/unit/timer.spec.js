@@ -3,6 +3,7 @@
 const os = require('os')
     , path = require('path')
     , crypto = require('crypto')
+    , series = require('async').series
     , tap = require('tap')
     , uuid   = require('uuid')
     , conf   = require('keef')
@@ -23,6 +24,63 @@ function clearAll(timers, cb) {
 test('timers', (t) => {
   t.test('create', (tt) => {
     let timers = null
+    tt.test('options', (ttt) => {
+      ttt.throws(() => {
+        new Timer({
+          storage: {
+            backend: 'leveldown'
+          , path: null
+          }
+        }, () => {})
+      }, /storage\.path must be set with non memdown backends/)
+      ttt.end()
+    })
+
+    tt.test('invalid transport', (ttt) => {
+      timers = new Timer(null, () =>{
+        timers.create('1', {
+          callback: {
+            transport: 'unknown'
+          }
+        }, (err) => {
+          ttt.type(err, Error)
+          clearAll(timers, ttt.end)
+        })
+      })
+
+    })
+
+    tt.test('duplicate timers', (ttt) => {
+      timers = new Timer(null, () => {
+        series([
+          (cb) => {
+            timers.create("1", {
+              timeout: 1000
+            , callback: {
+                transport: 'http'
+              , method: 'post'
+              , uri: 'http://localhost'
+              }
+            }, cb)
+          }
+        , (cb) => {
+            timers.create("1", {
+              timeout: 1000
+            , callback: {
+                transport: 'http'
+              , method: 'post'
+              , uri: 'http://localhost'
+              }
+            }, cb)
+          }
+        ], (err) => {
+          ttt.type(err, Error)
+          ttt.equal(err.code, 'EKEYEXISTS')
+          ttt.match(err.message, /already exists/)
+          clearAll(timers, ttt.end)
+        })
+      })
+    })
 
     tt.test('set up timer cache', (ttt) => {
       timers = new Timer({
