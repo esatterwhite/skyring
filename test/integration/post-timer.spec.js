@@ -45,7 +45,9 @@ function toServer(port, expect = 'hello', method = 'post', time = 1000, t){
 test('skyring:api', (t) => {
   let request, server
   t.test('setup skyring server', (tt) => {
-    server = new Server();
+    server = new Server({
+      seeds: [`${hostname}:3455`]
+    });
     request = supertest('http://localhost:3333');
     server.load().listen(3333, null, null, tt.end)
   });
