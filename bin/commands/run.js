@@ -36,6 +36,7 @@ module.exports = new seeli.Command({
     `${seeli.bold('Usage:')} skyring run -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=5522`
   , `${seeli.bold('Usage:')} skyring run -d -p 3001 -s localhost:5522 -s localhost:5523 --channel:port=5523`
   , `${seeli.bold('Usage:')} skyring run --no-daemon -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=6213`
+  , `${seeli.bold('Usage:')} skyring run --no-daemon -p 3000 -t @skyring/tcp-transport -t @skyring/zmq-transport`
   ] 
 , flags: {
     seeds: {
@@ -43,6 +44,11 @@ module.exports = new seeli.Command({
     , shorthand: 's'
     , required: true
     , description: 'Nodes in the ring to use as seed nodes'
+    }
+  , transport: {
+      type: [String, Array]
+    , shorthand: 't'
+    , description: 'Custom transports to load into the server at start up time'
     }
 
   , 'channel:host': {
