@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: conf/index.js</title>
+	<title>Skyring Tutorial: Custom Transports</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -37,6 +37,20 @@
 				</ul>
 			</li>
 			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-bootstrap.html">Bootstrapping A Cluster</a></li><li><a href="tutorial-transports.html">Custom Transports</a></li>
+				</ul>
+			</li>
+			
 		</ul>
         
             <div class="col-sm-3 col-md-3">
@@ -63,59 +77,57 @@
 	<div class="col-md-12">
 	
 		<div id="main">
-			
+			<section class="tutorial-section">
 
-		<h1 class="page-title">Source: conf/index.js</h1>
+<header>
     
-<section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">'use strict'
-/**
- * Configuration options for skyring. See {@link module:keef} on ways to pass configuration
- * @module skyring/conf
- * @author Eric Satterwhite
- * @since 1.0.0
- **/
+    <ul>
+        <li><a href="tutorial-skyring-tcp.html">Official TCP Transport</a></li>
+    
+        <li><a href="tutorial-skyring-zmq.html">Official ZMQ Transport</a></li>
+    </ul>
+    
+
+    <h2>Custom Transports</h2>
+</header>
+
+<article>
+    <p>The Transports systems is how skyring executes timeouts. When a timer lapses, a message is delivered to destination that you have defined. <em>How</em> that message is delivered is configurable. Out of the box, Skyring comes with an <a href="module-skyring_lib_transports_http.html">HTTP</a> transport. Defining your own transport is pretty simple, and you can use any of the tools you are currently used to using.</p>
+<h4>STDOUT Transport</h4><p>To illustrate the process, we're going to make a simple transport handler to write the data to <code>stdout</code>. Basically, speaking a transport is just a node.js module that exports a named <code>function</code></p>
+<pre class="prettyprint source"><code>'use strict'
+
 const os = require('os')
-const path = require('path')
 
-module.exports = {
-/**
- * @property {String|String[]} [seeds=127.0.0.1:3455,127.0.0.1:3456] A list of seed nodes to use for bootstrapping a ring cluster
- * @property {Object} channel
- * @property {String} [channel.host=127.0.0.1] hostname or ip addres for tchannel to listen on
- * @property {Number} [channel.port=3455] Port number for tchannel to bind to
- * @property {Number} [PORT=3000] The port number for the http API server to bind to
- * @property {Object} nats Nats queue specific configuration
- * @property {String|String[]} [nats.hosts=127.0.0.1:4222] host:port of instances of a nats cluster. One is usually enough.
- * @param {Object} [options.storage] Storage config options for level db
- * @param {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend
- * `leveldown` and `memdown` are installed by default
- * @param {String} options.storage.path A directory path to a leveldb instance. One will be created if it doesn't already exist.
- * If the backend is memdown, this is optional and randomly generated per timer instance
- **/
-  seeds: ['127.0.0.1:3455', '127.0.0.1:3456']
-, storage: {
-    backend: 'memdown'
-  , path: null
+module.exports = function stdout(method, url, payload, id, storage) {
+  // deliver the message
+  process.stdout.write(payload);
+  process.stdout(os.EOL);
+
+  // clear the timer
+  storage.remove(id);
+};</code></pre><p>Pretty simple. We just write the data to the stdout out stream attached to the process, of course, be sure to remove the timer reference from the <a href="https://github.com/esatterwhite/skyring">skyring</a> internal <code>storage</code>. To load your transport into a skyring server, you can pass an array of <code>transports</code> when instantiating as server instance. The array can contain references to the transport itself, or as string that can be passed to <a href="https://nodejs.org/api/globals.html#globals_require">require</a></p>
+<pre class="prettyprint source"><code>'use strict'
+
+const Skyring = require('skyring')
+const stdout = require('./transports/stdout')
+const server = new Skyring({
+  transports: [require('./transports/stdout')]
+, seeds: ['localhost:3455']
+})
+
+server.load().listen(3000)</code></pre><p>Done. Just be sure that <strong>every</strong> skyring node in the cluster has all of the same transports loaded so they have the capability to execute all of the timers. Other than that, we can start using our new transport by referencing it by name in the <code>transport</code> field of the request to create a new timer.</p>
+<pre class="prettyprint source lang-bash"><code>curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '{
+  &quot;timeout&quot;:3000
+, &quot;data&quot;:&quot;hello world!&quot;
+, &quot;callback&quot;: {
+    &quot;transport&quot;: &quot;stdout&quot;
+  , &quot;method&quot;:&quot;unused&quot;
+  , &quot;uri&quot;: &quot;unused&quot;
   }
-, channel: {
-    host:'127.0.0.1'
-  , port: 3455
-  }
-, PORT: 3000
-, nats: {
-    hosts:'127.0.0.1:4222'
-  }
-}
-</pre>
-    </article>
+}'</code></pre><p>It is pretty simple and straight forward to build your own transport layer for <a href="https://github.com/esatterwhite/skyring">Skyring</a>. It can be a simple function, or for more complex use cases, you can build out entire npm packages using whatever tools you want. This makes the <code>transport</code> system in skyring very flexible, powerful, and easy to use.</p>
+</article>
+
 </section>
-
-
-
-
 
 		</div>
 	</div>
@@ -154,7 +166,7 @@ module.exports = {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-04-30T09:20:23-05:00
+		on 2017-06-04T15:15:52-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

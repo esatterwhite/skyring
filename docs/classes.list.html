@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: json.js</title>
+	<title>Skyring Classes</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,21 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-bootstrap.html">Bootstrapping A Cluster</a></li><li><a href="tutorial-transports.html">Custom Transports</a></li>
 				</ul>
 			</li>
 			
@@ -60,52 +74,127 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: json.js</h1>
-    
+	<h1 class="page-title">Classes</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
-/**
- * JSON helpers
- * @module skyring/lib/json
- * @author Eric Satterwhite
- * @since 1.0.0
- */
 
-/**
- * Composite JSON ojbect
- * @typedef {Object} Result
- * @property {?Error} [error=null] An error if json parsing faile
- * @property {Object} value the result of Json parsing
- * @return {TYPE} DESCRIPTION
- **/
+<header>
+    
+        <h2>
+        
+        </h2>
+        
+    
+</header>
 
-/**
- * Wrpper around try/catch of JSON parsing
- * @method module:skyring/lib/json
- * @param {String} json A JSON string to parse
- * @return {Result}
- **/
-exports.parse = function parse(json) {
-  if (!json) return {error: null, value: {}}
-  try {
-    return { error: null, value: JSON.parse(json) }
-  } catch( e ) {
-    return {error: e, value: null}
-  }
-}
 
-</pre>
-    </article>
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-skyring_lib_server.html">module:skyring/lib/server</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_server_mock.Request.html">Request</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_server_mock.Response.html">Response</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_server_node.html">module:skyring/lib/server/node</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_server_response.html">module:skyring/lib/server/response</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_server_route.html">module:skyring/lib/server/route</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_server_router.html">module:skyring/lib/server/router</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_timer.html">module:skyring/lib/timer</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-skyring_lib_transports.html">module:skyring/lib/transports</a></dt>
+            <dd></dd>
+        
+            <dt><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -115,6 +204,10 @@ exports.parse = function parse(json) {
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
@@ -147,7 +240,7 @@ exports.parse = function parse(json) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-02T15:15:30-06:00
+		on 2017-06-04T15:15:51-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

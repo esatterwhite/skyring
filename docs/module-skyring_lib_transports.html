@@ -37,6 +37,20 @@
 				</ul>
 			</li>
 			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-bootstrap.html">Bootstrapping A Cluster</a></li><li><a href="tutorial-transports.html">Custom Transports</a></li>
+				</ul>
+			</li>
+			
 		</ul>
         
             <div class="col-sm-3 col-md-3">
@@ -70,6 +84,10 @@
 
 <header>
     
+        
+            
+        
+    
 </header>
 
 
@@ -77,23 +95,94 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Available tranports</p></div>
+            <div class="description"><p>Loads and maintains all transports</p></div>
         
 
         
+            
+<hr>
+<dt>
+    <h4 class="name" id="module:skyring/lib/transports"><span class="type-signature"></span>new (require("skyring/lib/transports"))(transports)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>transports</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">TransportHandler</span>
+|
+
+<span class="param-type">Array.&lt;TransportHandler></span>
+|
+
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Array.&lt;String></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Custome transports to registe</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
 	
 
 	
-	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
-	<dd class="tag-since">
-		<ul class="dummy">
-			<li>1.0.0</li>
-		</ul>
-	</dd>
-	
 
 	
 
@@ -107,13 +196,6 @@
 
 	
 
-	
-	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
-	<dd class="tag-author">
-		<ul>
-			<li>Eric Satterwhite</li>
-			</ul>
-	</dd>
 	
 
 	
@@ -143,6 +225,65 @@
 </dl>
 
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">const path = require(&#x27;path&#x27;)
+const Skyring = require(&#x27;skyring&#x27;)
+
+function fizzbuz(method, uri, payload, id, timer_store) {
+ // send payload to uri...
+ timer_store.remove(id)
+}
+
+fuzzbuz.shutdown(cb) {
+  // drain connections...
+  // free up event loop
+  cb()
+}
+
+const server = new Skyring({
+  transports: [
+    &#x27;my-transport-module&#x27;
+  , fizzbuz
+  , path.resolve(__dirname, &#x27;../transports/fake-transport&#x27;)
+  ]
+})</pre>
+
+    <pre class="sunlight-highlight-javascript">const Transports = require(&#x27;skyring/lib/transports&#x27;)
+function fizzbuz(method, uri, payload, id, timer_store) {
+ // send payload to uri...
+ timer_store.remove(id)
+}
+
+fuzzbuz.shutdown(cb) {
+  // drain connections...
+  // free up event loop
+  cb()
+}
+
+const t = new Transports([
+  &#x27;my-transport-module&#x27;
+, fizzbuz
+, path.resolve(__dirname, &#x27;../transports/fake-transport&#x27;)
+])</pre>
+
+
+    
+</dd>
+
         
     
     </div>
@@ -153,6 +294,8 @@
         <h3 class="subsection-title">Requires</h3>
 
         <ul>
+            <li>module:debug</li>
+        
             <li><a href="module-skyring_lib_transports_http.html">module:skyring/lib/transports/http</a></li>
         
             <li><a href="module-skyring_conf.html">module:skyring/conf</a></li>
@@ -296,6 +439,239 @@
     
 
     
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+<hr>
+<dt>
+    <h4 class="name" id="~TransportHandler"><span class="type-signature"></span>TransportHandler(method, uri, Payload, id, storage)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>uri</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>storage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">LevelUp</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A levelup instance container all curring timer data</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_transports_index.js.html">lib/transports/index.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            </dl>
+    
 
     
 </article>
@@ -346,7 +722,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-06-03T15:06:10-05:00
+		on 2017-06-04T15:15:52-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
