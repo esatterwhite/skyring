@@ -166,7 +166,7 @@ skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
 
 Skyring ships with a single HTTP transport, but support custom transports. A `transport` is a named function
 that can be executed when a timer triggers. To register a transport, you can pass an array of named functions, or
-requireable paths to the skyring server constructor via via the `transports` option
+requireable paths to the skyring server constructor via via the {@link module:skyring/lib/transports|transports} option
 
 Optionally, for transports that need to perform some clean up work, a function property `shutdown` may be defined
 on the transport

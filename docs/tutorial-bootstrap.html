@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: nats.js</title>
+	<title>Skyring Tutorial: Bootstrapping A Cluster</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,21 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-bootstrap.html">Bootstrapping A Cluster</a></li><li><a href="tutorial-transports.html">Custom Transports</a></li>
 				</ul>
 			</li>
 			
@@ -63,113 +77,19 @@
 	<div class="col-md-12">
 	
 		<div id="main">
-			
+			<section class="tutorial-section">
 
-		<h1 class="page-title">Source: nats.js</h1>
+<header>
     
-<section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
-/**
- * Small wrapper around nats for quickly connecting / disconnecting
- * @module skyring/lib/nats
- * @author Eric Satterwhite
- * @since 1.0.0.0
- * @requires url
- * @requires ionats
- * @requires keef
- * @requires debug
- */
 
-const url         = require('url')
-    , util        = require('util')
-    , nats        = require('nats')
-    , config      = require('keef')
-    , debug       = require('debug')('skyring:nats')
-    , nats_hosts  = config.get('nats:hosts')
-    , csv_exp     = /\s?,\s?/g;
+    <h2>Bootstrapping A Cluster</h2>
+</header>
 
-var client = null;
+<article>
+    
+</article>
 
-/**
- * Creates a new nats client
- * @method module:skyring/lib/nats#createClient
- * @return {RedisClient} A nats client instance
- **/
-exports.createClient = createClient
-
-/**
- * Disconnects the current client from nats
- * @method module:skyring/lib/nats#quit
- **/
-exports.disconnect = uti.deprecate((cb) => {
-  quit(cb)
-}, 'nats.disconnect: use nats.quit instead');
-exports.quit       = quit;
-Object.defineProperty(exports, 'client', {
-  get: function() {
-    return client || createClient()
-  }
-})
-
-function createClient() {
-  const servers = parse(nats_hosts);
-  debug('creating nats client', servers);
-  client = nats.connect({servers});
-  client.on('error', (err) => {
-    console.error('nats error', err);
-  });
-
-  client.on('connect', () => {
-    debug('nats connection successful');
-  });
-
-  client.on('end', () => {
-    debug('nats connection closed');
-    client.removeAllListeners();
-    client = null;
-  });
-
-  client.on('ready', () => {
-    debug('nats connection ready');
-  });
-
-  client.on('reconnecting', () => {
-    debug('nats client reconnecting');
-  })
-
-  return client;
-}
-
-function quit(cb){
-  if (!client) return setImmediate(cb);
-  client.close();
-  client.once('close', cb);
-}
-function parse(str) {
-  if (typeof str !== 'string') {
-    throw new TypeError('nats hosts must be a string');
-  }
-
-  const items = str.split(csv_exp);
-  return items.map(parseItem);
-}
-
-function parseItem(str) {
-  return str.indexOf('nats://') === 0
-    ? str
-    : `nats://${str}`
-}
-
-</pre>
-    </article>
 </section>
-
-
-
-
 
 		</div>
 	</div>
@@ -208,7 +128,7 @@ function parseItem(str) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-02T15:15:30-06:00
+		on 2017-06-04T15:15:52-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

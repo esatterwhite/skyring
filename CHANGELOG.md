@@ -1,3 +1,17 @@
+v4.3.0
+-------
+* test: moves test harness out of the docker setup - c25f5c5bc7
+* timers: setup storage before nats to allow errors to bubble - dc88b48eed
+* tansports: fixes named function checks
+
+v4.2.0
+------
+* Transports can define a shutdown handler
+
+v4.1.0
+------
+* Allows for custom transports
+
 v4.0.0
 ------
 * Support crash recovery of timers

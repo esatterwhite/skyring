@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: transports/index.js</title>
+	<title>Skyring Class: Request</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,21 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-bootstrap.html">Bootstrapping A Cluster</a></li><li><a href="tutorial-transports.html">Custom Transports</a></li>
 				</ul>
 			</li>
 			
@@ -60,54 +74,149 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: transports/index.js</h1>
-    
+	<h1 class="page-title">Class: Request</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
-/**
- * Available tranports
- * @module skyring/lib/transports
- * @author Eric Satterwhite
- * @since 1.0.0
- * @requires skyring/lib/transports/http
- */
 
-const callback = require('./callback')
- /**
-  * DESCRIPTION
-  * @memberof module:skyring/lib/transports
-  * @property {Object} http The HTTP transport
-  **/
-exports.http = require('./http');
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a>.</span>
+        
+        Request
+        </h2>
+        
+    
+</header>
 
-Object.defineProperty(exports, 'callback',{
-  enumerable: false
-, configurable: false
-, get: function(){
-    switch(process.env.NODE_ENV){
-      case 'production':
-      case 'prod':
-        const err = new Error('callback transport is for testing only')
-        err.name = 'TransportError';
-        err.code = 'ENOTRANSPORT';
-        throw err;
 
-      default:
-        return callback;
-    }
-  }
-});</pre>
-    </article>
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="Request"><span class="type-signature"></span>new Request()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>A mock IncomingMessage Object for proxying requests via tchannel</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_server_mock.js.html">lib/server/mock.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>EventEmitter</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -117,6 +226,10 @@ Object.defineProperty(exports, 'callback',{
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
@@ -149,7 +262,7 @@ Object.defineProperty(exports, 'callback',{
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-02T15:15:30-06:00
+		on 2017-06-04T15:15:51-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
