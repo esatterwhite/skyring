@@ -1,6 +1,6 @@
 {
-  "name": "skyring-zmq-transport",
-  "version": "1.0.0",
+  "name": "@skyring/zmq-transport",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
