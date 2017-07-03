@@ -107,7 +107,7 @@ define({ "api": [
       },
       {
         "title": "ruby:",
-        "content": "\nrequire 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer')\npayload = {\n timeout: 3000, \n data: \"hello world\", \n callback: {\n   method: 'post',\n   transport: 'http',\n   uri: 'http://localhost:4000'\n }\n}\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/json'})\nrequest.body = payload.to_json\nresponse = http.request(request)\nprint response.code",
+        "content": "\nrequire 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer')\npayload = {\n timeout: 3000,\n data: \"hello world\",\n callback: {\n   method: 'post',\n   transport: 'http',\n   uri: 'http://localhost:4000'\n }\n}\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/json'})\nrequest.body = payload.to_json\nresponse = http.request(request)\nprint response.code",
         "type": "ruby"
       }
     ],
@@ -251,7 +251,7 @@ define({ "api": [
       },
       {
         "title": "ruby:",
-        "content": "\nrequire 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45')\npayload = {\n timeout: 3000, \n data: \"hello world\", \n callback: {\n   method: 'post',\n   transport: 'http',\n   uri: 'http://localhost:4000'\n }\n}\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Put.new(uri.request_uri, {'Content-Type': 'application/json'})\nrequest.body = payload.to_json\nresponse = http.request(request)\nprint response.code",
+        "content": "\nrequire 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45')\npayload = {\n timeout: 3000,\n data: \"hello world\",\n callback: {\n   method: 'post',\n   transport: 'http',\n   uri: 'http://localhost:4000'\n }\n}\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Put.new(uri.request_uri, {'Content-Type': 'application/json'})\nrequest.body = payload.to_json\nresponse = http.request(request)\nprint response.code",
         "type": "ruby"
       }
     ],
