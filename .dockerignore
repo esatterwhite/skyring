@@ -8,3 +8,4 @@ npm-debug.log
 payload.txt
 coverage/
 tutorials/
+*.tgz
