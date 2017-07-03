@@ -9,3 +9,4 @@ jsdoc.json
 docs/
 .test
 tutorials/
+package-lock.json
