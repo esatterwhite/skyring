@@ -142,7 +142,7 @@ curl -i -XDELETE http://localhost:8080/timer/4adb026b-6ef3-44a8-af16-4d6be0343ec
 ```
 **Response Headers**
 
-```
+```http
 HTTP/1.1 202 Accepted
 Date: Fri, 23 Dec 2016 00:22:12 GMT
 Connection: keep-alive
