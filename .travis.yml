@@ -4,11 +4,10 @@ services:
 
 script: npm test
 language: node_js
-before_script:
-  - docker-compose -f compose/nats.yml up -d
-  - sleep 5
-after_script:
-  - docker-compose -f compose/nats.yml down
+before_install:
+  - docker pull nats:latest
+  - docker run --name=nats -p 4222:4222 -d nats:latest
+  - docker ps -a
 git:
   depth: 3
 node_js:
