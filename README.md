@@ -53,16 +53,37 @@ DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455
 ```
 
 
-### Clone Skyring
+### Using in your project
 
-Alternatively to the CLI, you can clone and install the project manually
+If you want to use the skyring directly, you can just require it and start it directly.
+most of the available enviroment and cli arguments can be passed to the {@link module:skyring/lib/server|skyring constructor}.
+If you don't pass anything to the construct the default values are {@link module:keef|loaded} from the appropriate sources
 
-```bash
-$ git clone https://github.com/esatterwhite/skyring.git
-$ cd skyring
-$ npm install
-$ DEBUG=* node index.js
+```javascript
+// index.js
+const Skyring = require('skyring')
+const server = new Skyring()
+
+function onSignal() {
+  server.close(()=>{
+    console.log('shutting down');
+  });
+}
+
+server.load().listen(3000, (err) => {
+  if (err) throw err
+  console.log('skyring listening at %s', 'http://0.0.0.0:3000')
+})
+
+process.once('SIGINT', onSignal);
+process.once('SIGTERM', onSignal);
 ```
+
+This can then be started as a single node cluster
+```
+$ DEBUG=* node . --channel:port=3455 --seeds='localhost:3455'
+```
+
 The default settings expect a minimum of 2 servers on port `3455` and `3456` respectively. Start each server in a different terminal session
 ```bash
 # Seed node 1

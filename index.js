@@ -24,7 +24,7 @@ if( require.main === module ){
 
   const server = new Server();
 
-  server.load().listen(conf.get('PORT'),null, null, (err) => {
+  server.load().listen(conf.get('PORT'), (err) => {
     if(err) {
       process.exitCode = 1;
       console.error(err);
