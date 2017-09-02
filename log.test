@@ -1,0 +1,31 @@
+'use strict'
+const util = require('util')
+const nats = require('nats')
+const chalk = require('chalk')
+const formats = {
+  create: chalk.cyan.bold
+, replace: chalk.blue
+, execute: chalk.blue.bold
+, cancel: chalk.yellow.bold
+, fail: chalk.red
+, success: chalk.green.bold
+, shutdown: chalk.bgYellow.white
+, ready: chalk.bgGreen.white.bold
+, recover: chalk.bgMagenta.bold
+, rebalance: chalk.bgBlue
+, purge: chalk.bgRed.white.bold
+, evict: chalk.red.bold
+}
+var client = nats.connect({servers: ['nats://0.0.0.0:4222']}) 
+
+client.subscribe('skyring:node', onNode)
+client.subscribe('skyring:events', onEvent)
+
+function onEvent(msg) {
+  const p = JSON.parse(msg)
+  console.log(util.format('[%s] timer: %s node: %s', formats[p.type](p.type), p.timer, p.node))
+}
+function onNode(msg) {
+  const p = JSON.parse(msg)
+  console.log((util.format('[%s] node: %s', formats[p.type](p.type), p.node)))
+}
