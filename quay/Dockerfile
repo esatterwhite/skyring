@@ -1,4 +1,4 @@
-FROM  mhart/alpine-node:8
+FROM  mhart/alpine-node:6
 COPY . /opt/skyring
 WORKDIR /opt/skyring
 RUN apk update && \
