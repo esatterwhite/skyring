@@ -96,22 +96,44 @@
  * @requires skyring/lib/nats
  * @requires skyring/lib/json
  */
-const os         = require('os')
-    , crypto     = require('crypto')
-    , path       = require('path')
-    , levelup    = require('levelup')
-    , Transports = require('./transports')
-    , nats       = require('./nats')
-    , json       = require('./json')
-    , conf       = require('../conf')
-    , debug      = require('debug')('skyring:timer')
-    , rebalance  = require('debug')('skyring:rebalance')
-    , store      = require('debug')('skyring:store')
-    , storage    = Symbol('storage')
-    , shutdown   = Symbol.for('kShutdown')
-    , noop       = () => {}
+const os             = require('os')
+    , crypto         = require('crypto')
+    , path           = require('path')
+    , levelup        = require('levelup')
+    , Transports     = require('./transports')
+    , nats           = require('./nats')
+    , json           = require('./json')
+    , conf           = require('../conf')
+    , debug          = require('debug')('skyring:timer')
+    , rebalance      = require('debug')('skyring:rebalance')
+    , store          = require('debug')('skyring:store')
+    , storage        = Symbol('storage')
+    , shutdown       = Symbol.for('kShutdown')
+    , kNode          = Symbol('nodeid')
+    , kRemove        = Symbol('remove')
+    , noop           = () => {}
     ;
 
+
+const EVENT_STATUS = {
+  CREATED:   'create'
+, UPDATED:   'replace'
+, EXEC:      'execute'
+, CANCELLED: 'cancel'
+, FAIL:      'fail'
+, SUCCESS:   'success'
+, SHUTDOWN:  'shutdown'
+, READY:     'ready'
+, RECOVERY:  'recover'
+, REBALANCE: 'rebalance'
+, PURGE:     'purge'
+, EVICT:     'evict'
+}
+
+function generateId(id) {
+  if (!id) return crypto.randomBytes(10).toString('hex')
+  return crypto.createHash('sha1').update(id).digest('hex')
+}
 /**
  * Node style callback
  * @typedef {Function} Nodeback
@@ -126,7 +148,7 @@ const os         = require('os')
  * @param {Object} [options.nats] Nats connection information
  * @param {String[]} [options.nats.servers] A list of nats `host:port` to connect to
  * @param {Object} [options.storage] Storage config options for level db
- * @param {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend
+ * @param {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend. `memdown` and `leveldown` are built in
  * `leveldown` and `memdown` are installed by default
  * @param {String} options.storage.path A directory path to a leveldb instance. One will be created if it doesn't already exist.
  * If the backend is memdown, this is optional and randomly generated per timer instance
@@ -149,9 +171,10 @@ class Timer extends Map {
     store(opts);
     if (!opts.path) {
       if (opts.backend === 'memdown') {
+        this[kNode] = generateId()
         opts.path = path.join(
           os.tmpdir()
-        , `skyring-${crypto.randomBytes(10).toString('hex')}`
+        , `skyring-${this[kNode]}`
         );
       } else {
         const err = new Error('storage.path must be set with non memdown backends');
@@ -160,6 +183,7 @@ class Timer extends Map {
       }
     }
     debug('storage path', opts);
+    this[kNode] = generateId(store_opts.path)
     this.nats = nats.createClient( this.options.nats );
     this.transports = new Transports(this.options.transports);
     this[storage] = levelup(opts.path, {
@@ -170,8 +194,14 @@ class Timer extends Map {
     });
 
     this[storage].once('ready', () => {
-      debug('storage backend ready', conf.get('storage'));
-      this.recover(cb);
+      store('storage backend ready', store_opts);
+      debug('node id', this[kNode])
+      this.recover(() => {
+        this.nats.publish('skyring:node', JSON.stringify({
+          node: this[kNode]
+        , type: EVENT_STATUS.READY
+        }), cb)
+      });
     });
   }
 
@@ -227,13 +257,22 @@ timers.create(id, options, (err) => {
     if( now > created + payload.timeout ){
       debug('executing stale timer');
       setImmediate(
-          transport
-        , payload.callback.method
-        , payload.callback.uri
-        , payload.data
-        , id
-        , this
+        transport
+      , payload.callback.method
+      , payload.callback.uri
+      , payload.data
+      , id
+      , this
       );
+
+      this.nats.publish('skyring:events', JSON.stringify({
+        type: EVENT_STATUS.EXEC
+      , timer: id
+      , node: this[kNode]
+      , executed: Date.now()
+      , created: created
+      , payload: payload
+      }), noop);
 
       return cb(null, id);
     }
@@ -250,6 +289,14 @@ timers.create(id, options, (err) => {
       //TODO(esatterwhite):
       // what should happen if leveldb fails.
       if (err) console.error(err);
+      this.nats.publish('skyring:events', JSON.stringify({
+        type: EVENT_STATUS.CREATED
+      , timer: id
+      , node: this[kNode]
+      , created: data.created
+      , payload: payload
+      }), noop);
+
       data.timer = setTimeout(
         transport
       , payload.timeout - elapsed
@@ -265,12 +312,87 @@ timers.create(id, options, (err) => {
   }
 
   /**
-   * Cancels a specific timer
+   * Clears the respective timer from storage and publishes a success event via nats
+   * @method module:skyring/lib/timer#success
+   * @param {String} id the is of the time to acknowledge as delivered successfully
+   * @param {Nodeback} [callback] Callback to execute when the acknowledge is complete
+   * @example timers.success('2e2f6dad-9678-4caf-bc41-8e62ca07d551')
+   **/
+  success(id, cb = noop) {
+    this[kRemove](id, (err) => {
+      this.nats.publish('skyring:events', JSON.stringify({
+        type: EVENT_STATUS.SUCCESS
+      , timer: id
+      , node: this[kNode]
+      }), cb)
+    })
+  }
+
+  /**
+   * Clears the respective timer from storage and publishes a failure event via nats
+   * @method module:skyring/lib/timer#failure
+   * @param {String} id the is of the time to acknowledge as delivered successfully
+   * @param {Error} error The error object to send with event objects
+   * @param {Nodeback} [callback] Callback to execute when the acknowledge is complete
+   * @example
+const error = Error('Remote server unavailable')
+error.code = 'ENOREMOTE'
+timers.success('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
+   **/
+  failure(id, error, cb = noop) {
+    this[kRemove](id, (err) => {
+      this.nats.publish('skyring:events', JSON.stringify({
+        type: EVENT_STATUS.FAIL
+      , timer: id
+      , node: this[kNode]
+      , message: error.message
+      , stack: error.stack
+      , error: error.code || error.name
+      }), cb)
+    })
+  }
+
+  /**
+   * Clears the respective timer from storage and publishes a cancelled event via nats
+   * @method module:skyring/lib/timer#cancelled
+   * @param {String} id the is of the time to acknowledge as delivered successfully
+   * @param {Nodeback} [callback] Callback to execute when the acknowledge is complete
+   * @example timers.cancel('2e2f6dad-9678-4caf-bc41-8e62ca07d551')
+   **/
+  cancel(id, cb = noop) {
+    this[kRemove](id, (err) => {
+      if (err) return cb(err)
+      cb()
+      this.nats.publish('skyring:events', JSON.stringify({
+        type: EVENT_STATUS.CANCELLED
+      , timer: id
+      , node: this[kNode]
+      }))
+    })
+  }
+
+  /**
+   * Clears a specific timer from storage
+   * @deprecated v5.0.0
    * @method module:skyring/lib/timer#delete
    * @param {String} id The id of the timer to cancel
    * @param {Nodeback} callback Node style callback to execute
    **/
-  remove(id, cb) {
+  remove(id, cb = noop) {
+    if (!this.warned){
+      process.emitWarning(
+        'timers#remove has been replaced with timers#cancel'
+      + ' and will be removed in future versions'
+      , 'DeprecationWarning'
+      , 'EDEPRECATED'
+      )
+
+      this.warned = true
+    }
+    return this[kRemove](id, cb)
+  }
+
+  [kRemove](id, cb = noop) {
     this[storage].del(id, (err) => {
       if (err) return console.error('unable to purge %s', id, err);
       store('%s purged from storage', id, this.options.storage);
@@ -279,21 +401,24 @@ timers.create(id, options, (err) => {
     if( !t ) {
       const err = new Error('Not Found');
       err.code = 'ENOENT';
-      return cb &amp;&amp; setImmediate(cb, err);
+      return setImmediate(cb, err);
     }
     clearTimeout(t.timer);
     this.delete(id);
+    setImmediate(cb)
     debug('timer cleared', id);
-    return cb &amp;&amp; setImmediate(cb);
   }
 
-  rebalance(opts, node, cb) {
-    const callback = cb || noop
-        , size = this.size
+  rebalance(opts, node, cb = noop) {
+    const size = this.size
         , batch = this[storage].batch()
         ;
 
     if( !size ) return;
+    this.nats.publish('skyring:node', JSON.stringify({
+      node: this[kNode]
+    , type: EVENT_STATUS.REBALANCE
+    }), noop)
     const records = this.values();
     const run = ( obj ) => {
       if ( node.owns( obj.id ) ) return;
@@ -305,7 +430,12 @@ timers.create(id, options, (err) => {
       , created: obj.created
       });
       rebalance( 'no longer the owner of %s', obj.id );
-      callback( data );
+      this.nats.publish('skyring:events', JSON.stringify({
+        node: this[kNode]
+      , type: EVENT_STATUS.EVICT
+      , timer: obj.id
+      }), noop)
+      cb( data );
     };
 
     for( var record of records ) {
@@ -316,7 +446,11 @@ timers.create(id, options, (err) => {
     });
   }
 
-  recover(cb) {
+  recover(cb = noop) {
+    this.nats.publish('skyring:node', JSON.stringify({
+      node: this[kNode]
+    , type: EVENT_STATUS.RECOVERY
+    }), noop)
     const fn = (data) => {
       store('recover', data.key);
       const out = Object.assign({}, data.value.payload, {
@@ -348,12 +482,36 @@ timers.create(id, options, (err) => {
    * @param {String} transport.method The method the transport should use when executing the timer
    * @param {String} transport.uri The target uri for the transport when the timer executes
    * @param {Nodeback} callback
+   * @example timers.update('0dc5a555-d0f6-49a0-b336-5befb0437288', {
+  timeout: 4000
+, data: "this is a payload"
+, callback: {
+    transport: 'http'
+  , method: 'put'
+  , uri: 'http://api.domain.com/callback'
+  }
+})
    **/
-  update(id, body, cb){
-    this.remove(id, ( err ) => {
+  update(id, body, cb) {
+    this[kRemove](id, ( err ) => {
       if ( err ) return cb( err );
       debug( 'updating timer', id );
       this.create( id, body, cb );
+    });
+  }
+
+  close(cb){
+    this[storage].close(cb);
+  }
+
+  disconnect(cb = noop) {
+    this[storage].close(noop)
+    this.transports[shutdown](() => {
+      this.nats.publish('skyring:node', JSON.stringify({
+        node: this[kNode]
+      , type: EVENT_STATUS.SHUTDOWN
+      }), noop)
+      setImmediate(this.nats.quit, cb)
     });
   }
 
@@ -369,6 +527,10 @@ timers.create(id, options, (err) => {
     if( !size ) {
       this[storage].close();
       return this.transports[shutdown](() => {
+        this.nats.publish('skyring:node', JSON.stringify({
+          node: this[kNode]
+        , type: EVENT_STATUS.SHUTDOWN
+        }), noop)
         this.nats.quit(cb);
       });
     }
@@ -393,24 +555,22 @@ timers.create(id, options, (err) => {
       this.nats.publish('skyring', JSON.stringify( data ), () => {
         if( ++acks === size ) {
           return batch.write(() => {
-            this.transports[shutdown](() => {
-              store('batch delete finished');
-              setImmediate(this.nats.quit, cb);
-            });
+            store('batch delete finished');
+            this.disconnect(cb)
           });
         }
         rebalance( '%s of %s processed', data.count, acks, data.id);
       });
     };
 
+    this.nats.publish('skyring:node', JSON.stringify({
+      node: this[kNode]
+    , type: EVENT_STATUS.PURGE
+    }), noop)
     for( var record of this.values() ) {
       run( record );
     }
     this.clear();
-  }
-
-  close(cb){
-    this[storage].close(cb);
   }
 
   /**
@@ -477,7 +637,7 @@ module.exports = Timer;
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-08-27T12:08:20-05:00
+		on 2017-09-05T08:59:26-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
