@@ -1,3 +1,20 @@
+v5.0.0
+------
+* Adds cluster wide events over nats
+* DEPRECATE: deprecates the remove function on timers class
+* Adds success / failure methods on timer class for acknowledging timer execution
+* shutdown will skip rebalance if node is last in cluster
+
+v4.4.1
+------
+* Fix docker auto build on quay
+
+v4.4.0
+------
+* Doc updates
+* include package-lock
+* minor dependancy updates
+
 v4.3.0
 -------
 * test: moves test harness out of the docker setup - c25f5c5bc7
