@@ -1,6 +1,6 @@
 {
   "name": "@skyring/tcp-transport",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A TCP transport for skyring service",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "generic-pool": "^3.1.7"
   },
   "peerDependencies": {
-    "skyring": ">=4.2.0"
+    "skyring": "<=^5.0.0"
   },
   "devDependencies": {
     "skyring": "^4.2.0",
