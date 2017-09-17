@@ -103,9 +103,9 @@ test('server', (t) => {
     })
 
     tt.test('should survive a lost node', ( ttt ) => {
-      ttt.plan(101)
+      ttt.plan(52)
       const request = supertest('http://localhost:5557');
-      const requests = Array.from(Array(50).keys())
+      const requests = Array.from(Array(25).keys())
       postback = http.createServer((req, res) => {
         const parsed = url.parse(req.url)
         const q = qs.parse(parsed.query)
@@ -133,7 +133,9 @@ test('server', (t) => {
           })
       }, (err) => {
         ttt.error(err)
-        sthree.close()
+        sthree.close(() => {
+          ttt.pass('server closed')
+        })
       })
     });
     tt.end()
