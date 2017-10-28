@@ -37,6 +37,7 @@ test('server', (t) => {
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
             path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+          , backend: 'leveldown'
           }
         })
         .load()
@@ -52,6 +53,7 @@ test('server', (t) => {
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
             path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+          , backend: 'leveldown'
           }
         })
         .load()
@@ -67,6 +69,7 @@ test('server', (t) => {
         , seeds: [`${hostname}:4444`, `${hostname}:4445`]
         , storage:{
             path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+          , backend: 'leveldown'
           }
         })
         .load()
