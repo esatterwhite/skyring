@@ -129,12 +129,12 @@ between 2K - 5K requests per second.
 
 ```bash
 curl -i -XPOST http://localhost:8080/timer -d '{
-  "timout": 6000,
+  "timeout": 6000,
   "data" : "{\"foo\":\"bar\"}",
   "callback": {
     "transport": "http",
     "method": "post",
-    "uri": "http://api.someservice.com/hook/timout"
+    "uri": "http://api.someservice.com/hook/timeout"
   }
 }'
 ```
