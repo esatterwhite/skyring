@@ -1,3 +1,19 @@
+v5.0.3
+------
+* Fixes a rash bug from invalid error reference in http transport
+
+v5.0.2
+------
+* replaces level w/ direct use of levelup so the swappable backend works
+* added dep - encoding-down for auto value encoding
+
+v5.0.1
+------
+* Update level@2.0.0
+* Update debug@3.1.0
+* Update seeli@5.0.0
+* Update Docker image to use node 8.7
+
 v5.0.0
 ------
 * Adds cluster wide events over nats
