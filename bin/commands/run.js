@@ -8,36 +8,17 @@ const child = require('child_process')
     , Skyring = require('../../lib')
     , path_regex = /^(.+)\:(.+)$/
 
-function namespace(obj, path){
-  if (!path) return obj;
-  const keys = path.split(':')
-  for( var idx = 0; idx < keys.length; idx++ ) {
-    const key = keys[idx];
-    if (!obj[key]) {
-      obj[key] = Object.create(null);
-    }
-    obj = obj[key];
-  };
-  return obj;
-}
-
-function set (obj, key, val) {
-  var parts = path_regex.exec(key);
-  if (parts){
-    namespace(obj, parts[1])[parts[2]] = val;
-  } else {
-    obj[key] = val;
-  }
-}
+const name = seeli.colorize(seeli.get('name'))
+const run = seeli.bold('run')
 
 module.exports = new seeli.Command({
   description: 'Run a new skyring instance'
 , usage: [
-    `${seeli.bold('Usage:')} skyring run -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=5522`
-  , `${seeli.bold('Usage:')} skyring run -d -p 3001 -s localhost:5522 -s localhost:5523 --channel:port=5523`
-  , `${seeli.bold('Usage:')} skyring run --no-daemon -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=6213`
-  , `${seeli.bold('Usage:')} skyring run --no-daemon -p 3000 -t @skyring/tcp-transport -t @skyring/zmq-transport`
-  ] 
+    `${name} ${run} -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=5522`
+  , `${name} ${run} -d -p 3001 -s localhost:5522 -s localhost:5523 --channel:port=5523`
+  , `${name} ${run} --no-daemon -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=6213`
+  , `${name} ${run} --no-daemon -p 3000 -t @skyring/tcp-transport -t @skyring/zmq-transport`
+  ]
 , flags: {
     seeds: {
       type: [String, Array]
@@ -93,35 +74,34 @@ module.exports = new seeli.Command({
     }
   }
 
-, run: ( cmd, data, done ) => {
+, run: function( cmd, data ) {
     const opts = {}
-        , cwd = path.resolve(__dirname, '..', '..')
+        , cwd = path.join(__dirname, '..', '..')
         ;
 
-    for( var key in data ){
-      if ( key === 'argv' ) continue;
-      set(opts, key, data[key]);
-    }
-
-    if ( !opts.daemon ) {
-      return new Skyring( opts ).load().listen(opts.port, null, null, (err) => {
-        if(err) {
-          console.log(err);
-          process.exit(1);
-        }
-        console.log(seeli.bold('skyring listening'))
-        done(null, String(process.pid));
-      });
+    if ( !data.daemon ) {
+      return new Promise((resolve, reject) => {
+         new Skyring( data ).load().listen(data.port, null, null, (err) => {
+          if(err) {
+            reject(err)
+            process.exit(1);
+          }
+          resolve(String(process.pid))
+        });
+      })
     }
 
     const args = [
       path.join(cwd, 'index.js')
-    , `-p ${opts.port}`
-    , `--seeds=${opts.seeds.join(',')}`
-    , `--nats:hosts=${opts.nats.hosts}`
-    , `--channel:host=${opts.channel.host}`
-    , `--channel:port=${opts.channel.port}`
+    , `-p ${data.port}`
+    , `--seeds=${data.seeds.join(',')}`
+    , `--nats:hosts=${data.nats.hosts}`
+    , `--channel:host=${data.channel.host}`
+    , `--channel:port=${data.channel.port}`
+    , `--storage:backend=${data.storage.backend}`
+    , `--storage:path=${data.storage.path || ''}`
     ]
+
     const skyring = child.spawn(
       process.execPath
     , args
@@ -133,7 +113,7 @@ module.exports = new seeli.Command({
     );
 
     skyring.unref();
-    done(null, String(skyring.pid));
+    return Promise.resolve(String(skyring.pid))
   }
 
 })
