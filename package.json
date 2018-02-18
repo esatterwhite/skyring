@@ -33,7 +33,7 @@
   "dependencies": {
     "body": "^5.1.0",
     "debug": "^3.1.0",
-    "encoding-down": "^3.0.1",
+    "encoding-down": "^4.0.0",
     "keef": "^2.0.0",
     "level": "^3.0.0",
     "memdown": "^2.0.0",
