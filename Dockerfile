@@ -1,5 +1,5 @@
 # -- BASE
-FROM buildpack-deps:jessie-curl AS base
+FROM buildpack-deps:stretch-curl AS base
 ENV storage__path /var/data/skyring
 ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y \
@@ -18,7 +18,7 @@ WORKDIR /opt/skyring
 RUN npm install && mv node_modules prod_node_modules
 
 # -- RELEASE
-FROM debian:jessie-slim as skyring
+FROM debian:stretch-slim as skyring
 RUN mkdir -p /var/data/skyring
 WORKDIR /opt/skyring
 VOLUME /etc
