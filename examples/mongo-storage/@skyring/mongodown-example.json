@@ -4,7 +4,7 @@
   }
 , "storage": {
     "backend": "mongodown"
-  , "path": "skyring-1"
+  , "path": "mongodb://localhost:27017/skeyring"
   }
 , "seeds": ["127.0.01:3455"]
 , "channel": { "host": "127.0.0.1", "port": 3455 }
