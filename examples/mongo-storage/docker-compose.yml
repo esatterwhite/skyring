@@ -1,0 +1,112 @@
+version: '2'
+services:
+  node-1:
+    build: ./
+    hostname: node-1
+    environment:
+      DEBUG: '*'
+      channel__host: 'node-1'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
+      seeds: 'node-1:3455,node-2:3456'
+      storage__backend: 'mongodown'
+      storage__path: 'mongodb://mongo:27017/skyring'
+      storage__collection: 'skyring-1'
+    networks:
+      - mongoring
+    depends_on:
+      - nats-a
+      - nats-b
+      - nats-c
+      - mongo
+
+  node-2:
+    build: ./
+    hostname: node-2
+    environment:
+      DEBUG: '*'
+      seeds: 'node-1:3455,node-2:3456'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
+      channel__host: 'node-2'
+      channel__port: 3456
+      storage__backend: 'mongodown'
+      storage__path: 'mongodb://mongo:27017/skyring'
+      storage__collection: 'skyring-2'
+    networks:
+      - mongoring
+    depends_on:
+      - nats-a
+      - nats-b
+      - nats-c
+      - mongo
+
+  node-3:
+    build: ./
+    hostname: node-3
+    environment:
+      DEBUG: '*'
+      seeds: 'node-1:3455,node-2:3456'
+      nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
+      channel__host: 'node-3'
+      storage__backend: 'mongodown'
+      storage__path: 'mongodb://mongo:27017/skyring'
+      storage__collection: 'skyring-3'
+    networks:
+      - mongoring
+    depends_on:
+      - nats-a
+      - nats-b
+      - nats-c
+      - node-1
+      - node-2
+      - mongo
+
+  nats-a:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/a.conf -D
+    networks:
+      - mongoring
+  nats-b:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/b.conf -D
+    depends_on:
+      - nats-a
+    networks:
+      - mongoring
+  nats-c:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    depends_on:
+      - nats-a
+    command: >
+      -c /tmp/c.conf -D
+    networks:
+      - mongoring
+
+  mongo:
+    image: mongo:3.6
+    networks:
+      - mongoring
+
+  nginx:
+    image: 'nginx:latest'
+    volumes:
+      - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:80"
+    networks:
+      - mongoring
+    depends_on:
+      - node-1
+      - node-2
+      - node-3
+
+networks:
+  mongoring:
+    driver: bridge

@@ -17,6 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "mongodown": "^1.2.0",
-    "skyring": "^5.1.0"
+    "skyring": "^6.0.0-alpha.1"
   }
 }
