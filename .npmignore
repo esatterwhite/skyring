@@ -2,6 +2,7 @@ compose/
 tutorials/
 assets/
 quay/
+examples/
 .nyc_output/
 Dockerfile*
 *.save

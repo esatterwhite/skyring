@@ -1,0 +1,22 @@
+{
+  "name": "@skyring/mongodown-example",
+  "version": "1.0.0",
+  "description": "Example skyring cluster using mongo db as a storage engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mongodb",
+    "skyring",
+    "storage",
+    "timers",
+    "distributed"
+  ],
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mongodown": "^1.2.0",
+    "skyring": "^5.1.0"
+  }
+}
