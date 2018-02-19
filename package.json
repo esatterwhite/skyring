@@ -46,7 +46,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "apidoc": "^0.16.1",
+    "apidoc": "^0.17.6",
     "async": "^2.1.4",
     "chalk": "^2.1.0",
     "codeclimate-test-reporter": "^0.4.0",
