@@ -37,7 +37,7 @@ $ gnats -D -V
 To verify that it is working, you can `telnet` directly to the server and ping it.
 
 ```bash
-$ telnet localhost 42222
+$ telnet localhost 4222
 > ping
 PONG
 ```
