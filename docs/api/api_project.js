@@ -1,13 +1,14 @@
 define({
   "name": "skyring",
-  "version": "4.4.1",
+  "version": "6.0.0-alpha.1",
   "description": "Distributed timers as a service",
   "sampleUrl": false,
-  "apidoc": "0.2.0",
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-09-05T13:59:28.466Z",
+    "time": "2018-02-22T04:33:17.651Z",
     "url": "http://apidocjs.com",
-    "version": "0.16.1"
+    "version": "0.17.6"
   }
 });
