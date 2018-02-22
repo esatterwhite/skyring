@@ -1,0 +1,19 @@
+{
+  "name": "skyring-manual",
+  "version": "1.0.0",
+  "description": "manual configuration example for a small skyring cluster",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "skring",
+    "manual",
+    "cluster"
+  ],
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "dependencies": {
+    "skyring": "^6.0.0-alpha.1"
+  }
+}
