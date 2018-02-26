@@ -1,6 +1,6 @@
 {
   "name": "@skyring/scylladown",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "SyllaDB leveldown backend for Skyring",
   "main": "index.js",
   "directories": {
