@@ -1,0 +1,22 @@
+{
+  "name": "@skyring/scylla-storage",
+  "version": "1.0.0",
+  "description": "Skyring example using external scylladb cluster",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scylladb",
+    "skyring",
+    "distributed",
+    "timers",
+    "settimeout"
+  ],
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@skyring/scylladown": "^1.0.1",
+    "skyring": "^6.0.0-alpha.2"
+  }
+}
