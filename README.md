@@ -183,6 +183,19 @@ persistent backend for `levelup`. [Leveldown](https://www.npmjs.com/package/leve
 skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
 ```
 
+### Custom Storage
+
+In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
+If, for example you want to off load data storage to a [mongo](https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage)
+or [scylladb](https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage) cluster, you would just include the backend package
+as a dependency in your project and specify it by name as the stoargae package. Options for the backend can be passed via the `storage` attribute
+
+```bash
+npm install @skyring/scylladown
+skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-1 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043
+skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-2 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043
+```
+
 # Custom Transports
 
 Skyring ships with a single HTTP transport, but support custom transports. A `transport` is a named function
@@ -225,3 +238,4 @@ transport=foobar,fizzbuz node index.js
 ```bash
 node index --transport=foobar --transport=fizzbuz --transport=$PWD/../path/to/my-transport
 ```
+
