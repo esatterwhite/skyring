@@ -178,7 +178,6 @@ immediately load them back into memory. By default, the [memdown](https://www.np
 persists between starts. To enable full persistence and recovery, you must configure skyring to use a 
 persistent backend for `levelup`. [Leveldown](https://www.npmjs.com/package/leveldown) is installed by default.
 
-
 ```bash
 skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
 ```
@@ -187,7 +186,7 @@ skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
 
 In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
 If, for example you want to off load data storage to a [mongo](https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage)
-or [scylladb](https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage) cluster, you would just include the backend package
+or [scylladb](https://github.com/esatterwhite/skyring/tree/master/examples/scylla-storage) cluster, you would just include the backend package
 as a dependency in your project and specify it by name as the stoargae package. Options for the backend can be passed via the `storage` attribute
 
 ```bash
