@@ -9,7 +9,7 @@ services:
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       seeds: 'node-1:3455,node-2:3456'
       storage__backend: 'leveldown'
-      storage__path: /var/data/skyring
+      storage__path: /var/data/skyring-1
     networks:
       - skyring
     depends_on:
@@ -27,7 +27,7 @@ services:
       channel__host: 'node-2'
       channel__port: 3456
       storage__backend: 'memdown'
-      storage__path: /var/data/skyring
+      storage__path: /var/data/skyring-2
     networks:
       - skyring
     depends_on:
@@ -44,7 +44,7 @@ services:
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-3'
       storage__backend: 'leveldown'
-      storage__path: /var/data/skyring
+      storage__path: /var/data/skyrin-3
     networks:
       - skyring
     depends_on:
@@ -63,7 +63,7 @@ services:
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-4'
       storage__backend: 'leveldown'
-      storage__path: /var/data/skyring
+      storage__path: /var/data/skyring-4
     networks:
       - skyring
     depends_on:
@@ -82,7 +82,7 @@ services:
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
       storage__backend: 'leveldown'
-      storage__path: /var/data/skyring
+      storage__path: /var/data/skyring-5
     networks:
       - skyring
     depends_on:
@@ -122,6 +122,40 @@ services:
       -c /tmp/c.conf -D
     networks:
       - skyring
+
+  influxdb:
+    image: influxdb:alpine
+    environment:
+      INFLUXDB_GRAPHITE_ENABLED: 1
+      INFLUXDB_ADMIN_ENABLED: 1
+    ports:
+      - 8060:8060
+      - 8083:8083
+      - 2003:2003
+    networks:
+      - skyring
+
+  chronograf:
+    image: chronograf:alpine
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+    networks:
+      - skyring
+    ports:
+      - 8888:8888
+    command: >
+      chronograf --influxdb-url=http://influxdb:8086
+
+  telegraf:
+    image: telegraf:1.6-alpine
+    volumes:
+      - ./etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - skyring
+    ports:
+      - 8125:8125/udp
+      - 8092:8092
+      - 8094:8094
 
   nginx:
     image: 'nginx:latest'
