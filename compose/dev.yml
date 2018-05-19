@@ -10,6 +10,10 @@ services:
       seeds: 'node-1:3455,node-2:3456'
       storage__backend: 'leveldown'
       storage__path: /var/data/skyring-1
+      statsd__host: telegraf
+      statsd__port: 8125
+      statsd__cacheDns: true
+      statsd__telegraf: true
     networks:
       - skyring
     depends_on:

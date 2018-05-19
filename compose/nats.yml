@@ -35,6 +35,40 @@ services:
     networks:
       - nats
 
+  influxdb:
+    image: influxdb:alpine
+    environment:
+      INFLUXDB_GRAPHITE_ENABLED: 1
+      INFLUXDB_ADMIN_ENABLED: 1
+    ports:
+      - 8060:8060
+      - 8083:8083
+      - 2003:2003
+    networks:
+      - nats
+
+  chronograf:
+    image: chronograf:alpine
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+    networks:
+      - nats
+    ports:
+      - 8888:8888
+    command: >
+      chronograf --influxdb-url=http://influxdb:8086
+
+  telegraf:
+    image: telegraf:1.6-alpine
+    volumes:
+      - ./etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - nats
+    ports:
+      - 8125:8125/udp
+      - 8092:8092
+      - 8094:8094
+
 networks:
   nats:
     driver: bridge
