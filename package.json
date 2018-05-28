@@ -39,7 +39,7 @@
     "memdown": "^2.0.0",
     "nats": "^0.8.10",
     "path-to-regexp": "^2.0.0",
-    "request": "^2.76.0",
+    "request": "^2.87.0",
     "ringpop": "^10.19.0",
     "seeli": "^8.1.3",
     "tchannel": "^3.9.12",
