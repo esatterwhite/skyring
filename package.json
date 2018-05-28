@@ -36,7 +36,7 @@
     "encoding-down": "^4.0.0",
     "keef": "^2.0.0",
     "level": "^3.0.0",
-    "memdown": "^2.0.0",
+    "memdown": "^3.0.0",
     "nats": "^0.8.10",
     "path-to-regexp": "^2.2.1",
     "request": "^2.87.0",
