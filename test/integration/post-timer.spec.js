@@ -114,6 +114,24 @@ test('skyring:api', (t) => {
         });
     });
 
+    tt.test('should not allow request with timeout exceeding maximum - (400)', (ttt) => {
+      request
+        .post('/timer')
+        .send({
+          timeout: Math.pow(2, 31)
+        , callback: {
+            uri: `http://${hostname}:8989`
+          , method: 'post'
+          , transport: 'http'
+          }
+        })
+        .expect(400)
+        .end((err, res) => {
+          ttt.equal(typeof res.headers['x-skyring-reason'], 'string');
+          ttt.end()
+        });
+    });
+
     tt.test('should allow request with no callback uri - (400)', (ttt) => {
       request
         .post('/timer')
