@@ -12,8 +12,8 @@
 * [API Docs](https://esatterwhite.github.io/skyring/api)
 
 # Skyring
-A distributed reliable timer service providing similar functionality to using `setTimeout`.
-`Skyring` servers are clustered  into a *hashring* using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API That allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )
+A distributed reliable timer service providing `setTimeout` functionality in a distributed fashion.
+`Skyring` servers are clustered into a *hashring* using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API that allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )
 
 # Architechture Overview 
 
@@ -126,6 +126,10 @@ between 2K - 5K requests per second.
 ##### **POST `/timer`**
 
 **Request**
+
+Since timers managed in `Skyring` are done so through the use of `setTimeout`, there is a maximum `timeout` value of `2^31 - 1` or
+`2147483647` milliseconds, which is approximately `24.8` days. Attempting to request a timeout great than this value will result in a
+`400 Bad Request` response. Additionally, the `timeout` must be greater than `0`.
 
 ```bash
 curl -i -XPOST http://localhost:8080/timer -d '{
