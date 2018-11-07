@@ -15,7 +15,7 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "timeout",
-            "description": "<p>the time in miliseconds before the timer executes</p>"
+            "description": "<p>the time in milliseconds from now the timer should execute. This must be in the range: 0 &lt; timeout &lt; 2^31 - 1.</p>"
           },
           {
             "group": "Parameter",
@@ -173,7 +173,7 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "timeout",
-            "description": "<p>the time in miliseconds before the timer executes</p>"
+            "description": "<p>the time in milliseconds from now the timer should execute. This must be in the range: 0 &lt; timeout &lt; 2^31 - 1.</p>"
           },
           {
             "group": "Parameter",
