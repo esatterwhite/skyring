@@ -1,3 +1,17 @@
+v7.0.0
+------
+
+* timer api will return a 400 if the timeout exeeds 2147483647
+
+v6.1.0
+------
+
+* updates local deps to address security exploits
+
+v6.0.0
+------
+* timer validator enforces an upper timeout limit of 2147483647 - 400 response will be returned if exceeded.
+
 v5.0.3
 ------
 * Fixes a rash bug from invalid error reference in http transport
