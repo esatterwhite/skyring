@@ -1,0 +1,136 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: skyring-node-seed
+  labels:
+    app: skyring-node-seed--{{ .Values.nameOverride }}
+    chart: {{ template "skyring.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.seedReplicaCount }}
+  selector:
+    matchLabels:
+      app: skyring-node-seed--{{ .Values.nameOverride }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: skyring-node-seed--{{ .Values.nameOverride }}
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+      - name: nats-pause
+        image: yauritux/busybox-curl
+        command:
+        - curl
+        - "http://skyring-nats-headless:4222/monitoring"
+      containers:
+        - name: skyring-node-seed--{{ .Values.nameOverride }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: port-one
+              containerPort: 3455
+            - name: port-two
+              containerPort: 3456
+            - name: port-three
+              containerPort: 3000
+          env:
+            {{- if eq .Values.debug true }}
+            - name: DEBUG
+              value: "*"
+            {{- end}}
+            - name: channel__host
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: channel__host_backup
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: nats__hosts
+              value: 'skyring-nats-headless:4222'
+            - name: seeds
+              value: 'skyring-node-seed--{{ .Release.Name }}:3455'
+            - name: storage__backend
+              value: 'leveldown'
+            - name: storage__path
+              value: /var/data/skyring
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: skyring-node
+  labels:
+    app: skyring-node--{{ .Values.nameOverride }}
+    chart: {{ template "skyring.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.workerReplicaCount }}
+  selector:
+    matchLabels:
+      app: skyring-node--{{ .Values.nameOverride }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: skyring-node--{{ .Values.nameOverride }}
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+      - name: nats-pause
+        image: yauritux/busybox-curl
+        command:
+        - curl
+        - "http://skyring-nats-headless:4222/monitoring"
+      containers:
+        - name: skyring-node--{{ .Values.nameOverride }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: Always
+          ports:
+            - name: port-one
+              containerPort: 3455
+            - name: port-two
+              containerPort: 3456
+            - name: port-three
+              containerPort: 3000
+          env:
+            {{- if eq .Values.debug true }}
+            - name: DEBUG
+              value: "*"
+            {{- end}}
+            - name: channel__host
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: nats__hosts
+              value: 'skyring-nats-headless:4222'
+            - name: seeds
+              value: 'skyring-node-seed--{{ .Release.Name }}:3455'
+            - name: storage__backend
+              value: 'leveldown'
+            - name: storage__path
+              value: /var/data/skyring
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+---

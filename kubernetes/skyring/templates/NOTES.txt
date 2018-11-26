@@ -1,0 +1,13 @@
+Nats chart comes from https://github.com/helm/charts/tree/master/stable/nats
+
+By default there is no external service exposed. Once the nodes are up and running you may test it internally with:
+
+curl -i -XPOST http://skyring-node--skyring.skyring.svc:3000/timer -d '{
+  "timeout": 6000,
+  "data" : "{\"foo\":\"bar\"}",
+  "callback": {
+    "transport": "http",
+    "method": "post",
+    "uri": "http://api.someservice.com/hook/timeout"
+  }
+}'
