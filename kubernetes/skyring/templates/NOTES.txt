@@ -1,8 +1,9 @@
 Nats chart comes from https://github.com/helm/charts/tree/master/stable/nats
+Mongo chart comes from https://github.com/helm/charts/tree/master/stable/mongodb
 
 By default there is no external service exposed. Once the nodes are up and running you may test it internally with:
 
-curl -i -XPOST http://skyring-node--skyring.skyring.svc:3000/timer -d '{
+curl -i -XPOST http://{{ .Values.nameOverride }}.NAMESPACE.svc:3000/timer -d '{
   "timeout": 6000,
   "data" : "{\"foo\":\"bar\"}",
   "callback": {

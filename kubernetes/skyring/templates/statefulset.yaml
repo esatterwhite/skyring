@@ -1,22 +1,22 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1beta2
+kind: StatefulSet
 metadata:
-  name: skyring-node-seed
+  name: {{ .Values.nameOverride }}-seed
   labels:
-    app: skyring-node-seed--{{ .Values.nameOverride }}
+    app: {{ .Values.nameOverride }}-seed
     chart: {{ template "skyring.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.seedReplicaCount }}
+  replicas: {{ .Values.SeedReplicaCount }}
   selector:
     matchLabels:
-      app: skyring-node-seed--{{ .Values.nameOverride }}
+      app: {{ .Values.nameOverride }}-seed
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: skyring-node-seed--{{ .Values.nameOverride }}
+        app: {{ .Values.nameOverride }}-seed
         release: {{ .Release.Name }}
     spec:
       initContainers:
@@ -24,11 +24,18 @@ spec:
         image: yauritux/busybox-curl
         command:
         - curl
-        - "http://skyring-nats-headless:4222/monitoring"
+        - "http://{{ .Release.Name }}-nats-client:4222/monitoring"
+      {{- if .Values.persistent.enabled }}
+      - name: mongo-pause
+        image: yauritux/busybox-curl
+        command:
+        - curl
+        - "http://{{ .Release.Name }}-mongodb-headless:9216/metrics"
+      {{- end }}
       containers:
-        - name: skyring-node-seed--{{ .Values.nameOverride }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Values.nameOverride }}-seed
+          image: {{ .Values.image.repository }}:{{ if not .Values.persistent.enabled }}{{ .Values.image.tag }}{{ end }}{{ if .Values.persistent.enabled }}{{ .Values.image.persistent_tag }}{{ end}}
+          imagePullPolicy: Always
           ports:
             - name: port-one
               containerPort: 3455
@@ -40,23 +47,31 @@ spec:
             {{- if eq .Values.debug true }}
             - name: DEBUG
               value: "*"
-            {{- end}}
+            {{- end }}
             - name: channel__host
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: channel__host_backup
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
             - name: nats__hosts
-              value: 'skyring-nats-headless:4222'
+              value: '{{ .Release.Name }}-nats-client:4222'
             - name: seeds
-              value: 'skyring-node-seed--{{ .Release.Name }}:3455'
+              value: '{{ .Values.nameOverride }}-seed:3455'
+            {{- if not .Values.persistent.enabled }}
             - name: storage__backend
               value: 'leveldown'
             - name: storage__path
               value: /var/data/skyring
+            {{- end }}
+            {{- if .Values.persistent.enabled }}
+            - name: storage__backend
+              value: 'mongodown'
+            - name: storage__path
+              value: 'mongodb://{{ .Release.Name }}-mongodb:27017/skyring'
+            - name: storage__collection
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{ end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       {{- if .Values.nodeSelector }}
@@ -68,25 +83,25 @@ spec:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
 ---
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1beta2
+kind: StatefulSet
 metadata:
-  name: skyring-node
+  name: {{ .Values.nameOverride }}
   labels:
-    app: skyring-node--{{ .Values.nameOverride }}
+    app: {{ .Values.nameOverride }}
     chart: {{ template "skyring.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.workerReplicaCount }}
+  replicas: {{ .Values.WorkerReplicaCount }}
   selector:
     matchLabels:
-      app: skyring-node--{{ .Values.nameOverride }}
+      app: {{ .Values.nameOverride }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: skyring-node--{{ .Values.nameOverride }}
+        app: {{ .Values.nameOverride }}
         release: {{ .Release.Name }}
     spec:
       initContainers:
@@ -94,10 +109,17 @@ spec:
         image: yauritux/busybox-curl
         command:
         - curl
-        - "http://skyring-nats-headless:4222/monitoring"
+        - "http://{{ .Release.Name }}-nats-client:4222/monitoring"
+      {{- if .Values.persistent.enabled }}
+      - name: mongo-pause
+        image: yauritux/busybox-curl
+        command:
+        - curl
+        - "http://{{ .Release.Name }}-mongodb-headless:9216/metrics"
+      {{- end }}
       containers:
-        - name: skyring-node--{{ .Values.nameOverride }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        - name: {{ .Values.nameOverride }}
+          image: {{ .Values.image.repository }}:{{ if not .Values.persistent.enabled }}{{ .Values.image.tag }}{{ end }}{{ if .Values.persistent.enabled }}{{ .Values.image.persistent_tag }}{{ end}}
           imagePullPolicy: Always
           ports:
             - name: port-one
@@ -116,13 +138,25 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: nats__hosts
-              value: 'skyring-nats-headless:4222'
+              value: '{{ .Release.Name }}-nats-client:4222'
             - name: seeds
-              value: 'skyring-node-seed--{{ .Release.Name }}:3455'
+              value: '{{ .Values.nameOverride}}-seed:3455'
+            {{- if not .Values.persistent.enabled }}
             - name: storage__backend
               value: 'leveldown'
             - name: storage__path
               value: /var/data/skyring
+            {{- end }}
+            {{- if .Values.persistent.enabled }}
+            - name: storage__backend
+              value: 'mongodown'
+            - name: storage__path
+              value: 'mongodb://{{ .Release.Name }}-mongodb:27017/skyring'
+            - name: storage__collection
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{ end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       {{- if .Values.nodeSelector }}

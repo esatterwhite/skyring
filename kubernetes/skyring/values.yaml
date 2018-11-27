@@ -1,17 +1,21 @@
 # Default values for skyring.
 # This is a YAML-formatted file.
 
-seedReplicaCount: 1
-workerReplicaCount: 4
+SeedReplicaCount: 2
+WorkerReplicaCount: 4
 
 image:
   repository: ianskebba/skyring-node
   tag: latest
+  persistent_tag: mongo-1
   pullPolicy: Always
 
-nameOverride: "skyring"
+nameOverride: "skyring-node"
 
 debug: true
+
+persistent:
+  enabled: false
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
