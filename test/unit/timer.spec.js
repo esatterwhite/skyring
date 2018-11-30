@@ -164,7 +164,7 @@ test('timers', (t) => {
     tt.end()
   });
 
-  t.test('remove', (tt) => {
+  t.test('cancel', (tt) => {
     let timers = null
     tt.test('set up timer cache', (ttt) => {
       timers = new Timer({
@@ -192,7 +192,7 @@ test('timers', (t) => {
         }
       }, (err) => {
         setTimeout(() => {
-          timers.remove(id, () => {
+          timers.cancel(id, () => {
             ttt.ok(!called)
             clearAll(timers, ttt.end)
           })
