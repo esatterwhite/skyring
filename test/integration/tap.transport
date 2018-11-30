@@ -6,5 +6,5 @@ if (require.main === module) return
 module.exports = function tap( method, url, payload, id, cache ) {
   console.log('tap transport executed')
   payload[method](1, 'tap transport')
-  cache.remove(id)
+  cache.cancel(id)
 }

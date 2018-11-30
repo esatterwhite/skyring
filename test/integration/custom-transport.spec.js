@@ -25,7 +25,7 @@ test('server', (t) => {
     let server = null
     tt.test('create server', (ttt) => {
       function foobar(method, url, payload, id, cache) {
-        tap.ok('foobar')
+        tap.ok('foobar', 'foobar transport called')
       }
       server = new Server({
         node: {
@@ -101,7 +101,7 @@ test('server', (t) => {
           timeout: 250
         , data: 'hello world'
         , callback: {
-            transport: 'http'
+            transport: 'test'
           , method: 'put'
           , uri: 'http://localhost:4444'
           }

@@ -4,5 +4,5 @@ if (require.main === module) return
 
 module.exports = function test(method, url ,payload, id, storage) {
   console.log('test transport')
-  storage.remove(id)
+  storage.cancel(id)
 }
