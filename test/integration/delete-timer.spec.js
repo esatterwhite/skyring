@@ -24,7 +24,7 @@ test('skyring:api', (t) => {
       seeds: [`${hostname}:3455`]
     });
     request = supertest('http://localhost:4444')
-    server.load().listen(4444, null, null, tt.end);
+    server.listen(4444, null, null, tt.end);
   });
 
   t.on('end', () => {
