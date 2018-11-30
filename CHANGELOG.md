@@ -1,3 +1,10 @@
+v7.0.1
+------
+
+* timer: corrects bug that would reset a timer during a rebalance
+* pkg: fix a broken dependency in package-lock
+* ci: fixes the travis build so PR builds will pass github checks
+
 v7.0.0
 ------
 
