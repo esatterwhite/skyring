@@ -1,4 +1,4 @@
-An offially supported TCP based transport with connection pooling for Skyring. This transport
+An officially supported TCP based transport with connection pooling for Skyring. This transport
 Will maintain a pool of connections to the destination of your choosing. It is responsible for growing
 and shrinking the pool as needed and re-creating connections if they happen to error or close unexpectedly.
 
@@ -20,9 +20,7 @@ const server = new Skyring({
 , seeds: ['localhost:3455']
 })
 
-server
-  .load()
-  .listen(3000)
+server.listen(3000)
 ```
 
 

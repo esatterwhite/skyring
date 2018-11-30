@@ -23,7 +23,6 @@ const server = new Skyring({
 })
 
 server
-  .load()
   .listen(3000)
 ```
 

@@ -40,7 +40,6 @@ test('server', (t) => {
         }
       , transports: [foobar]
       })
-      .load()
       .listen(5555, null, null, (err) => {
         ttt.error(err)
         ttt.end()
@@ -89,7 +88,6 @@ test('server', (t) => {
         }
       , transports: [require.resolve(path.join(__dirname, 'test.transport'))]
       })
-      .load()
       .listen(5555, null, null, (err) => {
         ttt.error(err)
         ttt.end()
