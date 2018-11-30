@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "tap --cov -Rtap test",
-    "posttest": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
+    "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",
     "start": "npm run compose:up",
     "stop": "npm run compose:down",
