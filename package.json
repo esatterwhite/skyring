@@ -7,7 +7,7 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "tap --cov -Rtap test",
+    "test": "npm run check && tap --cov -Rtap test",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",
     "check": "check-pkg -d !docs -d !node_modules -d !examples",
@@ -36,7 +36,8 @@
     "debug": "^3.1.0",
     "encoding-down": "^5.0.2",
     "keef": "^4.0.1",
-    "level": "^4.0.0",
+    "leveldown": "^4.0.1",
+    "levelup": "^3.1.1",
     "memdown": "^3.0.0",
     "nats": "^1.0.1",
     "needle": "^2.2.4",
