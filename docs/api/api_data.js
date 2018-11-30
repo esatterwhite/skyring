@@ -1,5 +1,28 @@
 define({ "api": [
   {
+    "description": "<p>returns a 200 status if the server is up</p>",
+    "group": "ping",
+    "name": "get_ping",
+    "type": "get",
+    "url": "/ping",
+    "title": "",
+    "version": "8.0.0",
+    "examples": [
+      {
+        "title": "curl:",
+        "content": "curl -i -XGET http://localhost:3000/ping",
+        "type": "curl"
+      },
+      {
+        "title": "Node.js:",
+        "content": "const http = require('http')\nhttp.get('http://localhost:3000/ping, (err, res) => {\n  console.log(res.statusCode);\n})",
+        "type": "js"
+      }
+    ],
+    "filename": "lib/server/api/get_ping.js",
+    "groupTitle": "ping"
+  },
+  {
     "description": "<p>Create a new time on the cluster</p>",
     "group": "timer",
     "name": "create_timer",
