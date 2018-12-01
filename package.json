@@ -7,7 +7,7 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "npm run check && tap --cov -Rtap test",
+    "test": "npm run check && tap --cov -Rclassic test",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",
     "check": "check-pkg -d !docs -d !node_modules -d !examples",

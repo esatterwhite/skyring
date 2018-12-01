@@ -5,7 +5,7 @@ ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y \
   build-essential curl g++ make tar python
 
-ENV NODE_VERSION 8.7.0
+ENV NODE_VERSION 8.12.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz"
 RUN tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1
