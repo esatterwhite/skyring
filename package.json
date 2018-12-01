@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "npm run check && tap --cov -Rclassic test",
+    "tap": "tap",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",
     "check": "check-pkg -d !docs -d !node_modules -d !examples",
@@ -56,5 +57,11 @@
     "jsdoc": "^3.5.5",
     "supertest": "^3.1.0",
     "tap": "^12.0.1"
-  }
+  },
+  "contributors": [
+    {
+      "name": "Ian Skebba",
+      "email": "iaskebba@ucdavis.edu"
+    }
+  ]
 }
