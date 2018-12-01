@@ -1,3 +1,23 @@
+v8.0.2
+------
+
+* middleware: fix proxy middle ware to always set location header
+
+v8.0.1
+------
+
+* revert needle back to request. fixes issue where transport callback not being called
+
+v8.0.0
+------
+
+* [BREAKING] remove deprecated server#load function. Calling it will be an error
+* replace request with needle. Http transport now uses needle
+* replace level package w/ levelup + leveldown explicitly
+* remove quay specific build
+* bump docker image to use node 8.12
+
+
 v7.0.1
 ------
 
