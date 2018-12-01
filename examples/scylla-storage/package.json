@@ -17,6 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "@skyring/scylladown": "^1.0.1",
-    "skyring": "^6.0.0-alpha.2"
+    "skyring": "^8.0.0"
   }
 }

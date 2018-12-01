@@ -17,7 +17,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3000, (err) => {
+server.listen(3000, (err) => {
   console.log('server listening http://0.0.0.0:3000')
 })
 
