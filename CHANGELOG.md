@@ -1,3 +1,8 @@
+v8.0.3
+------
+
+* timer: be sure to flush the nats connection before closing. Fixes issue where timers may be lost during a rebalance
+
 v8.0.2
 ------
 
