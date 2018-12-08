@@ -37,7 +37,7 @@ var _ = require('underscore');
 var EventEmitter = require('events').EventEmitter;
 var farmhash = require('farmhash');
 var timers = require('timers');
-var hammock = require('hammock');
+var micromock = require('@esatterwhite/micromock');
 var metrics = require('metrics');
 var packageJSON = require('./package.json');
 
@@ -136,10 +136,8 @@ function RingPop(options) {
     // use fingerprint if ringpop needs to function cross different platforms
     if (this.config.get('isCrossPlatform')) {
         this.hashFunc = farmhash.fingerprint32;
-    } else if (this.config.get('useLatestHash32')) {
-        this.hashFunc = farmhash.hash32;
     } else {
-        this.hashFunc = farmhash.hash32v1;
+        this.hashFunc = farmhash.hash32;
     }
 
     this.lagSampler = new LagSampler({
@@ -665,7 +663,7 @@ RingPop.prototype.handleOrProxyAll =
 
         dests.forEach(function(dest) {
             var destKeys = keysByDest[dest];
-            var res = hammock.Response(function(err, resp) {
+            var res = new micromock.Response(function(err, resp) {
                 onResponse(err, resp, dest);
             });
             if (whoami === dest) {
