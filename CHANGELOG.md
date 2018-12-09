@@ -1,3 +1,10 @@
+v9.0.0
+------
+
+* minimum node support v8
+* replaces uber ringpop w/ fork @skyring/ringpop
+* replaces inline hammock w/ @esatterwhite/micromock
+
 v8.0.3
 ------
 
