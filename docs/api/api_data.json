@@ -15,7 +15,7 @@
       },
       {
         "title": "Node.js:",
-        "content": "const http = require('http')\nhttp.get('http://localhost:3000/ping, (err, res) => {\n  console.log(res.statusCode);\n})",
+        "content": "const http = require('http')\nhttp.get('http://localhost:3000/ping', (err, res) => {\n  console.log(res.statusCode);\n})",
         "type": "js"
       },
       {
