@@ -3,7 +3,7 @@
 > [`ScyllaDB`] backend store for [`levelup`] leveraging [`abstract-leveldown`]
 
 [![level badge][level-badge]](https://github.com/level/awesome)
-[![npm](https://img.shields.io/npm/v/@skyring-scylladown.svg?style=flat-square)](https://github.com/esatterwhite/skyring-scylladown)
+[![npm](https://img.shields.io/npm/v/@skyring/scylladown.svg?style=flat-square)](https://github.com/esatterwhite/skyring-scylladown)
 [![npm](https://img.shields.io/npm/l/@skyring/scylladown.svg?style=flat-square)](https://github.com/esatterwhite/skyring-scylladown/blob/master/LICENSE)
 
 Specialized leveldown backend for use with skyring. Not all level down features are supported.
