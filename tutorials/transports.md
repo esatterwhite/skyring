@@ -31,7 +31,7 @@ const server = new Skyring({
 , seeds: ['localhost:3455']
 })
 
-server.load().listen(3000)
+server.listen(3000)
 ``` 
 
 Done. Just be sure that **every** skyring node in the cluster has all of the same transports loaded so they have the capability to execute all of the timers. Other than that, we can start using our new transport by referencing it by name in the `transport` field of the request to create a new timer.

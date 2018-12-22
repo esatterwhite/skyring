@@ -40,7 +40,6 @@ test('server', (t) => {
           , backend: 'leveldown'
           }
         })
-        .load()
         .listen(5555, null ,null, cb);
       }
     , (cb) => {
@@ -56,7 +55,6 @@ test('server', (t) => {
           , backend: 'leveldown'
           }
         })
-        .load()
         .listen(5556, null, null, cb);
       }
     , (cb) => {
@@ -72,7 +70,6 @@ test('server', (t) => {
           , backend: 'leveldown'
           }
         })
-        .load()
         .listen(5557, null, null, cb);
       }
     ], (err) => {

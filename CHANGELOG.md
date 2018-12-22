@@ -1,3 +1,42 @@
+v9.0.0
+------
+
+* minimum node support v8
+* replaces uber ringpop w/ fork @skyring/ringpop
+* replaces inline hammock w/ @esatterwhite/micromock
+
+v8.0.3
+------
+
+* timer: be sure to flush the nats connection before closing. Fixes issue where timers may be lost during a rebalance
+
+v8.0.2
+------
+
+* middleware: fix proxy middle ware to always set location header
+
+v8.0.1
+------
+
+* revert needle back to request. fixes issue where transport callback not being called
+
+v8.0.0
+------
+
+* [BREAKING] remove deprecated server#load function. Calling it will be an error
+* replace request with needle. Http transport now uses needle
+* replace level package w/ levelup + leveldown explicitly
+* remove quay specific build
+* bump docker image to use node 8.12
+
+
+v7.0.1
+------
+
+* timer: corrects bug that would reset a timer during a rebalance
+* pkg: fix a broken dependency in package-lock
+* ci: fixes the travis build so PR builds will pass github checks
+
 v7.0.0
 ------
 

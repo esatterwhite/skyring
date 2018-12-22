@@ -1,5 +1,42 @@
 [
   {
+    "description": "<p>returns a 200 status if the server is up</p>",
+    "group": "ping",
+    "name": "get_ping",
+    "type": "get",
+    "url": "/ping",
+    "title": "check if service is running",
+    "version": "8.0.0",
+    "examples": [
+      {
+        "title": "curl:",
+        "content": "curl -i -XGET http://localhost:3000/ping",
+        "type": "curl"
+      },
+      {
+        "title": "Node.js:",
+        "content": "const http = require('http')\nhttp.get('http://localhost:3000/ping', (err, res) => {\n  console.log(res.statusCode);\n})",
+        "type": "js"
+      },
+      {
+        "title": "python:",
+        "content": "import json\nfrom urllib.request import Request, urlopen\nreq = Request(url='http://localhost:3000/ping', method='GET')\nres = urlopen(req)\nprint(res.status)",
+        "type": "python"
+      }
+    ],
+    "header": {
+      "examples": [
+        {
+          "title": "Headers Example:",
+          "content": "HTTP/1.1 200 OK\nDate: Fri, 23 Dec 2018 00:19:13 GMT\nConnection: keep-alive\nContent-Length: 0",
+          "type": "text"
+        }
+      ]
+    },
+    "filename": "lib/server/api/get_ping.js",
+    "groupTitle": "ping"
+  },
+  {
     "description": "<p>Create a new time on the cluster</p>",
     "group": "timer",
     "name": "create_timer",
@@ -97,7 +134,7 @@
       },
       {
         "title": "Node.js:",
-        "content": "const http = require('http')\nconst data = JSON.stringify({\n  timeout: 5000,\n  data: {foo: 'bar', bar: 'baz'},\n  callback: {\n    transport: 'http',\n    method: 'post',\n    uri: 'http://mydomain.name/timer/callback'\n  }\n})\nconst options = {\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer',\n   method: 'POST',\n   headers: {\n     'Content-Type': 'application/json',\n     'Content-Length': Buffer.byteLength(data)\n   }\n };\nconst req = http.request(options, (res) => {\n  let data = '';\n  res.on('data', (chunk) => {\n    data += chunk;\n  });\n\n  res.on('end', () => {\n    // done\n  });\n})\nreq.write(data);\nreq.end();",
+        "content": "const http = require('http')\nconst data = JSON.stringify({\n  timeout: 5000,\n  data: {foo: 'bar', bar: 'baz'},\n  callback: {\n    transport: 'http',\n    method: 'post',\n    uri: 'http://mydomain.name/timer/callback'\n  }\n})\n\nconst req = http.request({\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer',\n   method: 'POST',\n   headers: {\n     'Content-Type': 'application/json',\n     'Content-Length': Buffer.byteLength(data)\n   }\n}, (res) => {\n  let data = '';\n  res.on('data', (chunk) => {\n    data += chunk;\n  });\n\n  res.on('end', () => {\n    // done\n  });\n})\nreq.write(data);\nreq.end();",
         "type": "js"
       },
       {
@@ -126,10 +163,10 @@
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "UUID",
             "optional": false,
             "field": "id",
-            "description": "<p>Users unique ID.</p>"
+            "description": "<p>unique timer ID.</p>"
           }
         ]
       },
@@ -150,8 +187,18 @@
       },
       {
         "title": "Node.js:",
-        "content": "const http = require('http')\nconst options = {\n   hostname: 'localhost',\n   port: 3000,\n   path: '/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45',\n   method: 'DELETE',\n   headers: {\n     'Content-Type': 'application/json',\n   }\n };\nconst req = http.request(options, (res) => {\n  res.on('end', () => {\n    // done\n  });\n})\nreq.end();",
+        "content": "const http = require('http')\nconst req = http.request({\n  hostname: 'localhost',\n  port: 3000,\n  path: '/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45',\n  method: 'DELETE',\n  headers: {\n    'Content-Type': 'application/json',\n  }\n}, (res) => {\n  res.on('end', () => {\n    // done\n  });\n})\nreq.end();",
         "type": "js"
+      },
+      {
+        "title": "python:",
+        "content": "import json\nfrom urllib.request import Request, urlopen\nreq = Request(url='http://localhost:3000/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45', method='DELETE')\nres = urlopen(req)\nprint(res.status)",
+        "type": "python"
+      },
+      {
+        "title": "ruby:",
+        "content": "require 'json'\nrequire 'net/http'\nrequire 'uri'\n\nuri = URI.parse('http://localhost:3003/timer/8c66a779-9c74-4e30-b5e8-f32d60909d45')\n\nhttp = Net::HTTP.new(uri.host, uri.port)\nrequest = Net::HTTP::Delete.new(uri.request_uri, {'Content-Type': 'application/json'})\nresponse = http.request(request)\nprint response.code",
+        "type": "ruby"
       }
     ],
     "filename": "lib/server/api/delete_timer.js",

@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+					<li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
 				</ul>
 			</li>
 			
@@ -95,10 +95,10 @@
 <article>
     <p>The start up process in each Skyring server includes a discovery phase referred to as the <code>bootstrap</code> phase.</p>
 <p>The <code>bootstrap</code> process is the process of each of the designated <strong>seed</strong> nodes coming online and discovering each other. 
-Once all of the seed nodes succesfully comes one line, the clusters is considered to be <code>bootstrapped</code> and the <code>HTTP</code> server 
+Once all of the seed nodes successfully comes one line, the clusters is considered to be <code>bootstrapped</code> and the <code>HTTP</code> server 
 will start up. Once the ring has been bootstrapped it will continue to function even if the seed node go down. However, new 
 node will be able to join the ring until all of the seeds have come back online.</p>
-<p><strong>NOTE</strong> It is highly reccomended that seeds get a static IP address or you will have to continually re-configure you clusters. 
+<p><strong>NOTE</strong> It is highly recommended that seeds get a static IP address or you will have to continually re-configure you clusters. 
 While not a requirement, each skyring instance should be on it's own host machine.</p>
 <h3>Seed Nodes</h3><p>Seed nodes are used by other nodes in the cluster to determine the topology of the cluster. Besides that, they are the same as 
 non-seed nodes. A Cluster must have one ore more seeds to function. When creating a new <code>Skyring</code> node, you specify cluster seeds 
@@ -110,7 +110,7 @@ const server = new Skyring({
   seeds: ['10.50.0.5:3456', '10.60.0.5:3456']
 })</code></pre><h3>Skyring Channel Configuration</h3><p>Each Skyring node uses an internal communication channel to talk to to the other seed nodes in the cluster during the <code>bootstrap</code> process. 
 You must make sure that one of the listed <code>seeds</code> matches the channel configuration of one of the nodes. </p>
-<h4>Single node cluster</h4><p>It is possible to <code>bootstarp</code> a single node cluster be specifing one seed node and configuring the internal node configuration match</p>
+<h4>Single node cluster</h4><p>It is possible to <code>bootstrap</code> a single node cluster by specifying one seed node and configuring the internal node configuration match</p>
 <pre class="prettyprint source lang-javascript"><code>const Skyring = require('skyring')
 const server = new Skyring({
   seeds: ['127.0.0.1:3456']
@@ -121,7 +121,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3000, null, null, () => {
+server.listen(3000, null, null, () => {
   console.log('skyring bootstrapped')
 })</code></pre><p>This will start a skyring node with a communication channel listing on port <code>3456</code> of localhost, and looking for a seed node on the same port. So, 
 this node bootstraps itself, and starts the <code>HTTP</code> server</p>
@@ -137,7 +137,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3000, null, null, () => {
+server.listen(3000, null, null, () => {
   console.log('skyring bootstrapped')
 })</code></pre><pre class="prettyprint source lang-javascript"><code>// Node 2
 const Skyring = require('skyring')
@@ -150,10 +150,10 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3001, null, null, () => {
+server.listen(3001, null, null, () => {
   console.log('skyring bootstrapped')
 })</code></pre><p>In this Example, we start two seeds on <code>localhost</code> ports <code>3455</code> and <code>3456</code>. Each one is configured to find itself and the other node in the cluster. 
-Once the initial cluster <code>bootstrap</code> is complete and the seedsd are online, we can start adding additional nodes to the ring cluster.</p>
+Once the initial cluster <code>bootstrap</code> is complete and the seeds are online, we can start adding additional nodes to the ring cluster.</p>
 <h4>Add Non-Seed Nodes</h4><p>To add additional server instances, we just start more services pointed at the 2 <code>seed</code> nodes with <code>node</code> configuration and a unused port for the 
 <code>HTTP</code> server</p>
 <pre class="prettyprint source lang-javascript"><code>// Node 3
@@ -167,7 +167,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3002, null, null, () => {
+server.listen(3002, null, null, () => {
   console.log('server 3 ready')
 })</code></pre><pre class="prettyprint source lang-javascript"><code>// Node 4
 const Skyring = require('skyring')
@@ -180,7 +180,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3003, null, null, () => {
+server.listen(3003, null, null, () => {
   console.log('Server 4 ready')
 })</code></pre>
 </article>
@@ -224,7 +224,7 @@ server.load().listen(3003, null, null, () => {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-11-06T21:04:11-05:00
+		on 2018-12-09T11:52:25-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

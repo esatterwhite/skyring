@@ -49,7 +49,7 @@ test('skyring:api', (t) => {
       seeds: [`${hostname}:3455`]
     });
     request = supertest('http://localhost:3333');
-    server.load().listen(3333, null, null, tt.end)
+    server.listen(3333, null, null, tt.end)
   });
 
   t.test('#POST /timer', (tt) => {

@@ -15,7 +15,7 @@
 A distributed reliable timer service providing `setTimeout` functionality in a distributed fashion.
 `Skyring` servers are clustered into a *hashring* using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API that allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )
 
-# Architechture Overview 
+# Architecture Overview
 
 <img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch.png" width="100%" max-width="800px">
 
@@ -56,7 +56,7 @@ DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455
 ### Using in your project
 
 If you want to use the skyring directly, you can just require it and start it directly.
-most of the available enviroment and cli arguments can be passed to the {@link module:skyring/lib/server|skyring constructor}.
+most of the available environment and cli arguments can be passed to the {@link module:skyring/lib/server|skyring constructor}.
 If you don't pass anything to the construct the default values are {@link module:keef|loaded} from the appropriate sources
 
 ```javascript
@@ -70,7 +70,7 @@ function onSignal() {
   });
 }
 
-server.load().listen(3000, (err) => {
+server.listen(3000, (err) => {
   if (err) throw err
   console.log('skyring listening at %s', 'http://0.0.0.0:3000')
 })
@@ -191,7 +191,7 @@ skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
 In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
 If, for example you want to off load data storage to a [mongo](https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage)
 or [scylladb](https://github.com/esatterwhite/skyring/tree/master/examples/scylla-storage) cluster, you would just include the backend package
-as a dependency in your project and specify it by name as the stoargae package. Options for the backend can be passed via the `storage` attribute
+as a dependency in your project and specify it by name as the storage package. Options for the backend can be passed via the `storage` attribute
 
 ```bash
 npm install @skyring/scylladown
@@ -203,7 +203,7 @@ skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-2 --sto
 
 Skyring ships with a single HTTP transport, but support custom transports. A `transport` is a named function
 that can be executed when a timer triggers. To register a transport, you can pass an array of named functions, or
-requireable paths to the skyring server constructor via via the {@link module:skyring/lib/transports|transports} option
+module file paths to the skyring server constructor via via the {@link module:skyring/lib/transports|transports} option
 
 Optionally, for transports that need to perform some clean up work, a function property `shutdown` may be defined
 on the transport

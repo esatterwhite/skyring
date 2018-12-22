@@ -4,7 +4,7 @@ const Skyring = require('skyring')
 
 const server = new Skyring({
   storage: {
-    backend: '@skyring/scylladown'
+    backend: 'leveldown'
   }
 })
 

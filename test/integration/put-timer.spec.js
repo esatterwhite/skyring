@@ -22,7 +22,7 @@ test('skyring:api', (t) => {
   t.test('set up ring server', ( tt ) => {
     server = new Server({ seeds: [`${hostname}:3455`] });
     request = supertest('http://localhost:5544');
-    server.load().listen(5544, null, null, tt.end);
+    server.listen(5544, null, null, tt.end);
   });
 
   t.on('end', ( done ) => {

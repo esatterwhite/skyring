@@ -4,7 +4,7 @@ const Skyring = require('skyring')
 
 const server = new Skyring()
 
-server.load().listen(process.env.PORT || 3000, (err) => {
+server.listen(process.env.PORT || 3000, (err) => {
   if(err) {
     process.exitCode = 1;
     console.error(err);

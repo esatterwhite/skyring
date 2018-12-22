@@ -14,6 +14,6 @@
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
   "dependencies": {
-    "skyring": "^6.0.0-alpha.1"
+    "skyring": "^8.0.0"
   }
 }

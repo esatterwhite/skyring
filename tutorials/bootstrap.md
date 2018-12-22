@@ -1,11 +1,11 @@
 The start up process in each Skyring server includes a discovery phase referred to as the `bootstrap` phase.
 
 The `bootstrap` process is the process of each of the designated **seed** nodes coming online and discovering each other. 
-Once all of the seed nodes succesfully comes one line, the clusters is considered to be `bootstrapped` and the `HTTP` server 
+Once all of the seed nodes successfully comes one line, the clusters is considered to be `bootstrapped` and the `HTTP` server 
 will start up. Once the ring has been bootstrapped it will continue to function even if the seed node go down. However, new 
 node will be able to join the ring until all of the seeds have come back online.
 
-**NOTE** It is highly reccomended that seeds get a static IP address or you will have to continually re-configure you clusters. 
+**NOTE** It is highly recommended that seeds get a static IP address or you will have to continually re-configure you clusters. 
 While not a requirement, each skyring instance should be on it's own host machine.
 
 ### Seed Nodes
@@ -45,7 +45,7 @@ You must make sure that one of the listed `seeds` matches the channel configurat
 
 #### Single node cluster
 
-It is possible to `bootstarp` a single node cluster be specifing one seed node and configuring the internal node configuration match
+It is possible to `bootstrap` a single node cluster by specifying one seed node and configuring the internal node configuration match
 
 ```javascript
 const Skyring = require('skyring')
@@ -58,7 +58,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3000, null, null, () => {
+server.listen(3000, null, null, () => {
   console.log('skyring bootstrapped')
 })
 ```
@@ -83,7 +83,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3000, null, null, () => {
+server.listen(3000, null, null, () => {
   console.log('skyring bootstrapped')
 })
 ```
@@ -100,13 +100,13 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3001, null, null, () => {
+server.listen(3001, null, null, () => {
   console.log('skyring bootstrapped')
 })
 ```
 
 In this Example, we start two seeds on `localhost` ports `3455` and `3456`. Each one is configured to find itself and the other node in the cluster. 
-Once the initial cluster `bootstrap` is complete and the seedsd are online, we can start adding additional nodes to the ring cluster.
+Once the initial cluster `bootstrap` is complete and the seeds are online, we can start adding additional nodes to the ring cluster.
 
 #### Add Non-Seed Nodes
 
@@ -125,7 +125,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3002, null, null, () => {
+server.listen(3002, null, null, () => {
   console.log('server 3 ready')
 })
 ```
@@ -142,7 +142,7 @@ const server = new Skyring({
   }
 })
 
-server.load().listen(3003, null, null, () => {
+server.listen(3003, null, null, () => {
   console.log('Server 4 ready')
 })
 ```

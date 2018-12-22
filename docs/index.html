@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_mock.html">skyring/lib/server/mock</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-skyring_lib_server_mock.Request.html">skyring/lib/server/mock.Request</a></li><li><a href="module-skyring_lib_server_mock.Response.html">skyring/lib/server/mock.Response</a></li><li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
+					<li><a href="skyring_lib_server_request.html">skyring/lib/server/request</a></li>
 				</ul>
 			</li>
 			
@@ -120,7 +120,7 @@
 </ul>
 <h1>Skyring</h1><p>A distributed reliable timer service providing <code>setTimeout</code> functionality in a distributed fashion.
 <code>Skyring</code> servers are clustered into a <em>hashring</em> using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API that allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )</p>
-<h1>Architechture Overview</h1><p><img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch-inverted.png" width="100%" max-width="800px"></p>
+<h1>Architecture Overview</h1><p><img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch-inverted.png" width="100%" max-width="800px"></p>
 <h1>Install</h1><pre class="prettyprint source"><code>npm install -s skyring</code></pre><h2>Run A Local Cluster</h2><h3>Start a nats instance</h3><p>Download the <a href="https://github.com/nats-io/gnatsd/releases">nats binary</a> and start it using the defaults</p>
 <pre class="prettyprint source lang-bash"><code>$ gnats -D -V</code></pre><p>To verify that it is working, you can <code>telnet</code> directly to the server and ping it.</p>
 <pre class="prettyprint source lang-bash"><code>$ telnet localhost 4222
@@ -129,7 +129,7 @@ PONG</code></pre><h3>Skyring CLI</h3><p>If you intend to run skyring as is, it m
 <pre class="prettyprint source"><code>npm install -g skyring
 
 DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455</code></pre><h3>Using in your project</h3><p>If you want to use the skyring directly, you can just require it and start it directly.
-most of the available enviroment and cli arguments can be passed to the <a href="module-skyring_lib_server.html">skyring constructor</a>.
+most of the available environment and cli arguments can be passed to the <a href="module-skyring_lib_server.html">skyring constructor</a>.
 If you don't pass anything to the construct the default values are <a href="module-keef.html">loaded</a> from the appropriate sources</p>
 <pre class="prettyprint source lang-javascript"><code>// index.js
 const Skyring = require('skyring')
@@ -141,7 +141,7 @@ function onSignal() {
   });
 }
 
-server.load().listen(3000, (err) => {
+server.listen(3000, (err) => {
   if (err) throw err
   console.log('skyring listening at %s', 'http://0.0.0.0:3000')
 })
@@ -195,12 +195,12 @@ persistent backend for <code>levelup</code>. <a href="https://www.npmjs.com/pack
 <pre class="prettyprint source lang-bash"><code>skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'</code></pre><h3>Custom Storage</h3><p>In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
 If, for example you want to off load data storage to a <a href="https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage">mongo</a>
 or <a href="https://github.com/esatterwhite/skyring/tree/master/examples/scylla-storage">scylladb</a> cluster, you would just include the backend package
-as a dependency in your project and specify it by name as the stoargae package. Options for the backend can be passed via the <code>storage</code> attribute</p>
+as a dependency in your project and specify it by name as the storage package. Options for the backend can be passed via the <code>storage</code> attribute</p>
 <pre class="prettyprint source lang-bash"><code>npm install @skyring/scylladown
 skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-1 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043
 skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-2 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043</code></pre><h1>Custom Transports</h1><p>Skyring ships with a single HTTP transport, but support custom transports. A <code>transport</code> is a named function
 that can be executed when a timer triggers. To register a transport, you can pass an array of named functions, or
-requireable paths to the skyring server constructor via via the <a href="module-skyring_lib_transports.html">transports</a> option</p>
+module file paths to the skyring server constructor via via the <a href="module-skyring_lib_transports.html">transports</a> option</p>
 <p>Optionally, for transports that need to perform some clean up work, a function property <code>shutdown</code> may be defined
 on the transport</p>
 <pre class="prettyprint source lang-javascript"><code>const path = require('path')
@@ -274,7 +274,7 @@ const server = new Skyring({
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-11-06T21:04:11-05:00
+		on 2018-12-09T11:52:24-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
