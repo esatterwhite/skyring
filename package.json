@@ -37,7 +37,7 @@
     "@skyring/ringpop": "^11.0.0",
     "body": "^5.1.0",
     "debug": "^3.1.0",
-    "encoding-down": "^5.0.2",
+    "encoding-down": "^5.0.4",
     "keef": "^4.1.0",
     "leveldown": "^5.0.1",
     "levelup": "^4.0.1",
