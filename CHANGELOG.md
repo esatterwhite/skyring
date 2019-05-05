@@ -1,3 +1,14 @@
+v9.0.1
+------
+* update micromock@2.0.0 fixing a bug where transfering requests from ringpop to the router would fail
+* update path-to-regexp@3.0.0
+* update leveldown@5.0.1
+* update levelup@4.0.1
+* update memdown@4.0.1
+* update nats@1.2.10
+* update tchannel@3.9.13
+* update encoding-down@5.0.4
+
 v9.0.0
 ------
 
