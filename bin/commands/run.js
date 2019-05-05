@@ -13,6 +13,7 @@ const run = seeli.bold('run')
 
 module.exports = new seeli.Command({
   description: 'Run a new skyring instance'
+, ui: 'dots9'
 , usage: [
     `${name} ${run} -p 3000 -s localhost:5522 -s localhost:5523 --channel:port=5522`
   , `${name} ${run} -d -p 3001 -s localhost:5522 -s localhost:5523 --channel:port=5523`
@@ -81,34 +82,37 @@ module.exports = new seeli.Command({
 
     if ( !data.daemon ) {
       return new Promise((resolve, reject) => {
-         new Skyring( data ).load().listen(data.port, null, null, (err) => {
+         new Skyring( data ).listen(data.port, null, null, (err) => {
+
           if(err) {
             reject(err)
             process.exit(1);
           }
-          resolve(String(process.pid))
+          resolve(
+           `skyring process ${process.pid} listening on port ${conf.get('PORT')}`
+          )
         });
       })
     }
 
-    const args = [
-      path.join(cwd, 'index.js')
-    , `-p ${data.port}`
-    , `--seeds=${data.seeds.join(',')}`
-    , `--nats:hosts=${data.nats.hosts}`
-    , `--channel:host=${data.channel.host}`
-    , `--channel:port=${data.channel.port}`
-    , `--storage:backend=${data.storage.backend}`
-    , `--storage:path=${data.storage.path || ''}`
-    ]
+    const env = Object.assign({}, process.env, {
+      PORT: data.port
+    , seeds: data.seeds.join(',')
+    , nats__hosts: data.nats.hosts
+    , channel__host: data.channel.host
+    , channel__port: data.channel.port
+    , storage__backend: data.storage.backend
+    , storage__path: data.storage.path || ''
+    })
 
     const skyring = child.spawn(
       process.execPath
-    , args
+    , [ path.join(cwd, 'index.js') ]
     , {
         stdio: 'ignore'
       , cwd: cwd
       , detatched: true
+      , env: env
       }
     );
 

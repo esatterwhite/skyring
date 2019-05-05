@@ -13,7 +13,7 @@
 
 const conf   = require('./conf')
     , Server = require('./lib/server')
-    , debug  = require('debug')('skyring')
+    , debug  = require('debug')('skyring:main')
     ;
 
 module.exports = Server;
@@ -30,7 +30,7 @@ if( require.main === module ){
       console.error(err);
       throw err;
     }
-    debug('server listening');
+    debug('server listening', conf.get('PORT'));
   });
 
   function onSignal() {
