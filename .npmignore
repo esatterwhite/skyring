@@ -3,8 +3,13 @@ tutorials/
 assets/
 quay/
 examples/
+docs/
 .nyc_output/
 Dockerfile*
+payload.txt
+jsdoc.json
+log.test
+local.env
 *.save
 *.tgz
 .dockerignore
@@ -14,8 +19,3 @@ Dockerfile*
 .eslintrc
 .gitignore
 .jshintrc
-payload.txt
-jsdoc.json
-docs/
-log.test
-jsdoc.json

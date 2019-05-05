@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "npm run check && tap --cov -Rtap test",
+    "local": "env $(cat local.env)",
     "tap": "tap",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "docs": "jsdoc -c jsdoc.json && apidoc -i lib/server -o docs/api",

@@ -21,3 +21,4 @@ tutorials/
 npm-debug.log
 payload.txt
 jsdoc.json
+local.env
