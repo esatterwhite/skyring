@@ -33,7 +33,7 @@
     "url": "https://github.com/esatterwhite/skyring/issues"
   },
   "dependencies": {
-    "@esatterwhite/micromock": "^1.1.0",
+    "@esatterwhite/micromock": "^2.0.0",
     "@skyring/ringpop": "^11.0.0",
     "body": "^5.1.0",
     "debug": "^4.1.1",
