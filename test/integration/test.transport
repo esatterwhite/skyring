@@ -2,7 +2,11 @@
 
 if (require.main === module) return
 
-module.exports = function test(method, url ,payload, id, storage) {
-  console.log('test transport')
-  storage.cancel(id)
+class test {
+  exec (method, url ,payload, id, storage) {
+    console.log('test transport')
+    storage.cancel(id)
+  }
 }
+
+module.exports = test
