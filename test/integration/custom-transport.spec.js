@@ -24,8 +24,10 @@ test('server', (t) => {
   t.test('register custom transport as a function', (tt) => {
     let server = null
     tt.test('create server', (ttt) => {
-      function foobar(method, url, payload, id, cache) {
-        tap.ok('foobar', 'foobar transport called')
+      class Foobar {
+        exec (method, url, payload, id, cache) {
+         tap.ok('foobar', 'foobar transport called')
+        }
       }
       server = new Server({
         node: {
@@ -38,7 +40,7 @@ test('server', (t) => {
           backend: 'leveldown'
           , path: '/tmp/sk111'
         }
-      , transports: [foobar]
+      , transports: [Foobar]
       })
       .listen(5555, null, null, (err) => {
         ttt.error(err)
@@ -61,7 +63,7 @@ test('server', (t) => {
         .expect(201)
         .end((err, res) => {
           ttt.error(err)
-          ttt.type(server._timers.transports.foobar, 'function')
+          ttt.type(server._timers.transports.get('foobar').exec, 'function')
           ttt.end()
         })
     })
@@ -109,7 +111,7 @@ test('server', (t) => {
         .expect(201)
         .end((err, res) => {
           ttt.error(err)
-          ttt.type(server._timers.transports.test, 'function')
+          ttt.type(server._timers.transports.get('test').exec, 'function')
           ttt.end()
         })
     })

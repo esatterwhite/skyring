@@ -13,20 +13,28 @@ test('transports', (t) => {
 
   t.throws(() => {
     new Transports([
-      () => {}
+      class fake {
+        exec() {}
+      }
     ])
   }, /Transports must accept five parameters/)
 
   t.throws(() => {
     new Transports([
-      (a, b, c, d, e) => {}
+      class {
+        exec (a, b, c, d, e) {}
+      }
     ])
   }, /transports.name is required and must be a string/)
 
   t.throws(() => {
     new Transports([
-      function test(a, b, c, d, e) {}
-    , function test(a, b, c, d, e) {}
+       class test {
+         exec (a, b, c, d, e) {}
+       }
+     , class test {
+         exec (a, b, c, d, e) {}
+       }
     ])
   }, /A transport with name test is already defined/)
   t.end()
