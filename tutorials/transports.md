@@ -2,20 +2,32 @@ The Transports systems is how skyring executes timeouts. When a timer lapses, a 
 
 #### STDOUT Transport
 
-To illustrate the process, we're going to make a simple transport handler to write the data to `stdout`. Basically, speaking a transport is just a node.js module that exports a named `function`
+To illustrate the process, we're going to make a simple transport handler to write the data to `stdout`. Basically, speaking a transport is just a node.js module that exports a `class`.
+The class must, at the very least, have an `exec` function.
 
 ```
 'use strict'
 
 const os = require('os')
 
-module.exports = function stdout(method, url, payload, id, storage) {
-  // deliver the message
-  process.stdout.write(payload);
-  process.stdout(os.EOL);
+module.exports = class Stdout {
 
-  // clear the timer
-  storage.remove(id);
+  constructor(opts) {
+    // do set up
+  }
+
+  exec (method, url, payload, id, storage) {
+    // deliver the message
+    process.stdout.write(payload);
+    process.stdout(os.EOL);
+
+    // clear the timer
+    storage.remove(id);
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'SkyringSTDOutTransport'
+  }
 };
 ```
 
@@ -25,14 +37,14 @@ Pretty simple. We just write the data to the stdout out stream attached to the p
 'use strict'
 
 const Skyring = require('skyring')
-const stdout = require('./transports/stdout')
+const Stdout = require('./transports/stdout')
 const server = new Skyring({
-  transports: [require('./transports/stdout')]
+  transports: [Stdout]
 , seeds: ['localhost:3455']
 })
 
 server.listen(3000)
-``` 
+```
 
 Done. Just be sure that **every** skyring node in the cluster has all of the same transports loaded so they have the capability to execute all of the timers. Other than that, we can start using our new transport by referencing it by name in the `transport` field of the request to create a new timer.
 
@@ -47,5 +59,5 @@ curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '
   }
 }'
 ```
- 
+
 It is pretty simple and straight forward to build your own transport layer for [Skyring](https://github.com/esatterwhite/skyring). It can be a simple function, or for more complex use cases, you can build out entire npm packages using whatever tools you want. This makes the `transport` system in skyring very flexible, powerful, and easy to use.
