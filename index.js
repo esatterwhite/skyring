@@ -11,12 +11,14 @@
  * @requires skyring/lib/server
  **/
 
-const conf   = require('./conf')
-    , Server = require('./lib/server')
-    , debug  = require('debug')('skyring:main')
+const conf      = require('./conf')
+    , Server    = require('./lib/server')
+    , Transport = require('./lib/transports/transport')
+    , debug     = require('debug')('skyring:main')
     ;
 
 module.exports = Server;
+module.exports.Transport = Transport;
 
 if( require.main === module ){
   process.title = 'skyring';
