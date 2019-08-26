@@ -112,6 +112,13 @@ $ npm start
 ```
 That is it! You have a 5 node **Skyring** cluster with a 3 node `nats` cluster behind an `nginx` proxy listening on port `8080`
 
+#### Run via Kubernetes Helm
+
+To bootstrap to a kubernetes cluster simply go into the kubernetes folder and run
+```
+helm install ./skyring
+```
+The default values.yaml file will bootstrap a small cluster that should be suitable for most workloads.
 
 # Timer API
 
