@@ -1,7 +1,7 @@
 node_modules/
 .nyc_output
-packages/
 npm-debug.log
+lerna-debug.log
 *.tgz
 coverage/
 *.save

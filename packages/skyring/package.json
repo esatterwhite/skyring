@@ -1,0 +1,62 @@
+{
+  "name": "skyring",
+  "version": "9.0.1",
+  "description": "Distributed timers as a service",
+  "main": "index.js",
+  "bin": {
+    "skyring": "./bin/skyring.js"
+  },
+  "scripts": {
+    "test": "npm run check && tap --cov -Rtap test",
+    "tap": "tap",
+    "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
+    "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
+    "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
+    "posttest:ci": "docker-compose -f compose/test.yml down",
+    "compose:up": "docker-compose -f compose/dev.yml up --build ",
+    "compose:down": "docker-compose -f compose/dev.yml down"
+  },
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esatterwhite/skyring"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "bugs": {
+    "email": "esatterwhite@wi.rr.com",
+    "url": "https://github.com/esatterwhite/skyring/issues"
+  },
+  "dependencies": {
+    "@esatterwhite/micromock": "^2.0.0",
+    "@skyring/ringpop": "^11.0.0",
+    "body": "^5.1.0",
+    "debug": "^4.1.1",
+    "encoding-down": "^5.0.4",
+    "keef": "^4.1.0",
+    "leveldown": "^5.0.1",
+    "levelup": "^4.0.1",
+    "memdown": "^4.0.0",
+    "nats": "^1.2.10",
+    "path-to-regexp": "^3.0.0",
+    "request": "^2.88.0",
+    "seeli": "^8.1.3",
+    "tchannel": "^3.9.13",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "async": "^2.6.1",
+    "check-pkg": "^2.1.1",
+    "codeclimate-test-reporter": "^0.5.1",
+    "supertest": "^3.1.0",
+    "tap": "^12.6.2"
+  },
+  "contributors": [
+    {
+      "name": "Ian Skebba",
+      "email": "iaskebba@ucdavis.edu"
+    }
+  ]
+}
