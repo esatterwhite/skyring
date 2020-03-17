@@ -35,11 +35,11 @@
     "@esatterwhite/micromock": "^1.1.0",
     "body": "^5.0.0",
     "error": "^5.0.0",
-    "farmhash": "^2.1.0",
+    "farmhash": "^3.0.0",
     "metrics": "^0.1.8",
     "toobusy-js": "^0.5.0",
     "underscore": "^1.5.2",
-    "uuid": "^3.3.2"
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "after": "^0.8.1",
@@ -62,8 +62,8 @@
     "pre-commit": "^0.0.9",
     "tape": "^3.0.3",
     "tape-cluster": "2.1.0",
-    "tchannel": "^3.6.13",
-    "tcurl": "^4.11.1",
+    "tchannel": "^4.0.0",
+    "tcurl": "^4.23.1",
     "timer-shim": "^0.3.0",
     "tmp": "0.0.31",
     "tryit": "^1.0.1",
