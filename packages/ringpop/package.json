@@ -1,0 +1,88 @@
+{
+  "name": "@skyring/ringpop",
+  "description": "Scalable, fault-tolerant application-layer sharding",
+  "contributors": [
+    "ben fleis <ben.fleis@gmail.com>",
+    "Alex Hauser <ahauser@uber.com>",
+    "Rui Hu <ruihu.pvt@gmail.com>",
+    "Bob Nugmanov <bob.nugmanov@gmail.com>",
+    "Matt Ranney <mranney@uber.com>",
+    "Jeff Wolski <wolski@uber.com>",
+    "Jake Verbaten <raynos2@gmail.com>",
+    "Mark Yen <mark@uber.com>",
+    "Eric Satterwhite <esatterwhite@wi.rr.com>"
+  ],
+  "version": "11.1.0",
+  "engines": {
+    "node": ">=7.0"
+  },
+  "repository": "https://github.com/esatterwhite/ringpop-node",
+  "bin": {
+    "ringpop": "./main.js"
+  },
+  "scripts": {
+    "test": "npm run jshint && node test/index.js | faucet",
+    "test-debug": "node debug test/index.js",
+    "test-integration": "node test/integration/index.js | faucet",
+    "test-shared-integration-tests": "test/run-shared-integration-tests",
+    "test-unit": "node test/unit/index.js | faucet",
+    "cover": "istanbul cover --print detail --report html test/index.js | faucet",
+    "jshint": "jshint --verbose *.js lib/**/*.js server/**/*.js",
+    "travis": "npm run jshint && npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
+    "view-cover": "opn coverage/index.html"
+  },
+  "dependencies": {
+    "@esatterwhite/micromock": "^1.1.0",
+    "body": "^5.0.0",
+    "error": "^5.0.0",
+    "farmhash": "^3.0.0",
+    "metrics": "^0.1.8",
+    "toobusy-js": "^0.5.0",
+    "underscore": "^1.5.2",
+    "uuid": "^7.0.2"
+  },
+  "devDependencies": {
+    "after": "^0.8.1",
+    "async": "^0.9.0",
+    "benchmark": "^1.0.0",
+    "buffer-equal": "0.0.1",
+    "cli-color": "^0.3.2",
+    "commander": "^2.6.0",
+    "coveralls": "^2.11.2",
+    "debug-logtron": "^2.1.0",
+    "express": "^4.13.3",
+    "faucet": "^0.0.1",
+    "format-stack": "4.1.0",
+    "glob": "^4.3.1",
+    "istanbul": "^0.3.5",
+    "itape": "^1.5.0",
+    "jshint": "^2.9.2",
+    "leaked-handles": "^5.1.0",
+    "opn": "^1.0.1",
+    "pre-commit": "^0.0.9",
+    "tape": "^3.0.3",
+    "tape-cluster": "2.1.0",
+    "tchannel": "^4.0.0",
+    "tcurl": "^4.23.1",
+    "timer-shim": "^0.3.0",
+    "tmp": "0.0.31",
+    "tryit": "^1.0.1",
+    "winston": "^1.0.1"
+  },
+  "pre-commit": [
+    "test"
+  ],
+  "pre-commit.silent": true,
+  "itape": {
+    "trace": {
+      "debuglog": [
+        "ringpop",
+        "tchannel"
+      ],
+      "formatStack": true,
+      "leakedHandles": {
+        "fullStack": false
+      }
+    }
+  }
+}

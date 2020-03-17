@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - "8"
+  - "9"
+  - "10"
+before_install: npm i npm@6 -g
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
+env:
+  - CXX=g++-4.8 RUN="npm run travis"
+  - CXX=g++-4.8 RUN="npm run test-shared-integration-tests"
+
+matrix:
+  fast_finish: true
+
+script:
+  - test/travis
