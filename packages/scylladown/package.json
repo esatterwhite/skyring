@@ -1,0 +1,39 @@
+{
+  "name": "@skyring/scylladown",
+  "version": "1.0.2",
+  "description": "SyllaDB leveldown backend for Skyring",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "tap test -Rclassic --cov",
+    "posttest": "tap --coverage-report=text-summary"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esatterwhite/skyring-scylladown"
+  },
+  "keywords": [
+    "skyring",
+    "scylladb",
+    "levelup",
+    "leveldown"
+  ],
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/esatterwhite/skyring-scylladown/issues"
+  },
+  "homepage": "https://github.com/esatterwhite/skyring-scylladown#readme",
+  "dependencies": {
+    "abstract-leveldown": "^4.0.3",
+    "cassandra-driver": "^3.4.1",
+    "debug": "^3.1.0"
+  },
+  "devDependencies": {
+    "levelup": "^2.0.2",
+    "skyring": "^6.0.0-alpha.1",
+    "tap": "^11.1.1"
+  }
+}
