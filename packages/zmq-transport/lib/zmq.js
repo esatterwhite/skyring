@@ -1,5 +1,5 @@
 'use strict'
-const Zmq = require('zmq')
+const Zmq = require('zeromq')
 const debug = require('debug')('skyring:transports:zmq')
 const monitor = require('debug')('skyring:transports:zmq:monitor')
 const connections = new Map()
