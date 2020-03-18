@@ -1,0 +1,23 @@
+{
+  "name": "@skyring/zmq-transport",
+  "version": "1.0.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "ZMQ_DEBUG=1 tap --cov -Rtap test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^2.6.8",
+    "zmq": "^2.15.3"
+  },
+  "peerDependencies": {
+    "skyring": "<=^5.0"
+  },
+  "devDependencies": {
+    "skyring": "^4.2.0",
+    "supertest": "^3.0.0",
+    "tap": "^10.3.3"
+  }
+}
