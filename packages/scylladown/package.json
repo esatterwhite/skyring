@@ -29,11 +29,11 @@
   "dependencies": {
     "abstract-leveldown": "^4.0.3",
     "cassandra-driver": "^3.4.1",
-    "debug": "^3.1.0"
+    "debug": "4.1.1"
   },
   "devDependencies": {
     "levelup": "^2.0.2",
-    "skyring": "^6.0.0-alpha.1",
+    "skyring": "^9.0.0",
     "tap": "^11.1.1"
   }
 }
