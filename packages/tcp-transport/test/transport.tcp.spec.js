@@ -30,7 +30,7 @@ test('timeouts', (t) => {
     , seeds: [`${hostname}:3455`]
     });
     request = supertest('http://localhost:3333')
-    server.load().listen(3333, null, null, tt.end)
+    server.listen(3333, null, null, tt.end)
   })
 
   t.test('success - should deliver payload', (tt) => {
@@ -100,7 +100,7 @@ test('pool', (t) => {
     , seeds: [`${hostname}:3455`]
     });
     request = supertest('http://localhost:3333')
-    server.load().listen(3333, null, null, tt.end)
+    server.listen(3333, null, null, tt.end)
   })
 
   t.test('start saturate pool - no connection', (tt) => {

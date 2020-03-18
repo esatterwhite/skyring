@@ -16,7 +16,7 @@
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 8.0.0"
   },
   "repository": {
     "type": "git",
@@ -27,14 +27,11 @@
     "url": "https://github.com/esatterwhite/skyring-tcp-transport/issues"
   },
   "dependencies": {
-    "debug": "^2.6.8",
+    "debug": "^4.1.1",
     "generic-pool": "^3.1.7"
   },
-  "peerDependencies": {
-    "skyring": "<=^5.0.0"
-  },
   "devDependencies": {
-    "skyring": "^4.2.0",
+    "skyring": "^9.0.0",
     "supertest": "^3.0.0",
     "tap": "^10.3.2"
   }

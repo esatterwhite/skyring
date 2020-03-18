@@ -27,7 +27,7 @@ module.exports = function zmq(method, url, payload, id, storage) {
     throw err
   }
 
-  debug('execut zmq timer', 'timeout', payload)
+  debug('execute zmq timer', 'timeout', payload)
   conn
     .send('timeout', Zmq.ZMQ_SNDMORE)
     .send(payload)
