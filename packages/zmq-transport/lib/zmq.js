@@ -1,4 +1,5 @@
 'use strict'
+
 const Zmq = require('zeromq')
 const debug = require('debug')('skyring:transports:zmq')
 const monitor = require('debug')('skyring:transports:zmq:monitor')
@@ -6,6 +7,8 @@ const connections = new Map()
 const METHODS = new Set(['push', 'pub'])
 const ZMQ_DEBUG = !!process.env.ZMQ_DEBUG
 const ZMQ_BIND = !!process.env.ZMQ_BIND
+const kType = Symbol.for('skyringType')
+const TRANSPORT = 'zmqtransport'
 const MONITOR_EVENTS = new Set([
   'connect'
 , 'connect_delay'
@@ -19,22 +22,51 @@ const MONITOR_EVENTS = new Set([
 , 'disconnect'
 ])
 
-module.exports = function zmq(method, url, payload, id, storage) {
-  const conn = getConnection(url, method)
-  if(!conn) {
-    const err = new Error(`unable to create connection for ${method} - ${url}`)
-    err.code = 'ENOZMQCONN'
-    throw err
+const noop = () => {}
+
+module.exports = class ZMQ {
+  constructor(opts) {
+    this.name = TRANSPORT
   }
 
-  debug('execute zmq timer', 'timeout', payload)
-  conn
-    .send('timeout', Zmq.ZMQ_SNDMORE)
-    .send(payload)
-  storage.remove(id)
-}
+  exec(method, url, payload, id, storage) {
+    const conn = getConnection(url, method)
+    if (!conn) {
+      const err = new Error(`unable to create connection for ${method} - ${url}`)
+      err.code = 'ENOZMQCONN'
+      throw err
+    }
 
-module.exports.shutdown = shutdown
+    debug('execute zmq timer', 'timeout', payload)
+    conn
+      .send('timeout', Zmq.ZMQ_SNDMORE)
+      .send(payload)
+    storage.success(id)
+  }
+
+  shutdown(cb = noop) {
+    for (const [addr, socket] of connections.entries()) {
+      debug('shutdown - %s', addr)
+      socket.removeAllListeners()
+      socket.disconnect(addr)
+      socket.close()
+      connections.delete(addr)
+    }
+    cb()
+  }
+
+  static [Symbol.hasInstance](instance) {
+    return instance[kType] === TRANSPORT
+  }
+
+  get [kType]() {
+    return TRANSPORT
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'ZMQTransport';
+  }
+}
 
 function getConnection(addr, type) {
   if (connections.has(addr)) return connections.get(addr)
@@ -74,24 +106,12 @@ function startMonitor(socket) {
   }
 }
 
-function shutdown(cb = () =>{}) {
-  for (const [addr, socket] of connections.entries()) {
-    debug('shutdown - %s', addr)
-    socket.removeAllListeners()
-    socket.disconnect(addr)
-    socket.close()
-    connections.delete(addr)
-  }
-  cb()
-}
-
-function tryBind(socket, addr){
-  try{
+function tryBind(socket, addr) {
+  try {
     socket.bindSync(addr)
-  } catch(e) {
+  } catch (e) {
     e.meta = {
       address: addr
-    , type: type
     }
     return e
   }

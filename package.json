@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
+    "lint": "eslint.",
+    "lint:fix": "npm run lint -- --fix",
     "local": "env $(cat local.env)",
     "docs": "jsdoc -c jsdoc.json && apidoc -i packages/skyring/lib/server -o docs/api",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
@@ -17,5 +19,6 @@
     "lerna": "^3.20.2",
     "nats": "^1.2.4"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }

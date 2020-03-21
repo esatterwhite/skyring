@@ -1,5 +1,4 @@
-/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
+'use strict'
 /**
  * A noop function transport for testing
  * @module skyring/lib/transports/timer
@@ -17,9 +16,9 @@ class Callback extends Transport {
   exec( method, url, payload, id, cache ) {
     setImmediate(() => {
       payload[method](url, id)
-      return cache.success(id);
-    });
+      return cache.success(id)
+    })
   }
-};
+}
 
 module.exports = Callback

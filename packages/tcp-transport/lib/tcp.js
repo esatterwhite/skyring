@@ -1,29 +1,53 @@
 'use strict'
+
 const Url = require('url')
-    , net = require('net')
-    , Pool = require('generic-pool')
-    , debug = require('debug')('skyring:transports:tcp')
-    , connections = new Map()
-    ;
+const net = require('net')
+const Pool = require('generic-pool')
+const debug = require('debug')('skyring:transports:tcp')
+const kType = Symbol.for('skyringType')
+const connections = new Map()
+const TRANSPORT = 'tcptransport'
+const noop = () => {}
 
-module.exports = function tcp( method, url, payload, id, cache ){
-  const pool = getPool(url)
-  pool.acquire().then((conn) => {
-    const out = typeof payload === 'object' ? JSON.stringify(payload) : payload
-    cache.remove(id)
-    conn.write(out + '\n', 'utf8',() => {
-      pool.release(conn)
+module.exports = class TCP {
+  constructor(opts) {
+    this.name = TRANSPORT
+  }
+
+  exec(method, url, payload, id, storage) {
+    const pool = getPool(url)
+    pool.acquire().then((conn) => {
+      const out = typeof payload === 'object' ? JSON.stringify(payload) : payload
+      storage.remove(id)
+      conn.write(out + '\n', 'utf8', () => {
+        pool.release(conn)
+      })
     })
-  })
-  .catch((e) => {
-    debug('error', e)
-    const err = new Error(`Unable to exeute tcp transport for timer ${id}`)
-    err.name = 'ETCPERR'
-    console.error(err)
-  })
-}
+    .catch((e) => {
+      debug('error', e)
+      const err = new Error(`Unable to exeute tcp transport for timer ${id}`)
+      err.name = 'ETCPERR'
+      console.error(err)
+    })
+  }
+  shutdown(cb = noop) {
+    const entries = connections.entries()
+    const run = () => {
+      const next = entries.next()
+      if (next.done) return cb()
+      const [key, value] = next.value
+      debug('disconnecting %s', key)
+      value.drain().then(() => {
+        value.clear()
+        debug(`removing tcp connection to ${key}`)
+        connections.delete(key)
+        run()
+      })
+    }
 
-module.exports.shutdown = shutdown
+    run()
+  }
+}
 
 function getPool(addr, opts) {
   if (connections.has(addr)) return connections.get(addr)
@@ -73,6 +97,5 @@ function shutdown(cb = ()=>{}) {
       run()
     })
   }
-
   run()
 }

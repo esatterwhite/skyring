@@ -1,22 +1,21 @@
 'use strict'
 
 const zmq = require('zeromq')
-    , os = require('os')
-    , path = require('path')
-    , tap = require('tap')
-    , supertest = require('supertest')
-    , Skyring = require('skyring')
-    , test = tap.test
-    , ZMQ_BIND = !!process.env.ZMQ_BIND
-    ;
+const os = require('os')
+const path = require('path')
+const tap = require('tap')
+const supertest = require('supertest')
+const Skyring = require('skyring')
+const test = tap.test
+const ZMQ_BIND = !!process.env.ZMQ_BIND
 
-let hostname = null;
+let hostname = null
 
-if(!process.env.TEST_HOST) {
-  hostname =  os.hostname()
+if (!process.env.TEST_HOST) {
+  hostname = os.hostname()
   console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
 } else {
-  hostname = process.env.TEST_HOST;
+  hostname = process.env.TEST_HOST
 }
 
 test('zmq:push', (t) => {
@@ -32,9 +31,12 @@ test('zmq:push', (t) => {
     server = new Skyring({
       transports: [path.resolve(__dirname, '../')]
     , seeds: [`${hostname}:3455`]
-    });
+    })
     request = supertest('http://localhost:3333')
-    server.listen(3333, null, null, tt.end)
+    server.listen(3333, null, null, () => {
+      console.log(server._timers.transports)
+      tt.end()
+    })
   })
 
   t.test('success - should deliver payload', (tt) => {
@@ -63,7 +65,7 @@ test('zmq:push', (t) => {
         , status: 200
         })
       , callback: {
-          uri: `tcp://0.0.0.0:5555`
+          uri: 'tcp://0.0.0.0:5555'
         , method: 'push'
         , transport: 'zmq'
         }
@@ -79,8 +81,8 @@ test('zmq:push', (t) => {
 
 test('error case', (t) => {
   t.throws(() => {
-    const transport = require('../lib/zmq')
-    transport('fake', 'zmq://0.0.0.0:3333', '{}', '1', null)
+    const transport = new (require('../lib/zmq'))
+    transport.exec('fake', 'zmq://0.0.0.0:3333', '{}', '1', null)
   }, /unable to create connection for fake/)
   t.end()
 })
@@ -96,7 +98,7 @@ test('zmq:pub', (t) => {
       , data: 'fake'
       , callback: {
           transport: 'zmq'
-        , uri: `tcp://0.0.0.0:5555`
+        , uri: 'tcp://0.0.0.0:5555'
         , method: 'pub'
         }
       })
@@ -114,21 +116,22 @@ test('zmq:pub', (t) => {
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
       transports: [require(path.resolve(__dirname, '../'))]
-    , seeds: [`${hostname}:3455`]
-    });
+      , seeds: [`${hostname}:3455`]
+    })
     request = supertest('http://localhost:3333')
     server.listen(3333, null, null, tt.end)
   })
 
   t.test('start saturate pool - no connection', (tt) => {
     tt.plan(151)
-    for (var x = 0; x < 150; x++ ) {
+    for (var x = 0; x < 150; x++) {
       doRequest(tt)
     }
     setTimeout(() => {
       tt.pass('saturated')
     }, 2000)
   })
+
   t.test('success - should deliver payload', (tt) => {
     tt.plan(150)
     handler = zmq.socket('sub')
@@ -141,13 +144,11 @@ test('zmq:pub', (t) => {
     handler.on('message', (evt, data) => {
       tt.match(data, /fake/)
     })
-    for (var x = 0; x < 150; x++ ) {
-      doRequest({error: () => {}})
+    for (var x = 0; x < 150; x++) {
+      doRequest({
+        error: () => {}
+      })
     }
   })
   t.end()
 })
-
-
-
-

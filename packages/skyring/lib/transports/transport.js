@@ -1,6 +1,6 @@
 'use strict'
 
-const kType = Symbol('skyringType')
+const kType = Symbol.for('skyringType')
 const noop = new Function()
 const TRANSPORT = 'transport'
 
@@ -24,7 +24,7 @@ module.exports = class Transport {
   }
 
   get [Symbol.toStringTag]() {
-    return 'SkyringTransport';
+    return 'SkyringTransport'
   }
 
 }

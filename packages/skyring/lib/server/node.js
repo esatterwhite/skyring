@@ -1,4 +1,4 @@
-/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
+'use strict'
 /**
  * Represents a participant in the Hashring
  * @module skyring/lib/server/node
@@ -13,32 +13,31 @@
  * @requires keef
  */
 
-const path           = require('path')
-    , EventEmitter   = require('events').EventEmitter
-    , dns            = require('dns')
-    , Ringpop        = require('@skyring/ringpop')
-    , TChannel       = require('tchannel')
-    , debug          = require('debug')('skyring:ring')
-    , conf           = require(path.join(__dirname, '..', '..', 'conf'))
-    , host           = conf.get('channel:host')
-    , port           = ~~conf.get('channel:port')
-    ;
+const path = require('path')
+const EventEmitter = require('events').EventEmitter
+const dns = require('dns')
+const Ringpop = require('@skyring/ringpop')
+const TChannel = require('tchannel')
+const debug = require('debug')('skyring:ring')
+const conf = require(path.join(__dirname, '..', '..', 'conf'))
+const host = conf.get('channel:host')
+const port = ~~conf.get('channel:port')
+let ring_seeds = conf.get('seeds')
 
-let ring_seeds = conf.get('seeds');
-ring_seeds     = !Array.isArray(ring_seeds) ? ring_seeds.split(',') : ring_seeds;
+ring_seeds = !Array.isArray(ring_seeds) ? ring_seeds.split(',') : ring_seeds
 
-function resolve( tasks, cb ){
-  const results = [];
-  ;(function next(){
-    if(!tasks.length) return cb(null, results);
-    const task = tasks.shift();
-    let [h, p] = task.split(':');
+function resolve(tasks, cb) {
+  const results = []
+  ;(function next() {
+    if (!tasks.length) return cb(null, results)
+    const task = tasks.shift()
+    const [h, p] = task.split(':')
     dns.lookup(h, (err, addr) => {
-      if (err) return cb(err);
-      results.push(`${addr}${p ? ':' + p : ''}`);
-      next();
-    });
-  })();
+      if (err) return cb(err)
+      results.push(`${addr}${p ? ':' + p : ''}`)
+      next()
+    })
+  })()
 }
 
 /**
@@ -50,14 +49,14 @@ function resolve( tasks, cb ){
  * @param {String} [app=timers] app name of the active ring
  */
 class Node extends EventEmitter {
-  constructor(h = host, p = port, name = 'ringpop', app = 'timers' ) {
-    super();
-    this._port = p;
-    this._host = host;
-    this._name = name;
-    this._app  = app;
-    this._tchannel = new TChannel();
-    this._ring = null;
+  constructor(h = host, p = port, name = 'ringpop', app = 'timers') {
+    super()
+    this._port = p
+    this._host = host
+    this._name = name
+    this._app = app
+    this._tchannel = new TChannel()
+    this._ring = null
   }
 
   /**
@@ -69,45 +68,45 @@ class Node extends EventEmitter {
 if (err) throw err
  })
    **/
-  join(seed_arr, cb){
-    const nodes = seed_arr || ring_seeds;
-    if(!Array.isArray(nodes)) {
-      const err = new TypeError('seeds must be and array');
-      return cb(err);
+  join(seed_arr, cb) {
+    const nodes = seed_arr || ring_seeds
+    if (!Array.isArray(nodes)) {
+      const err = new TypeError('seeds must be and array')
+      return cb(err)
     }
 
-    let addrs = [this._host].concat(nodes);
+    const addrs = [this._host].concat(nodes)
     resolve(addrs, (err, seeds) => {
       debug('seed nodes', seeds)
-      if( err ) return cb( err );
-      const host = seeds.shift();
+      if (err) return cb(err)
+      const host = seeds.shift()
       this._ring = new Ringpop({
           app: this._app
-        , hostPort:`${host}:${this._port}`
+        , hostPort: `${host}:${this._port}`
         , channel: this._tchannel.makeSubChannel({
             serviceName: this._name
           , trace: false
           })
-      });
-      this._ring.setupChannel();
-      this._ring.on('ringChanged', ( evt ) => {
-        const added = evt.added;
-        if(!added.length) return debug('node removed', evt.removed);
-        if(added.length === 1 && added.indexOf(`${host}:${this._port}`) !== -1) return;
-        debug('node added', added);
-        this.emit('ringchange', evt);
-      });
-      this._tchannel.listen( this._port, host, (er)=> {
-        if(er) return cb(er);
-        debug('tchannel listening on ', host, this._port);
-        this._ring.bootstrap(seeds, ( er ) => {
-          if( er ) return cb(er);
-          debug( 'ring bootstraped', seeds);
-          this.emit('bootstrap', seeds);
-          cb(null);
-        });
-      });
-    });
+      })
+      this._ring.setupChannel()
+      this._ring.on('ringChanged', (evt) => {
+        const added = evt.added
+        if (!added.length) return debug('node removed', evt.removed)
+        if (added.length === 1 && added.indexOf(`${host}:${this._port}`) !== -1) return
+        debug('node added', added)
+        this.emit('ringchange', evt)
+      })
+      this._tchannel.listen(this._port, host, (er) => {
+        if (er) return cb(er)
+        debug('tchannel listening on ', host, this._port)
+        this._ring.bootstrap(seeds, (er) => {
+          if (er) return cb(er)
+          debug('ring bootstraped', seeds)
+          this.emit('bootstrap', seeds)
+          cb(null)
+        })
+      })
+    })
   }
 
   /**
@@ -115,14 +114,14 @@ if (err) throw err
    * @method module:skyring/lib/server/node#leave
    * @param {Function} callback Callback function to call when the eviction process is complete
    **/
-  leave(cb){
-    this._ring.selfEvict((err)=>{
-      if( err ) return cb( err );
+  leave(cb) {
+    this._ring.selfEvict((err) => {
+      if (err) return cb(err)
       this._tchannel.drain('leaving ring', () => {
-        this._ring.destroy();
-      });
-      cb();
-    });
+        this._ring.destroy()
+      })
+      cb()
+    })
   }
 
   /**
@@ -131,7 +130,7 @@ if (err) throw err
    * @param {Function} handler A request handler for incoming requests from the ring
    **/
   handle(cb) {
-    return this._ring.on('request', cb);
+    return this._ring.on('request', cb)
   }
 
   /**
@@ -147,7 +146,7 @@ if (!handle) return;
    * @return {Boolean}
    **/
   handleOrProxy(key, req, res) {
-    return this._ring.handleOrProxy(key, req, res);
+    return this._ring.handleOrProxy(key, req, res)
   }
 
   /**
@@ -156,8 +155,8 @@ if (!handle) return;
    * @param {String} key The key to use
    * @return {Boolean}
    **/
-  owns( key ){
-    return this._ring.lookup( key ) == this._ring.whoami();
+  owns(key) {
+    return this._ring.lookup(key) == this._ring.whoami()
   }
 
   /**
@@ -166,8 +165,8 @@ if (!handle) return;
    * @param {String} key The key to look up
    * @return {String} A server address
    **/
-  lookup( key ) {
-    return this._ring.lookup(key);
+  lookup(key) {
+    return this._ring.lookup(key)
   }
 
   /**
@@ -175,18 +174,18 @@ if (!handle) return;
    * @method module:skyring/lib/server/node#close
    * @param {Function} callback A callback function to call when the ring is closed
    **/
-  close( cb ) {
-    debug('node close');
+  close(cb) {
+    debug('node close')
     this._ring.selfEvict(() => {
-      debug('draining tchannel');
+      debug('draining tchannel')
       this._tchannel.drain('leaving', () => {
-        debug('destroying ring');
-        this._ring.once('destroyed',()=>{
-          setTimeout(cb, 100);
-        });
-        this._ring.destroy();
-      });
-    });
+        debug('destroying ring')
+        this._ring.once('destroyed', () => {
+          setTimeout(cb, 100)
+        })
+        this._ring.destroy()
+      })
+    })
   }
 }
 
@@ -198,8 +197,8 @@ Object.defineProperty(Node.prototype, 'name', {
      * @memberof module:skyring/lib/server/node
      * @property {String} name The name of the node
      **/
-    return this._app;
+    return this._app
   }
-});
+})
 
-module.exports = Node;
+module.exports = Node
