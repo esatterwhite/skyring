@@ -35,6 +35,7 @@
     "body": "^5.1.0",
     "debug": "^4.1.1",
     "encoding-down": "^5.0.4",
+    "get-port": "^5.1.1",
     "keef": "^4.1.0",
     "leveldown": "^5.0.1",
     "levelup": "^4.0.1",
