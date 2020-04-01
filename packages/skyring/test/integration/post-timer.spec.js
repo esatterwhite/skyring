@@ -1,12 +1,10 @@
 'user strict';
 const http      = require('http')
-    , os        = require('os')
-    , tap       = require('tap')
-    , supertest = require('supertest')
-    , nats      = require('../../lib/nats')
-    , Server    = require('../../lib')
-    , test      = tap.test
-    ;
+const os        = require('os')
+const {test}    = require('tap')
+const supertest = require('supertest')
+const Server    = require('../../lib')
+const {ports}   = require('../util')
 
 
 let hostname = null;
@@ -21,9 +19,8 @@ if(!process.env.TEST_HOST) {
 function toServer(port, expect = 'hello', method = 'post', time = 1000, t){
   const start = Date.now()
   const s = http.createServer((req, res) => {
+    const now = Date.now()
     let data = ''
-      , now = Date.now()
-      ;
 
     res.writeHead(200);
     res.end('ok');
@@ -132,7 +129,7 @@ test('skyring:api', (t) => {
         });
     });
 
-    tt.test('should allow request with no callback uri - (400)', (ttt) => {
+    tt.test('should not allow request with no callback uri - (400)', (ttt) => {
       request
         .post('/timer')
         .send({
@@ -151,7 +148,7 @@ test('skyring:api', (t) => {
         });
     });
 
-    tt.test('should allow request with no transport - (400)', (ttt) => {
+    tt.test('should not allow request with no transport - (400)', (ttt) => {
       request
         .post('/timer')
         .send({

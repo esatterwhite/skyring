@@ -5,22 +5,21 @@
  * @module skyring/lib/server
  * @requires http
  * @requires debug
- * @requires skyring/lib/server/mock
+ * @requires @esaterwhite/micromock
  * @requires skyring/lib/server/node
  * @requires skyring/lib/server/router
  * @requires skyring/lib/timer
  */
 
 const http   = require('http')
-    , mock   = require('@esatterwhite/micromock')
-    , util   = require('util')
-    , Debug  = require('debug')
-    , routes = require('./api')
-    , Node   = require('./node')
-    , Router = require('./router')
-    , Timer  = require('../timer')
-    , debug  = Debug('skyring:server')
-    ;
+const mock   = require('@esatterwhite/micromock')
+const util   = require('util')
+const Debug  = require('debug')
+const routes = require('./api')
+const Node   = require('./node')
+const Router = require('./router')
+const Timer  = require('../timer')
+const debug  = Debug('skyring:server')
 
 /**
  * @constructor
@@ -146,6 +145,7 @@ class Server extends http.Server {
         this._timers.watch(`skyring:${this._group}`, (err, data) => {
           this.proxy(data);
         });
+        debug('binding to port', port)
         super.listen(port, ...args);
       });
     });

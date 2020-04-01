@@ -1,12 +1,11 @@
 'use strict';
 const os        = require('os')
-    , http      = require('http')
-    , tap       = require('tap')
-    , uuid      = require('uuid')
-    , supertest = require('supertest')
-    , Server    = require('../../lib')
-    , test      = tap.test
-    ;
+const http      = require('http')
+const {test}    = require('tap')
+const uuid      = require('uuid')
+const supertest = require('supertest')
+const Server    = require('../../lib')
+const {ports}   = require('../util')
 
 let hostname = null;
 
@@ -17,14 +16,19 @@ if (!process.env.TEST_HOST) {
   hostname = process.env.TEST_HOST;
 }
 
-test('skyring:api', (t) => {
+test('skyring:api', async (t) => {
   let server, request;
+  const [ring_port, callback_port] = await ports(2)
   t.test('set up skyring server', (tt) => {
     server = new Server({
-      seeds: [`${hostname}:3455`]
+      seeds: [`${hostname}:${ring_port}`]
+    , node: {port: ring_port}
     });
-    request = supertest('http://localhost:4444')
-    server.listen(4444, null, null, tt.end);
+    server.listen(0, null, null, (err) => {
+      const port = server.address().port
+      request = supertest(`http://localhost:${port}`)
+      tt.end()
+    });
   });
 
   t.on('end', () => {
@@ -38,7 +42,7 @@ test('skyring:api', (t) => {
         timeout: 1000
       , data: 'hello'
       , callback: {
-          uri: `http://${hostname}:7777`
+          uri: `http://${hostname}:${callback_port}`
         , method: 'post'
         , transport: 'http'
         }
@@ -49,6 +53,7 @@ test('skyring:api', (t) => {
         cb(null, res.headers.location)
       })
   }
+
   t.test('#DELETE /timer/:id', (tt) => {
     tt.test('Should cancel an existing timer -202', (ttt) => {
       const callback_server = http.createServer((req, res) => {
@@ -56,7 +61,7 @@ test('skyring:api', (t) => {
         res.end();
         const err = new Error('timer should be deleted')
         ttt.fail('callback server request')
-      }).listen(7777);
+      }).listen(callback_port);
 
       getLocation((err, url) => {
         request

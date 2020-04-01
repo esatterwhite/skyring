@@ -1,19 +1,18 @@
 'use strict'
 
-const crypto    = require('crypto')
-    , os        = require('os')
-    , path      = require('path')
-    , http      = require('http')
-    , supertest = require('supertest')
-    , async     = require('async')
-    , conf      = require('keef')
-    , tap       = require('tap')
-    , Server    = require('../../lib/server')
-    , test      = tap.test
+const crypto     = require('crypto')
+const os         = require('os')
+const path       = require('path')
+const http       = require('http')
+const supertest  = require('supertest')
+const async      = require('async')
+const conf       = require('keef')
+const {test, ok} = require('tap')
+const {ports}     = require('../util')
+const Server     = require('../../lib/server')
 
-test('server', (t) => {
-  var os = require('os')
-  var hostname;
+test('server', async (t) => {
+  let hostname;
   if(!process.env.TEST_HOST) {
     hostname =  os.hostname()
     console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
@@ -21,35 +20,37 @@ test('server', (t) => {
     hostname = process.env.TEST_HOST;
   }
 
+  const [ring_port, http_port] = await ports(3)
   t.test('register custom transport as a function', (tt) => {
     let server = null
     tt.test('create server', (ttt) => {
       class Foobar {
         exec (method, url, payload, id, cache) {
-         tap.ok('foobar', 'foobar transport called')
+          ok('foobar', payload)
         }
       }
       server = new Server({
         node: {
-          port: 6543
+          port: ring_port
         , host: hostname
         , app: 'spec'
         }
-      , seeds: [`${hostname}:6543`]
+      , seeds: [`${hostname}:${ring_port}`]
       , storage: {
-          backend: 'leveldown'
-          , path: '/tmp/sk111'
+          backend: 'memdown'
         }
       , transports: [Foobar]
       })
-      .listen(5555, null, null, (err) => {
+      .listen(http_port, null, null, (err) => {
         ttt.error(err)
-        ttt.end()
+        new Promise((resolve) => {
+          setTimeout(resolve, 300)
+        }).then(ttt.end)
       })
     })
 
-    tt.test('tap transport', (ttt) => {
-      supertest('http://localhost:5555')
+    tt.test('foobar transport', (ttt) => {
+      supertest(`http://localhost:${http_port}`)
         .post('/timer')
         .send({
           timeout: 250
@@ -74,42 +75,46 @@ test('server', (t) => {
     tt.end()
   })
 
-  t.test('register custom transport as a string', (tt) => {
+  t.test('register custom transport as a string', async (tt) => {
     let server = null
+    const [ring_port, http_port] = await ports(2)
     tt.test('create server', (ttt) => {
       server = new Server({
         node: {
-          port: 6543
+          port: ring_port
         , host: hostname
         , app: 'spec'
         }
-      , seeds: [`${hostname}:6543`]
-      , storage: {
-          backend: 'leveldown'
-        , path: '/tmp/sk22'
-        }
+      , seeds: [`${hostname}:${ring_port}`]
+
       , transports: [require.resolve(path.join(__dirname, 'test.transport'))]
+      , storage: {
+          backend: 'memdown'
+        }
       })
-      .listen(5555, null, null, (err) => {
+      .listen(http_port, null, null, (err) => {
         ttt.error(err)
-        ttt.end()
+        new Promise((resolve) => {
+          setTimeout(resolve, 300)
+        }).then(ttt.end)
       })
     })
 
-    tt.test('tap transport', (ttt) => {
-      supertest('http://localhost:5555')
+    tt.test('test transport', (ttt) => {
+      supertest(`http://localhost:${http_port}`)
         .post('/timer')
         .send({
           timeout: 250
-        , data: 'hello world'
+        , data: {put: () => {console.log('called')}}
         , callback: {
             transport: 'test'
-          , method: 'put'
-          , uri: 'http://localhost:4444'
+          , method: 'post'
+          , uri: 'doesnotmatter'
           }
         })
         .expect(201)
         .end((err, res) => {
+          ttt.ok('test callback called')
           ttt.error(err)
           ttt.type(server._timers.transports.get('test').exec, 'function')
           ttt.end()

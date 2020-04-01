@@ -1,0 +1,15 @@
+files:
+- packages/skyring/test/**/*.js
+- packages/scylladown/test/**/*.js
+- packages/zmq-transport/test/**/*.js
+- packages/tcp-transport/test/**/*.js
+jobs: 4
+check-coverage: true
+esm: false
+ts: false
+jsx: false
+timeout: 45
+lines: 95
+functions: 95
+branches: 95
+statements: 95

@@ -1,22 +1,19 @@
 'use strict'
+const url          = require('url')
+const qs           = require('querystring')
+const crypto       = require('crypto')
+const os           = require('os')
+const path         = require('path')
+const http         = require('http')
+const supertest    = require('supertest')
+const async        = require('async')
+const conf         = require('keef')
+const {test, pass} = require('tap')
+const {ports}   = require('../util')
+const Server       = require('../../lib/server')
 
-const url       = require('url')
-    , qs        = require('querystring')
-    , crypto    = require('crypto')
-    , os        = require('os')
-    , path      = require('path')
-    , http      = require('http')
-    , supertest = require('supertest')
-    , async     = require('async')
-    , conf      = require('keef')
-    , tap       = require('tap')
-    , Server    = require('../../lib/server')
-    , test      = tap.test
-
-
-test('server', (t) => {
-  let sone, stwo, sthree
-  var os = require('os')
+test('server', async (t) => {
+  let sone, stwo, sthree, sfour
   var hostname;
   if(!process.env.TEST_HOST) {
     hostname =  os.hostname()
@@ -25,66 +22,87 @@ test('server', (t) => {
     hostname = process.env.TEST_HOST;
   }
 
-  t.test('setup server nodes',(tt) => {
+  const [
+    http_one, http_two, http_three
+  , ring_one, ring_two, ring_three, ring_four
+  , callback_port
+  ] = await ports(8)
+
+  t.test('setup server nodes', (tt) => {
     async.parallel([
       (cb) => {
         sone = new Server({
           node: {
-            port: 4444
+            port: ring_one
           , host: hostname
           , app: 'rebalance'
           }
-        , seeds: [`${hostname}:4444`, `${hostname}:4445`]
+        , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
         , storage:{
             path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
           , backend: 'leveldown'
           }
         })
-        .listen(5555, null ,null, cb);
+        .listen(http_one, cb);
       }
     , (cb) => {
         stwo = new Server({
           node:{
-            port: 4445
+            port: ring_two
           , host: hostname
           , app: 'rebalance'
           }
-        , seeds: [`${hostname}:4444`, `${hostname}:4445`]
+        , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
         , storage:{
             path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
           , backend: 'leveldown'
           }
         })
-        .listen(5556, null, null, cb);
+        .listen(http_two, null, null, cb);
       }
     , (cb) => {
         sthree = new Server({
           node: {
-            port: 4446
+            port: ring_three
           , host: hostname
           , app: 'rebalance'
           }
-        , seeds: [`${hostname}:4444`, `${hostname}:4445`]
+        , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
         , storage:{
             path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
-          , backend: 'leveldown'
+          , backend: 'memdown'
           }
         })
-        .listen(5557, null, null, cb);
+        .listen(http_three, cb);
       }
     ], (err) => {
       tt.error(err)
+      sfour = new Server({
+        node: {
+          port: ring_four
+        , host: hostname
+        , app: 'rebalance'
+        }
+      , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
+      , storage:{
+          path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+        , backend: 'memdown'
+        }
+      })
       tt.end()
     });
   })
 
   t.on('end', () => {
     sone.close(() => {
-      tap.pass('sone closed')
+      t.comment('sone closed')
     });
 
     stwo.close(() => {
-      tap.pass('two closed')
+      t.comment('stwo closed')
+    });
+    sfour.close(() => {
+      t.comment('sfour closed')
     });
   });
 
@@ -92,53 +110,67 @@ test('server', (t) => {
     tt.ok(sone);
     tt.ok(stwo);
     tt.ok(sthree);
+    tt.ok(sfour);
     tt.end();
   })
 
-  t.test('rebalance', function(tt) {
+  t.test('rebalance on shutdown', function(tt) {
     let count = 0, postback
 
     tt.on('end',(done) => {
       postback && postback.close(done);
     })
 
-    tt.test('should survive a lost node', ( ttt ) => {
-      ttt.plan(102)
-      const request = supertest('http://localhost:5557');
+    tt.test('should survive a nodes moving', (ttt) => {
+
+      const request = supertest(`http://localhost:${http_one}`);
       const requests = Array.from(Array(100).keys())
       postback = http.createServer((req, res) => {
         const parsed = url.parse(req.url)
         const q = qs.parse(parsed.query)
-        ttt.pass(`${q.idx} idx`)
+        ttt.pass(`timer ${q.idx} handled`)
         res.writeHead(200)
         res.end();
-      }).listen( 2222 );
+      }).listen(callback_port);
 
-      async.each(requests, (idx, cb) => {
-        request
-          .post('/timer')
-          .send({
-            timeout: 5000
-          , data: 'data'
-          , callback: {
-              uri: `http://localhost:2222?idx=${idx}`
-            , method: 'post'
-            , transport: 'http'
-            }
+      async.until(
+        async function _test() {
+          const sone_count = sone._timers.size
+          const stwo_count = stwo._timers.size
+          const sthree_count = sthree._timers.size
+          const valid = (sone_count > 2 && stwo_count > 2 && sthree_count > 2)
+          return valid
+        }
+      , async function action() {
+          count++
+          await request
+            .post('/timer')
+            .send({
+              timeout: 5000
+            , data: 'data'
+            , callback: {
+                uri: `http://localhost:${callback_port}?idx=${count}`
+              , method: 'post'
+              , transport: 'http'
+              }
+            })
+            .expect(201)
+        }
+      , function exec(err) {
+          ttt.comment(`expected timers ${count}`)
+          ttt.plan(count + 1)
+          // start server 4
+          sfour.listen(0, () => {
+            // drop server 3
+            setImmediate(() => {
+              sthree.close(() => {
+                ttt.pass('server closed')
+              })
+            })
           })
-          .expect(201)
-          .end((err, res) => {
-            ttt.error(err)
-            cb()
-          })
-      }, (err) => {
-        ttt.error(err)
-        sthree.close(() => {
-          ttt.pass('server closed')
-        })
-      })
+        }
+      )
     });
     tt.end()
   });
-  t.end()
 });

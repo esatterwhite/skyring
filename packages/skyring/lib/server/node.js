@@ -4,10 +4,10 @@
  * @module skyring/lib/server/node
  * @author Eric Satterwhite
  * @since 1.0.0
- * @require path
+ * @requires path
  * @requires events
  * @requires dns
- * @requires ringpop
+ * @requires @skyringringpop
  * @requires tchannel
  * @requires debug
  * @requires keef

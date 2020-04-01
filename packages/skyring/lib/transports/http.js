@@ -30,6 +30,7 @@ const method_exp = /^(post|put|patch|delete|get|options|head)$/i
 class Http extends Transport {
   constructor(options) {
     super(options)
+    this.name = 'http'
   }
 
   exec( method, url, payload, id, cache ) {

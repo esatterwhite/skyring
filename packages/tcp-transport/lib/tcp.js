@@ -18,7 +18,7 @@ module.exports = class TCP {
     const pool = getPool(url)
     pool.acquire().then((conn) => {
       const out = typeof payload === 'object' ? JSON.stringify(payload) : payload
-      storage.remove(id)
+      storage.cancel(id)
       conn.write(out + '\n', 'utf8', () => {
         pool.release(conn)
       })
@@ -53,13 +53,13 @@ function getPool(addr, opts) {
   if (connections.has(addr)) return connections.get(addr)
   const pool = Pool.createPool({
     create: () => {
-      debug("creating")
+      debug('creating new tcp connection', addr)
       const url = Url.parse(addr)
       let conn =  net.connect(url.port, url.hostname)
       conn.setNoDelay(true)
       conn.setKeepAlive(true)
       conn.once('error', (err) => {
-        debug("destroying connection", err.message)
+        debug('error: destroying connection', err.message)
         pool.destroy(conn).catch(()=>{})
         connections.delete(addr)
       })

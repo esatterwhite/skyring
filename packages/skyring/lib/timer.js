@@ -1,34 +1,36 @@
-/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true, unused: true*/
-'use strict';
+'use strict'
 /**
  * Manage Timers on a node
  * @module skyring/lib/timer
  * @author Eric Satterwhite
  * @since 3.0.0
+ * @requires os
+ * @requires crypto
+ * @requires path
+ * @requires levelup
+ * @requires encoding-down
  * @requires debug
  * @requires skyring/lib/transports
  * @requires skyring/lib/nats
  * @requires skyring/lib/json
  */
 const os             = require('os')
-    , crypto         = require('crypto')
-    , path           = require('path')
-    , levelup        = require('levelup')
-    , encode         = require('encoding-down')
-    , Transports     = require('./transports')
-    , nats           = require('./nats')
-    , json           = require('./json')
-    , conf           = require('../conf')
-    , debug          = require('debug')('skyring:timer')
-    , rebalance      = require('debug')('skyring:rebalance')
-    , store          = require('debug')('skyring:store')
-    , storage        = Symbol('storage')
-    , shutdown       = Symbol.for('kShutdown')
-    , kNode          = Symbol('nodeid')
-    , kRemove        = Symbol('remove')
-    , noop           = () => {}
-    ;
-
+const crypto         = require('crypto')
+const path           = require('path')
+const levelup        = require('levelup')
+const encode         = require('encoding-down')
+const Transports     = require('./transports')
+const nats           = require('./nats')
+const json           = require('./json')
+const conf           = require('../conf')
+const debug          = require('debug')('skyring:timer')
+const rebalance      = require('debug')('skyring:rebalance')
+const store          = require('debug')('skyring:store')
+const storage        = Symbol('storage')
+const shutdown       = Symbol.for('kShutdown')
+const kNode          = Symbol('nodeid')
+const kRemove        = Symbol('remove')
+const noop           = () => {}
 
 const EVENT_STATUS = {
   CREATED:   'create'
@@ -73,47 +75,47 @@ function generateId(id) {
  **/
 class Timer extends Map {
   constructor(options = {}, cb = noop) {
-    super();
+    super()
     this.options = Object.assign({}, {
       nats: null
     , storage: null
     , transports: []
-    }, options);
-    this._sid = null;
-    this._bail = false;
-    const store_opts = conf.get('storage');
-    const opts = Object.assign(store_opts, this.options.storage);
-    store(opts);
+    }, options)
+    this._sid = null
+    this._bail = false
+    const store_opts = conf.get('storage')
+    const opts = Object.assign(store_opts, this.options.storage)
+    store(opts)
     if (!opts.path) {
       if (opts.backend === 'memdown') {
         this[kNode] = generateId()
         opts.path = path.join(
           os.tmpdir()
         , `skyring-${this[kNode]}`
-        );
+        )
       } else {
-        const err = new Error('storage.path must be set with non memdown backends');
-        err.code = 'ENOSTORAGE';
-        throw err;
+        const err = new Error('storage.path must be set with non memdown backends')
+        err.code = 'ENOSTORAGE'
+        throw err
       }
     }
     const backend = opts.backend === 'memdown'
       ? new (require(opts.backend))
       : encode(require(opts.backend)(opts.path), {valueEncoding: 'json'})
 
-    debug('storage path', opts);
+    debug('storage path', opts)
     this[kNode] = generateId(store_opts.path)
-    this.nats = nats.createClient( this.options.nats );
-    this.transports = new Transports(this.options.transports);
+    this.nats = nats.createClient(this.options.nats)
+    this.transports = new Transports(this.options.transports)
     this[storage] = levelup(backend, opts, (err) => {
-      store('storage backend ready', store_opts);
+      store('storage backend ready', store_opts)
       debug('node id', this[kNode])
       this.recover(() => {
         this.nats.publish('skyring:node', JSON.stringify({
           node: this[kNode]
         , type: EVENT_STATUS.READY
         }), cb)
-      });
+      })
     })
 
   }
@@ -152,23 +154,25 @@ timers.create(id, options, (err) => {
 })
    **/
   create(id, body, cb) {
-    const payload = body;
-    const transport = this.transports.get(payload.callback.transport);
+    const payload = body
+    const transport = this.transports.get(payload.callback.transport)
     if (!transport) {
       const err = new Error(`Unknown transport ${payload.callback.transport}`)
       err.code = 'ENOTRANSPORT'
-      return setImmediate(cb, err)
+      setImmediate(cb, err)
+      return null
     }
-    if ( this.has( id ) ) {
-      const err = new Error(`Timer with id ${id} already exists` );
-      err.code = 'EKEYEXISTS';
-      return setImmediate(cb, err);
+    if (this.has( id )) {
+      const err = new Error(`Timer with id ${id} already exists`)
+      err.code = 'EKEYEXISTS'
+      setImmediate(cb, err)
+      return null
     }
-    const now = Date.now();
-    const created = payload.created || now;
-    const elapsed = now - created;
-    if( now > created + payload.timeout ){
-      debug('executing stale timer');
+    const now = Date.now()
+    const created = payload.created || now
+    const elapsed = now - created
+    if(now > created + payload.timeout) {
+      debug('executing stale timer')
       setImmediate(
         transport.exec.bind(transport)
       , payload.callback.method
@@ -176,7 +180,7 @@ timers.create(id, options, (err) => {
       , payload.data
       , id
       , this
-      );
+      )
 
       this.nats.publish('skyring:events', JSON.stringify({
         type: EVENT_STATUS.EXEC
@@ -185,9 +189,10 @@ timers.create(id, options, (err) => {
       , executed: Date.now()
       , created: created
       , payload: payload
-      }), noop);
+      }), noop)
 
-      return cb(null, id);
+      cb(null, id)
+      return null
     }
 
     const data = {
@@ -195,23 +200,24 @@ timers.create(id, options, (err) => {
     , id: id
     , payload: payload
     , timer: null
-    };
+    }
 
     this[storage].put(id, data, (err) => {
-      debug('setting timer', id);
-      //TODO(esatterwhite):
-      // what should happen if leveldb fails.
+      debug('setting timer', id)
+
       if (err) {
-        console.error(err);
-        return cb(err, null);
+        console.error(err)
+        cb(err, null)
+        return null
       }
+
       this.nats.publish('skyring:events', JSON.stringify({
         type: EVENT_STATUS.CREATED
       , timer: id
       , node: this[kNode]
       , created: data.created
       , payload: payload
-       }), noop);
+       }), noop)
 
        data.timer = setTimeout(
         transport.exec.bind(transport)
@@ -221,10 +227,11 @@ timers.create(id, options, (err) => {
       , payload.data
       , id
       , this
-      ).unref();
-      this.set( id, data );
-      cb(null, id);
-    });
+      ).unref()
+      this.set(id, data)
+      cb(null, id)
+      return null
+    })
   }
 
   /**
@@ -287,79 +294,70 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     })
   }
 
-  /**
-   * Clears a specific timer from storage
-   * @deprecated v5.0.0
-   * @method module:skyring/lib/timer#delete
-   * @param {String} id The id of the timer to cancel
-   * @param {Nodeback} callback Node style callback to execute
-   **/
-  remove(id, cb = noop) {
-    if (!this.warned){
-      process.emitWarning(
-        'timers#remove has been replaced with timers#cancel'
-      + ' and will be removed in future versions'
-      , 'DeprecationWarning'
-      , 'EDEPRECATED'
-      )
-
-      this.warned = true
-    }
-    return this[kRemove](id, cb)
-  }
-
   [kRemove](id, cb = noop) {
     this[storage].del(id, (err) => {
-      if (err) return console.error('unable to purge %s', id, err);
-      store('%s purged from storage', id, this.options.storage);
-    });
-    const t = this.get(id);
-    if( !t ) {
-      const err = new Error('Not Found');
-      err.code = 'ENOENT';
-      return setImmediate(cb, err);
+      if (err) return console.error('unable to purge %s', id, err)
+      store('%s purged from storage', id, this.options.storage)
+    })
+    const rec = this.get(id)
+
+    if(!rec) {
+      const err = new Error('Not Found')
+      err.code = 'ENOENT'
+      setImmediate(cb, err)
+      return null
     }
-    clearTimeout(t.timer);
-    this.delete(id);
+
+    clearTimeout(rec.timer)
+    this.delete(id)
     setImmediate(cb)
-    debug('timer cleared', id);
+    debug('timer cleared', id)
+    return null
   }
 
   rebalance(opts, node, cb = noop) {
     const size = this.size
-        , batch = this[storage].batch()
-        ;
+    const batch = this[storage].batch()
 
-    if( !size ) return;
+    if(!size) return
+
     this.nats.publish('skyring:node', JSON.stringify({
       node: this[kNode]
     , type: EVENT_STATUS.REBALANCE
     }), noop)
-    const records = this.values();
+
+    const records = this.values()
+
     const run = ( obj ) => {
-      if ( node.owns( obj.id ) ) return;
-      clearTimeout( obj.timer );
-      this.delete( obj.id );
-      batch.del(obj.id);
+      if (node.owns(obj.id)) return
+
+      clearTimeout(obj.timer)
+      this.delete(obj.id)
+      batch.del(obj.id)
+
       const data = Object.assign({}, obj.payload, {
         id: obj.id
       , created: obj.created
-      });
-      rebalance( 'no longer the owner of %s', obj.id );
+      })
+
+      rebalance( 'no longer the owner of %s', obj.id )
+
       this.nats.publish('skyring:events', JSON.stringify({
         node: this[kNode]
       , type: EVENT_STATUS.EVICT
       , timer: obj.id
       }), noop)
-      cb( data );
-    };
+
+      cb(data)
+    }
 
     for( var record of records ) {
-      run( record );
+      run(record)
     }
+
     batch.write(() => {
-      store('rebalance batch delete complete');
-    });
+      store('rebalance batch delete complete')
+    })
   }
 
   recover(cb = noop) {
@@ -367,25 +365,27 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       node: this[kNode]
     , type: EVENT_STATUS.RECOVERY
     }), noop)
+
     const fn = (data) => {
-      store('recover', data.key);
+      store('recover', data.key)
       const out = Object.assign({}, data.value.payload, {
         id: data.value.id
       , created: data.value.created
-      });
-      this.create(data.key, out, debug);
-    };
+      })
+      this.create(data.key, out, debug)
+    }
 
-    const stream = this[storage].createReadStream();
+    const stream = this[storage].createReadStream()
 
     stream
     .on('data', fn)
     .once('close', function () {
-      debug('recover stream close');
-      stream.removeListener('data', fn);
-      cb && cb();
-    });
+      debug('recover stream close')
+      stream.removeListener('data', fn)
+      cb && cb()
+    })
   }
+
   /**
    * Updates a timer inplace
    * @method module:skyring/lib/timer#update
@@ -409,29 +409,30 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 })
    **/
   update(id, body, cb) {
-    this[kRemove](id, ( err ) => {
-      if ( err ) return cb( err );
-      debug( 'updating timer', id );
-      this.create( id, body, cb );
-    });
+    this[kRemove](id, (err) => {
+      if (err) return cb(err)
+      debug('updating timer', id)
+      this.create(id, body, cb)
+    })
   }
 
   close(cb){
-    this[storage].close(cb);
+    this[storage].close(cb)
   }
 
   disconnect(cb = noop) {
-    this[storage].close(noop);
+    this[storage].close(noop)
     this.transports[shutdown](() => {
       this.nats.publish('skyring:node', JSON.stringify({
         node: this[kNode]
       , type: EVENT_STATUS.SHUTDOWN
       }), noop)
+
       this.nats.flush((err) => {
-        if (err) return cb(err);
-        this.nats.quit(cb);
-      });
-    });
+        if (err) return cb(err)
+        this.nats.quit(cb)
+      })
+    })
   }
 
   /**
@@ -441,59 +442,61 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    * @param {Nodeback} callback Node style callback to execute when the function is complete
    **/
   shutdown(cb) {
-    const size = this.size;
-    const client = this.nats;
+    const size = this.size
+    const client = this.nats
 
-    if( !size ) {
-      this[storage].close();
+    if (!size) {
+      this[storage].close()
       return this.transports[shutdown](() => {
         this.nats.publish('skyring:node', JSON.stringify({
           node: this[kNode]
         , type: EVENT_STATUS.SHUTDOWN
         }), noop)
         this.nats.flush((err) => {
-          if (err) return cb(err);
-          this.nats.quit(cb);
-        });
-      });
+          if (err) return cb(err)
+          this.nats.quit(cb)
+        })
+      })
     }
 
-    let sent = 0;
-    let acks = 0;
+    let sent = 0
+    let acks = 0
 
-    const batch = this[storage].batch();
+    const batch = this[storage].batch()
 
-    client.unsubscribe( this._sid );
-    this._sid = null;
+    client.unsubscribe(this._sid)
+    this._sid = null
 
-    const run = ( obj ) => {
-      clearTimeout( obj.timer );
-      batch.del(obj.id);
+    const run = (obj) => {
+      clearTimeout(obj.timer)
+      batch.del(obj.id)
       const data = Object.assign({}, obj.payload, {
         id: obj.id
       , created: obj.created
       , count: ++sent
-      });
+      })
 
-      this.nats.publish('skyring', JSON.stringify( data ), () => {
-        if( ++acks === size ) {
+      this.nats.publish('skyring', JSON.stringify(data), () => {
+        if (++acks === size) {
           return batch.write(() => {
-            store('batch delete finished');
+            store('batch delete finished')
             this.disconnect(cb)
-          });
+          })
         }
-        rebalance( '%s of %s processed', acks, data.count, data.id);
-      });
-    };
+        rebalance( '%s of %s processed', acks, data.count, data.id)
+      })
+    }
 
     this.nats.publish('skyring:node', JSON.stringify({
       node: this[kNode]
     , type: EVENT_STATUS.PURGE
     }), noop)
-    for( var record of this.values() ) {
-      run( record );
+
+    for(let record of this.values()) {
+      run(record)
     }
-    this.clear();
+
+    this.clear()
   }
 
   /**
@@ -502,16 +505,16 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    * @param {String} key The name of the nats queue to create
    * @param {Nodeback} callback Node style callback to execute when the function has finished execution
    **/
-  watch( key, cb ){
-    if( this._bail ) return;
-    const opts = { queue: key };
+  watch(key, cb) {
+    if (this._bail) return
+    const opts = { queue: key }
     this._sid = this.nats.subscribe('skyring', opts, ( data ) => {
-      if( this._bail ) return;
-      const value = json.parse( data );
-      cb( value.error, value.value );
-    });
-    return this._sid;
+      if(this._bail) return
+      const value = json.parse(data)
+      cb(value.error, value.value)
+    })
+    return this._sid
   }
 }
 
-module.exports = Timer;
+module.exports = Timer

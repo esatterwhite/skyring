@@ -4,6 +4,7 @@
   "scripts": {
     "lerna": "lerna",
     "lint": "eslint.",
+    "tap": "tap",
     "lint:fix": "npm run lint -- --fix",
     "local": "env $(cat local.env)",
     "docs": "jsdoc -c jsdoc.json && apidoc -i packages/skyring/lib/server -o docs/api",
@@ -17,8 +18,10 @@
     "ink-docstrap": "^1.3.2",
     "jsdoc": "^3.5.5",
     "lerna": "^3.20.2",
-    "nats": "^1.2.4"
+    "nats": "^1.2.4",
+    "tap": "^14.10.7"
   },
   "dependencies": {
+    "get-port": "^5.1.1"
   }
 }

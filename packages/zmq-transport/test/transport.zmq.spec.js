@@ -3,10 +3,10 @@
 const zmq = require('zeromq')
 const os = require('os')
 const path = require('path')
-const tap = require('tap')
+const {test} = require('tap')
 const supertest = require('supertest')
 const Skyring = require('skyring')
-const test = tap.test
+const {sys} = require('../../../test')
 const ZMQ_BIND = !!process.env.ZMQ_BIND
 
 let hostname = null
@@ -18,11 +18,13 @@ if (!process.env.TEST_HOST) {
   hostname = process.env.TEST_HOST
 }
 
-test('zmq:push', (t) => {
+test('zmq:push', async (t) => {
   let request, server, handler
+  const [ring_port, zmq_port] = await sys.ports(2)
+
   t.on('end', () => {
     handler.removeAllListeners()
-    handler.disconnect('tcp://0.0.0.0:5555')
+    handler.disconnect(`tcp://0.0.0.0:${zmq_port}`)
     handler.close()
     server.close()
   })
@@ -30,11 +32,13 @@ test('zmq:push', (t) => {
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
       transports: [path.resolve(__dirname, '../')]
-    , seeds: [`${hostname}:3455`]
+    , seeds: [`${hostname}:${ring_port}`]
+    , node: {port: ring_port}
     })
-    request = supertest('http://localhost:3333')
-    server.listen(3333, null, null, () => {
-      console.log(server._timers.transports)
+
+    server.listen(0, null, null, () => {
+      const {port} = server.address()
+      request = supertest(`http://localhost:${port}`)
       tt.end()
     })
   })
@@ -43,10 +47,11 @@ test('zmq:push', (t) => {
     tt.plan(3)
     handler = zmq.socket('pull')
     if (ZMQ_BIND) {
-      handler.connect('tcp://0.0.0.0:5555')
+      handler.connect(`tcp://0.0.0.0:${zmq_port}`)
     } else {
-      handler.bindSync('tcp://0.0.0.0:5555')
+      handler.bindSync(`tcp://0.0.0.0:${zmq_port}`)
     }
+
     handler.on('message', (evt, data) => {
       const payload = JSON.parse(data)
       tt.match(payload, {
@@ -65,7 +70,7 @@ test('zmq:push', (t) => {
         , status: 200
         })
       , callback: {
-          uri: 'tcp://0.0.0.0:5555'
+          uri: `tcp://0.0.0.0:${zmq_port}`
         , method: 'push'
         , transport: 'zmq'
         }
@@ -87,18 +92,18 @@ test('error case', (t) => {
   t.end()
 })
 
-test('zmq:pub', (t) => {
+test('zmq:pub', async (t) => {
   let request, server, handler
-  const req = supertest('http://localhost:3333')
+  const [ring_port, zmq_port] = await sys.ports(2)
   function doRequest(t) {
-    req
+    request
       .post('/timer')
       .send({
         timeout: 500
       , data: 'fake'
       , callback: {
           transport: 'zmq'
-        , uri: 'tcp://0.0.0.0:5555'
+        , uri: `tcp://0.0.0.0:${zmq_port}`
         , method: 'pub'
         }
       })
@@ -107,19 +112,26 @@ test('zmq:pub', (t) => {
         t.error(err)
       })
   }
+
   t.on('end', (done) => {
     handler.removeAllListeners()
-    handler.disconnect('tcp://0.0.0.0:5555')
+    handler.disconnect(`tcp://0.0.0.0:${zmq_port}`)
     handler.close()
     server.close()
   })
+
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
       transports: [require(path.resolve(__dirname, '../'))]
-      , seeds: [`${hostname}:3455`]
+    , seeds: [`${hostname}:${ring_port}`]
+    , node: {port: ring_port}
     })
-    request = supertest('http://localhost:3333')
-    server.listen(3333, null, null, tt.end)
+    server.listen(0, null, null, (err) => {
+      tt.error(err)
+      const {port} = server.address()
+      request = supertest(`http://localhost:${port}`)
+      tt.end()
+    })
   })
 
   t.test('start saturate pool - no connection', (tt) => {
@@ -137,9 +149,9 @@ test('zmq:pub', (t) => {
     handler = zmq.socket('sub')
     handler.subscribe('timeout')
     if (ZMQ_BIND) {
-      handler.connect('tcp://0.0.0.0:5555')
+      handler.connect(`tcp://0.0.0.0:${zmq_port}`)
     } else {
-      handler.bindSync('tcp://0.0.0.0:5555')
+      handler.bindSync(`tcp://0.0.0.0:${zmq_port}`)
     }
     handler.on('message', (evt, data) => {
       tt.match(data, /fake/)
@@ -150,5 +162,4 @@ test('zmq:pub', (t) => {
       })
     }
   })
-  t.end()
 })

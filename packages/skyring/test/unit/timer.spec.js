@@ -1,15 +1,14 @@
 'use strict';
 
 const os = require('os')
-    , path = require('path')
-    , crypto = require('crypto')
-    , series = require('async').series
-    , tap = require('tap')
-    , uuid   = require('uuid')
-    , conf   = require('keef')
-    , Timer  = require('../../lib/timer')
-    , test   = tap.test
-    ;
+const path = require('path')
+const crypto = require('crypto')
+const series = require('async').series
+const {test} = require('tap')
+const uuid   = require('uuid')
+const conf   = require('keef')
+const Timer  = require('../../lib/timer')
+const Node   = require('../../lib/server/node')
 
 function clearAll(timers, cb) {
   for(var t of timers.values()){

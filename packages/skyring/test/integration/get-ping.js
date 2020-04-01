@@ -1,13 +1,13 @@
 
 'user strict';
 const http      = require('http')
-    , os        = require('os')
-    , tap       = require('tap')
-    , supertest = require('supertest')
-    , nats      = require('../../lib/nats')
-    , Server    = require('../../lib')
-    , test      = tap.test
-    ;
+const os        = require('os')
+const {test}    = require('tap')
+const supertest = require('supertest')
+const nats      = require('../../lib/nats')
+const Server    = require('../../lib')
+const {ports}   = require('../util')
+
 let hostname = null;
 
 if(!process.env.TEST_HOST) {
@@ -17,24 +17,19 @@ if(!process.env.TEST_HOST) {
   hostname = process.env.TEST_HOST;
 }
 
-test('skyring:api', (t) => {
-
-  const request = supertest('http://localhost:3333')
+test('skyring:api', async (t) => {
+  const [http_port, ring_port] = await ports(2)
+  const request = supertest(`http://localhost:${http_port}`)
   t.test('setup skyring server', (tt) => {
     server = new Server({
-      seeds: [`${hostname}:3455`]
+      seeds: [`${hostname}:${ring_port}`]
+    , node: {port: ring_port}
     });
-    server.listen(3333, null, null, tt.end)
+    server.listen(http_port, tt.end)
   });
 
-  t.test('#GET /ping', (tt) => {
-    request
-      .get('/ping')
-      .expect(200)
-      .end((err, res) => {
-        tt.error(err)
-        tt.end()
-      })
+  t.test('#GET /ping', async (tt) => {
+    await request.get('/ping').expect(200)
   })
 
   t.test('close server', (tt) => {

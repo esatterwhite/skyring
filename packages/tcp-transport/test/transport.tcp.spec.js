@@ -1,13 +1,12 @@
 'use strict'
 
 const net = require('net')
-    , os = require('os')
-    , path = require('path')
-    , tap = require('tap')
-    , supertest = require('supertest')
-    , Skyring = require('skyring')
-    , test = tap.test
-    ;
+const os = require('os')
+const path = require('path')
+const {test} = require('tap')
+const supertest = require('supertest')
+const Skyring = require('skyring')
+const {sys} = require('../../../test')
 
 let hostname = null;
 
@@ -18,19 +17,26 @@ if(!process.env.TEST_HOST) {
   hostname = process.env.TEST_HOST;
 }
 
-test('timeouts', (t) => {
+test('timeouts', async (t) => {
   let request, server, handler
+  const [node_port] = await sys.ports()
   t.on('end', (done) => {
     handler.close()
     server.close()
   })
+
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
       transports: [path.resolve(__dirname, '../')]
-    , seeds: [`${hostname}:3455`]
+    , seeds: [`${hostname}:${node_port}`]
+    , node: {port: node_port}
     });
-    request = supertest('http://localhost:3333')
-    server.listen(3333, null, null, tt.end)
+    server.listen(0, null, null, (err) => {
+      tt.error(err, 'server listen should not error')
+      const {port} = server.address()
+      request = supertest(`http://localhost:${port}`)
+      tt.end()
+    })
   })
 
   t.test('success - should deliver payload', (tt) => {
@@ -46,7 +52,7 @@ test('timeouts', (t) => {
         socket.end()
         tt.pass('timeout executed')
       })
-    }).listen(5555).unref()
+    }).listen(0).unref()
 
     request
       .post('/timer')
@@ -57,7 +63,7 @@ test('timeouts', (t) => {
         , status: 200
         })
       , callback: {
-          uri: `tcp://${hostname}:5555`
+          uri: `tcp://${hostname}:${handler.address().port}`
         , method: 'post'
         , transport: 'tcp'
         }
@@ -70,18 +76,18 @@ test('timeouts', (t) => {
   t.end()
 })
 
-test('pool', (t) => {
+test('pool', async (t) => {
   let request, server, handler
-  const req = supertest('http://localhost:3333')
+  const [node_port, callback_port] = await sys.ports(2)
   function doRequest(t) {
-    req
+    request
       .post('/timer')
       .send({
         timeout: 500
       , data: 'fake'
       , callback: {
           transport: 'tcp'
-        , uri: `http://${hostname}:5555`
+        , uri: `http://${hostname}:${callback_port}`
         , method: 'post'
         }
       })
@@ -90,17 +96,23 @@ test('pool', (t) => {
         t.error(err)
       })
   }
+
   t.on('end', (done) => {
     handler.close()
     server.close()
   })
+
   t.test('set up skyring server', (tt) => {
     server = new Skyring({
       transports: [require(path.resolve(__dirname, '../'))]
-    , seeds: [`${hostname}:3455`]
+    , seeds: [`${hostname}:${node_port}`]
+    , node: {port: node_port}
     });
-    request = supertest('http://localhost:3333')
-    server.listen(3333, null, null, tt.end)
+    server.listen(0, (err) => {
+      tt.error(err)
+      request = supertest(`http://localhost:${server.address().port}`)
+      tt.end()
+    })
   })
 
   t.test('start saturate pool - no connection', (tt) => {
@@ -112,6 +124,7 @@ test('pool', (t) => {
       tt.pass('saturated')
     }, 2000)
   })
+
   t.test('success - should deliver payload', (tt) => {
     tt.plan(151)
     handler = net.createServer((socket) => {
@@ -119,7 +132,7 @@ test('pool', (t) => {
       socket.once('data', (data) => {
         tt.match(data, /fake/)
       })
-    }).listen(5555, (err) => {
+    }).listen(callback_port, (err) => {
       tt.error(err)
       for (var x = 0; x < 150; x++ ) {
         doRequest({error: () => {}})
