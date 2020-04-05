@@ -40,7 +40,7 @@
     "leveldown": "^5.0.1",
     "levelup": "^4.0.1",
     "memdown": "^4.0.0",
-    "nats": "^1.2.10",
+    "nats": "^1.4.8",
     "path-to-regexp": "^3.0.0",
     "request": "^2.88.0",
     "seeli": "^8.1.3",

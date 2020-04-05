@@ -120,6 +120,10 @@ class Timer extends Map {
 
   }
 
+  get id() {
+    return this[kNode]
+  }
+
   /**
    * Sets a new time instance. If The timer has lapsed, it will be executed immediately
    * @method module:skyring/lib/timer#create
@@ -321,13 +325,14 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 
     if(!size) return
 
+    rebalance('node %s begin rebalance; timers: %d', this[kNode], size)
     this.nats.publish('skyring:node', JSON.stringify({
       node: this[kNode]
     , type: EVENT_STATUS.REBALANCE
     }), noop)
 
-    const records = this.values()
 
+    const records = this.values()
     const run = ( obj ) => {
       if (node.owns(obj.id)) return
 
@@ -340,7 +345,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       , created: obj.created
       })
 
-      rebalance( 'no longer the owner of %s', obj.id )
+      rebalance('node %s no longer the owner of %s', this[kNode], obj.id)
 
       this.nats.publish('skyring:events', JSON.stringify({
         node: this[kNode]
@@ -356,7 +361,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     }
 
     batch.write(() => {
-      store('rebalance batch delete complete')
+      store('node %s rebalance batch delete complete', this[kNode])
     })
   }
 
@@ -443,8 +448,6 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    **/
   shutdown(cb) {
     const size = this.size
-    const client = this.nats
-
     if (!size) {
       this[storage].close()
       return this.transports[shutdown](() => {
@@ -464,7 +467,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 
     const batch = this[storage].batch()
 
-    client.unsubscribe(this._sid)
+    this.nats.unsubscribe(this._sid)
     this._sid = null
 
     const run = (obj) => {
@@ -473,7 +476,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       const data = Object.assign({}, obj.payload, {
         id: obj.id
       , created: obj.created
-      , count: ++sent
+      , count: ++senst
       })
 
       this.nats.publish('skyring', JSON.stringify(data), () => {

@@ -162,11 +162,11 @@ test('server', async (t) => {
           // start server 4
           sfour.listen(0, () => {
             // drop server 3
-            setImmediate(() => {
+            setTimeout(() => {
               sthree.close(() => {
                 ttt.pass('server closed')
               })
-            })
+            }, 200)
           })
         }
       )

@@ -182,7 +182,7 @@ class Server extends http.Server {
           return m.status === 'alive'
         })
 
-        if(active.length) {
+        if (active.length) {
           return this._timers.shutdown(() => {
             debug('closing server');
             this.closed = true;
