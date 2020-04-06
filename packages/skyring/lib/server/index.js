@@ -1,5 +1,5 @@
 /*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
-'use strict';
+'use strict'
 /**
  * Primary server instance for a skyring app.
  * @module skyring/lib/server
@@ -11,15 +11,17 @@
  * @requires skyring/lib/timer
  */
 
-const http   = require('http')
-const mock   = require('@esatterwhite/micromock')
-const util   = require('util')
-const Debug  = require('debug')
-const routes = require('./api')
-const Node   = require('./node')
-const Router = require('./router')
-const Timer  = require('../timer')
-const debug  = Debug('skyring:server')
+const {isFunction} = require('util')
+const http         = require('http')
+const mock         = require('@esatterwhite/micromock')
+const util         = require('util')
+const Debug        = require('debug')
+const routes       = require('./api')
+const Node         = require('./node')
+const Router       = require('./router')
+const Timer        = require('../timer')
+const conf         = require('../../conf')
+const debug        = Debug('skyring:server')
 
 /**
  * @constructor
@@ -61,15 +63,16 @@ server.listen(5000)
 class Server extends http.Server {
   constructor(opts = {}){
     super((req, res) => {
-      this._router.handle(req, res);
-    });
-    this.closed = false;
+      this._router.handle(req, res)
+    })
+    this.closed = false
     this.options = Object.assign({}, {
       seeds: null
     , nats: null
     , storage: null
     , transports: []
-    }, opts);
+    , autobalance: conf.get('autobalance')
+    }, opts)
     if( opts.node ){
       this._node = opts.node instanceof Node
         ? opts.node
@@ -78,14 +81,20 @@ class Server extends http.Server {
             opts.node.port,
             opts.node.name,
             opts.node.app
-          );
+          )
     } else {
-      this._node = new Node();
+      this._node = new Node()
     }
-    this._group = this._node.name;
+    this._group = this._node.name
     this._node.on('bootstrap', (seeds) => {
-      this.emit('bootstrap', seeds);
-    });
+      this.emit('bootstrap', seeds)
+    })
+  }
+
+  route(opts) {
+    const route = this._router.route(opts.path, opts.method, opts.handler)
+    item.middleware && route.before( item.middleware )
+    debug('loaded: %s %s', item.method, item.path)
   }
 
   /**
@@ -99,61 +108,72 @@ class Server extends http.Server {
    **/
   listen(port, ...args) {
     const callback = args[args.length - 1]
-    debug('seed nodes', this.options.seeds);
+    if (this.listening) return isFunction(callback) ? callback() : null
+
+    debug('seed nodes', this.options.seeds)
 
     this._timers = new Timer({
       nats: this.options.nats
     , storage: this.options.storage
     , transports: this.options.transports
     }, (err) => {
-      if (err) return typeof callback === 'function' ? callback(err) : null;
-      this._router = new Router(this._node, this._timers);
+      if (err) return isFunction(callback) ? callback(err) : null
+      this._router = new Router(this._node, this._timers)
       for (const key of Object.keys(routes)) {
         const item = routes[key]
         const route = this._router.route(
           item.path
         , item.method
         , item.handler
-        );
+        )
         debug('loaded: %s %s', item.method, item.path)
 
-        item.middleware && route.before( item.middleware );
+        item.middleware && route.before( item.middleware )
       }
 
       // When nodes are added / removed exec a rebalanace of local timers
       // If this node is not the owner, sent it back in the ring
-      this._node.on('ringchange', (evt) => {
-        this._timers.rebalance(evt, this._node, (data) => {
-          this.proxy(data);
-        });
-      });
+
+      if (this.options.autobalance) {
+        this._node.on('ringchange', (evt) => {
+          this._timers.rebalance(evt, this._node, (data) => {
+            this.proxy(data)
+          })
+        })
+      }
+
+      process.on('SIGUSR2', () => {
+        this._timers.rebalance({}, this._node, (data) => {
+          this.proxy(data)
+        })
+      })
 
       // Join the ring
       this._node.join(this.options.seeds, (err) => {
         if (err) {
-          return typeof callback === 'function' ? callback(err) : null;
+          return isFunction(callback) ? callback(err) : null
         }
 
         // delegate mock requests from the ring to the
         // API router
         this._node.handle(( req, res ) => {
-          this._router.handle( req, res );
-        });
+          this._router.handle( req, res )
+        })
 
-        // listen timers being purged over nats when a remote
+        // listen for timers being purged over nats when a remote
         // node is evicted or shutdown
         this._timers.watch(`skyring:${this._group}`, (err, data) => {
-          this.proxy(data);
-        });
+          this.proxy(data)
+        })
         debug('binding to port', port)
-        super.listen(port, ...args);
-      });
-    });
-    return this;
+        super.listen(port, ...args)
+      })
+    })
+    return this
   }
 
   proxy(data) {
-    debug('fabricating request', data.id);
+    debug('fabricating request', data.id)
     const opts = {
       url: '/timer'
     , method: 'POST'
@@ -161,11 +181,11 @@ class Server extends http.Server {
         "x-timer-id": data.id
       }
     , payload: JSON.stringify(data)
-    };
-    const res = new mock.Response();
-    const req = new mock.Request( opts );
+    }
+    const res = new mock.Response()
+    const req = new mock.Request( opts )
     debug('routing fabricated request', data.id)
-    this._router.handle( req, res );
+    this._router.handle( req, res )
     this.emit('proxy', data)
   }
   /**
@@ -175,7 +195,7 @@ class Server extends http.Server {
    * @param {Function} callback A callback to be called when the server is completely shut down
    **/
   close( cb ){
-    if(this.closed) return cb && setImmediate(cb);
+    if(this.closed) return isFunction(cb) ? setImmediate(cb) : null
     super.close(() => {
       this._node.close(() => {
         const active = this._node._ring.membership.members.filter((m) => {
@@ -184,22 +204,22 @@ class Server extends http.Server {
 
         if (active.length) {
           return this._timers.shutdown(() => {
-            debug('closing server');
-            this.closed = true;
-            cb && cb();
-          });
+            debug('closing server')
+            this.closed = true
+            cb && cb()
+          })
         }
 
         debug('Last node in cluster - skipping rebalanace')
         this._timers.disconnect(() => {
-          debug('closing server');
-          this.closed = true;
-          cb && cb();
+          debug('closing server')
+          this.closed = true
+          cb && cb()
         })
-      });
-    });
+      })
+    })
   }
 }
 
-module.exports = Server;
-module.exports.Router = Router;
+module.exports = Server
+module.exports.Router = Router

@@ -45,7 +45,7 @@ Object.defineProperty(exports, 'client', {
 function createClient(options) {
   const hosts = (options && options.hosts) || nats_hosts;
   const servers = Array.isArray(hosts) ? hosts : parse(hosts);
-  const opts = Object.assign({}, options, {servers});
+  const opts = Object.assign({json: true}, options, {servers});
   debug('creating nats client', opts);
   const client = nats.connect(opts);
   client.on('error', (err) => {

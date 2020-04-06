@@ -9,24 +9,24 @@ const supertest    = require('supertest')
 const async        = require('async')
 const conf         = require('keef')
 const {test, pass} = require('tap')
-const {ports}   = require('../util')
 const Server       = require('../../lib/server')
+const {sys, rand}  = require('../../../../test')
 
 test('server', async (t) => {
   let sone, stwo, sthree, sfour
-  var hostname;
+  var hostname
   if(!process.env.TEST_HOST) {
     hostname =  os.hostname()
     console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
   } else {
-    hostname = process.env.TEST_HOST;
+    hostname = process.env.TEST_HOST
   }
 
   const [
     http_one, http_two, http_three
   , ring_one, ring_two, ring_three, ring_four
   , callback_port
-  ] = await ports(8)
+  ] = await sys.ports(8)
 
   t.test('setup server nodes', (tt) => {
     async.parallel([
@@ -39,11 +39,11 @@ test('server', async (t) => {
           }
         , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
         , storage:{
-            path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+            path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'leveldown'
           }
         })
-        .listen(http_one, cb);
+        .listen(http_one, cb)
       }
     , (cb) => {
         stwo = new Server({
@@ -54,11 +54,11 @@ test('server', async (t) => {
           }
         , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
         , storage:{
-            path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+            path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'leveldown'
           }
         })
-        .listen(http_two, null, null, cb);
+        .listen(http_two, cb)
       }
     , (cb) => {
         sthree = new Server({
@@ -69,11 +69,11 @@ test('server', async (t) => {
           }
         , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
         , storage:{
-            path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+            path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'memdown'
           }
         })
-        .listen(http_three, cb);
+        .listen(http_three, cb)
       }
     ], (err) => {
       tt.error(err)
@@ -84,54 +84,55 @@ test('server', async (t) => {
         , app: 'rebalance'
         }
       , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
+      , autobalance: true
       , storage:{
-          path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+          path: path.join(os.tmpdir(), rand.bytes())
         , backend: 'memdown'
         }
       })
       tt.end()
-    });
+    })
   })
 
   t.on('end', () => {
     sone.close(() => {
       t.comment('sone closed')
-    });
+    })
 
     stwo.close(() => {
       t.comment('stwo closed')
-    });
+    })
     sfour.close(() => {
       t.comment('sfour closed')
-    });
-  });
+    })
+  })
 
   t.test('should bootstrap server nodes', (tt) => {
-    tt.ok(sone);
-    tt.ok(stwo);
-    tt.ok(sthree);
-    tt.ok(sfour);
-    tt.end();
+    tt.ok(sone)
+    tt.ok(stwo)
+    tt.ok(sthree)
+    tt.ok(sfour)
+    tt.end()
   })
 
   t.test('rebalance on shutdown', function(tt) {
     let count = 0, postback
 
     tt.on('end',(done) => {
-      postback && postback.close(done);
+      postback && postback.close(done)
     })
 
     tt.test('should survive a nodes moving', (ttt) => {
 
-      const request = supertest(`http://localhost:${http_one}`);
+      const request = supertest(`http://localhost:${http_one}`)
       const requests = Array.from(Array(100).keys())
       postback = http.createServer((req, res) => {
         const parsed = url.parse(req.url)
         const q = qs.parse(parsed.query)
         ttt.pass(`timer ${q.idx} handled`)
         res.writeHead(200)
-        res.end();
-      }).listen(callback_port);
+        res.end()
+      }).listen(callback_port)
 
       async.until(
         async function _test() {
@@ -170,7 +171,7 @@ test('server', async (t) => {
           })
         }
       )
-    });
+    })
     tt.end()
-  });
-});
+  })
+})

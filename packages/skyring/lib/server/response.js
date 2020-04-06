@@ -35,12 +35,12 @@ Response.prototype.error = function error( err, msg ) {
     });
   }
   err.statusCode = err.statusCode || err.code;
-  if( !err.statusCode ) {
+  if(!err.statusCode) {
     err.statusCode = 500;
     err.message = 'Internal Server Error';
   }
 
-  this.status( err.statusCode );
+  this.status(err.statusCode);
   debug(err);
   this.res.setHeader('x-skyring-reason', err.message);
   return this.end();

@@ -26,6 +26,8 @@ function Request( req ) {
   const parsed = parseurl(req);
   this._body  = false;
   this.body   = null;
+  this.timers  = null;
+  this.res     = null;
 
   if ( parsed ) {
     this.query = parsed.query;
@@ -42,8 +44,8 @@ function Request( req ) {
  * @returns {String} The request header, if set
  */
 Request.prototype.get = function get( key ) {
-  const _key = key.toLowerCae();
-  const headers = this.req.headers || {};
+  const _key = key.toLowerCase();
+  const headers = this.headers || {};
   switch (_key) {
     case 'referrer':
     case 'referer':

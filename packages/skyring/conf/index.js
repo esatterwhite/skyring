@@ -9,11 +9,12 @@ module.exports = conf.defaults({
     backend: "memdown"
   , path: null
   }
+, autobalance: false
 , channel: {
     host: "127.0.0.1"
   , port: 3455
   }
-, PORT: 3000
+, port: 3000
 , nats: {
     hosts: "127.0.0.1:4222"
   }

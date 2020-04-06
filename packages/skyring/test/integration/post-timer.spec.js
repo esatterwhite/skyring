@@ -1,10 +1,10 @@
 'user strict';
-const http      = require('http')
-const os        = require('os')
-const {test}    = require('tap')
-const supertest = require('supertest')
-const Server    = require('../../lib')
-const {ports}   = require('../util')
+const http              = require('http')
+const os                = require('os')
+const {test}            = require('tap')
+const supertest         = require('supertest')
+const Server            = require('../../lib')
+const {sys, testCase}   = require('../../../../test')
 
 
 let hostname = null;
@@ -45,14 +45,20 @@ test('skyring:api', (t) => {
     server = new Server({
       seeds: [`${hostname}:3455`]
     });
-    request = supertest('http://localhost:3333');
-    server.listen(3333, null, null, tt.end)
+    server.listen(3333, (err) => {
+      tt.error(err, 'starting the server should not error')
+      request = supertest(`http://localhost:${server.address().port}`);
+      tt.end()
+    })
   });
 
   t.test('#POST /timer', (tt) => {
     let sone, stwo, sthree
 
-    tt.test('should set a timer postback (201)', (ttt) => {
+    testCase(tt, {
+      code: 201
+    , description: 'should set a timer postback'
+    }, (ttt) => {
       ttt.plan(6)
       toServer(8989, 'hello', 'post', 1000, ttt)
       request
@@ -165,57 +171,67 @@ test('skyring:api', (t) => {
           ttt.end()
         });
     });
-    tt.test('should not allow request with no callback - (400)', (ttt) => {
-      request
-        .post('/timer')
-        .send({
-          timeout:1000
-        , data: 'hello'
-        })
-        .expect(400)
-        .end((err, res) => {
-          ttt.error(err)
-          ttt.end()
-        });
+
+    testCase(tt, {
+      code: 400
+    , description: 'should not allow request with no callback'
+    }, async (ttt) => {
+      const payload ={
+        timeout:1000
+      , data: 'hello'
+      }
+      const {headers} = await request.post('/timer').send(payload).expect(400)
+      ttt.match(headers, {
+        location: /\/timer\/(\w+)/
+      , 'x-skyring-reason': /callback is required/ig
+      })
     });
 
-    tt.test('should not allow request with no uri - (400)', (ttt) => {
-      request
-        .post('/timer')
-        .send({
-          timeout:1000
-        , data: 'hello'
-        , callback: {
-            transport: 'http'
-          , method: 'post'
-          }
-        })
-        .expect(400)
-        .end((err, res) => {
-          ttt.error(err)
-          ttt.end()
-        });
+    testCase(tt, {
+      code: 400
+    , description: 'should not allow request with no uri'
+    }, async (ttt) => {
+      const payload = {
+        timeout:1000
+      , data: 'hello'
+      , callback: {
+          transport: 'http'
+        , method: 'post'
+        }
+      }
+      await request.post('/timer').send(payload).expect(400)
     });
 
-    tt.test('should not allow request with no transport - (400)', (ttt) => {
-      request
-        .post('/timer')
-        .send({
-          timeout:1000
-        , data: 'hello'
-        , callback: {
-            uri: 'http://foo.com'
-          , method: 'post'
-          }
-        })
-        .expect(400)
-        .end((err, res) => {
-          ttt.error(err)
-          ttt.end()
-        });
+    testCase(tt, {
+      code: 400
+    , description: 'should not allow request with no transport'
+    }, async (ttt) => {
+      const payload = {
+        timeout:1000
+      , data: 'hello'
+      , callback: {
+          uri: 'http://foo.com'
+        , method: 'post'
+        }
+      }
+      await request.post('/timer').send(payload).expect(400)
     });
+
+    testCase(tt, {
+      code: 400
+    , description: 'Invalid JSON'
+    }, async (ttt) => {
+      await request
+        .post('/timer')
+        .set({
+          'Content-Type': 'application/json'
+        })
+        .send('{"foo","bar"}')
+        .expect(400)
+    })
     tt.end()
   });
+
   t.test('close server', (tt) => {
     server.close(tt.end)
   })

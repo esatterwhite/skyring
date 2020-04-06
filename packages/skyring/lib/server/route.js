@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /**
  * represents the middleware stack for a url / method combination
  * @module skyring/lib/server/route
@@ -7,7 +7,7 @@
  * @requires path-to-regexp
  */
 
-const pathToRegExp = require('path-to-regexp');
+const pathToRegExp = require('path-to-regexp')
 
 /**
  * @constructor
@@ -25,17 +25,17 @@ rte.use((req, res, node, next) => {
 })
  **/
 function Route(path, method) {
-  this.path = path;
-  this.method = method;
-  this._keys = [];
-  this.stack = [];
-  this.regexp = pathToRegExp(path, this._keys);
-  this.keys = new Array(this._keys.length);
-  this.params = Object.create(null);
+  this.path = path
+  this.method = method
+  this._keys = []
+  this.stack = []
+  this.regexp = pathToRegExp(path, this._keys)
+  this.keys = new Array(this._keys.length)
+  this.params = Object.create(null)
 
   for( var idx = 0; idx < this._keys.length; idx++ ) {
-    this.keys[ idx ] = this._keys[ idx ].name;
-    this.params[ this._keys[ idx ].name ] = undefined;
+    this.keys[ idx ] = this._keys[ idx ].name
+    this.params[ this._keys[ idx ].name ] = undefined
   }
 }
 
@@ -44,65 +44,65 @@ function Route(path, method) {
  * @method module:skyring/lib/server/route#use
  * @param {module:skyring/lib/server/route~Middleware} fn a the middelware function to add
  **/
-Route.prototype.use = function use( fn ) {
-  if( Array.isArray( fn ) ) {
+Route.prototype.use = function use(fn) {
+  if (Array.isArray(fn)) {
     for(var idx = 0; idx < fn.length; idx++) {
-      this.stack.push( fn[idx] );
+      this.stack.push(fn[idx])
     }
   } else {
-    this.stack.push( fn );
+    this.stack.push(fn)
   }
 
-  return this;
-};
+  return this
+}
 
 /**
  * Adds a middleware function to the beginning of the internal route stack
  * @method module:skyring/lib/server/route#before
  * @param {module:skyring/lib/server/route~Middleware} fn a the middelware function to add
  **/
-Route.prototype.before = function before( fn ) {
-  if( Array.isArray( fn ) ) {
-    this.stack.unshift( ...fn );
+Route.prototype.before = function before(fn) {
+  if (Array.isArray(fn)) {
+    this.stack.unshift(...fn)
   } else {
-    this.stack.unshift( fn );
+    this.stack.unshift(fn)
   }
 
-  return this;
-};
+  return this
+}
 
-Route.prototype.match = function match( path ) {
-  const matches = this.regexp.exec( path );
-  if ( !matches ) return null;
+Route.prototype.match = function match(path) {
+  const matches = this.regexp.exec(path)
+  if (!matches) return null
 
-  const keys = this.keys;
-  const params = Object.assign({}, this.params);
+  const keys = this.keys
+  const params = Object.assign({}, this.params)
 
-  for( var idx = 1; idx < matches.length; idx++ ) {
-    params[ keys[ idx - 1 ] ] = matches[ idx ];
+  for (var idx = 1; idx < matches.length; idx++) {
+    params[keys[idx - 1]] = matches[idx]
   }
 
-  return params;
-};
+  return params
+}
 
-Route.prototype.process = function process( req, res, node, next ) {
-  const stack = this.stack;
+Route.prototype.process = function process(req, res, node, next) {
+  const stack = this.stack
   ;(function run( idx ) {
-    const fn = stack[ idx];
+    const fn = stack[idx]
     try {
-      fn(req, res, node, (err) => {
-         if ( err ) return next( err );
-         if( idx === stack.length -1 ) return next();
-         run(++idx);
-      });
+      fn(req, res, node, (err, body) => {
+         if ( err ) return next( err )
+         if( idx === stack.length -1 ) return next()
+         run(++idx)
+      })
     } catch ( err ){
-      err.statusCode = err.statusCode || 500;
-      return next( err );
+      err.statusCode = err.statusCode || 500
+      return next( err )
     }
-  })(0);
-};
+  })(0)
+}
 
-module.exports = Route;
+module.exports = Route
 
 /**
  * A route middleware function

@@ -26,13 +26,13 @@ if( require.main === module ){
 
   const server = new Server();
 
-  server.listen(conf.get('PORT'), (err) => {
+  server.listen(conf.get('port'), (err) => {
     if(err) {
       process.exitCode = 1;
       console.error(err);
       throw err;
     }
-    debug('server listening', conf.get('PORT'));
+    debug('server listening', conf.get('port'));
   });
 
   function onSignal() {

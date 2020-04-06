@@ -1,5 +1,5 @@
 'use strict';
-/*jshint laxcomma: true, smarttabs: true, esnext: true, node: true*/
+
 /**
  * Middleware that determines if the current server should handle the request, and will proxy
  * it to the appropriate node if it isn't
@@ -13,10 +13,9 @@
  */
 
 const uuid  = require('uuid')
-    , body  = require('body')
-    , debug = require('debug')('skyring:proxy')
-    , json  = require('../../../json')
-    ;
+const body  = require('body')
+const debug = require('debug')('skyring:proxy')
+const json  = require('../../../json')
 
 /**
  * @function
@@ -27,21 +26,24 @@ const uuid  = require('uuid')
  * @param {Function} next
  **/
 module.exports = function proxy(req, res, node, cb) {
-  const timer_id = req.$.headers['x-timer-id'] || uuid.v4();
-  req.headers['x-timer-id'] = timer_id;
-  res.setHeader('location', `/timer/${timer_id}`);
-  const do_handle = node.handleOrProxy(timer_id, req, res);
-  if (!do_handle) return debug('proxing', timer_id);
+  const timer_id = req.$.headers['x-timer-id'] || uuid.v4()
+  req.headers['x-timer-id'] = timer_id
+  res.setHeader('location', `/timer/${timer_id}`)
+  const do_handle = node.handleOrProxy(timer_id, req, res)
+  if (!do_handle) return debug('proxing', timer_id)
 
   debug('handle request')
   body(req, res, (err, data) => {
-    if (err) return cb(err);
+    if (err) return cb(err)
 
-    const {error, value} = json.parse(data);
+    const {error, value} = json.parse(data)
 
-    if (error) return cb(error);
+    if (error) {
+      error.statusCode = 400
+      return cb(error)
+    }
 
-    req.$.body = value;
-    cb();
-  });
-};
+    req.$.body = value
+    cb()
+  })
+}

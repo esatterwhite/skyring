@@ -31,7 +31,7 @@ const shutdown       = Symbol.for('kShutdown')
 const kNode          = Symbol('nodeid')
 const kRemove        = Symbol('remove')
 const noop           = () => {}
-
+const REBALANCE_SUB  = 'skyring.rebalance'
 const EVENT_STATUS = {
   CREATED:   'create'
 , UPDATED:   'replace'
@@ -111,10 +111,10 @@ class Timer extends Map {
       store('storage backend ready', store_opts)
       debug('node id', this[kNode])
       this.recover(() => {
-        this.nats.publish('skyring:node', JSON.stringify({
+        this.nats.publish('skyring:node', {
           node: this[kNode]
         , type: EVENT_STATUS.READY
-        }), cb)
+        }, cb)
       })
     })
 
@@ -186,14 +186,14 @@ timers.create(id, options, (err) => {
       , this
       )
 
-      this.nats.publish('skyring:events', JSON.stringify({
+      this.nats.publish('skyring:events', {
         type: EVENT_STATUS.EXEC
       , timer: id
       , node: this[kNode]
       , executed: Date.now()
       , created: created
       , payload: payload
-      }), noop)
+      }, noop)
 
       cb(null, id)
       return null
@@ -215,13 +215,13 @@ timers.create(id, options, (err) => {
         return null
       }
 
-      this.nats.publish('skyring:events', JSON.stringify({
+      this.nats.publish('skyring:events', {
         type: EVENT_STATUS.CREATED
       , timer: id
       , node: this[kNode]
       , created: data.created
       , payload: payload
-       }), noop)
+       }, noop)
 
        data.timer = setTimeout(
         transport.exec.bind(transport)
@@ -247,11 +247,11 @@ timers.create(id, options, (err) => {
    **/
   success(id, cb = noop) {
     this[kRemove](id, (err) => {
-      this.nats.publish('skyring:events', JSON.stringify({
+      this.nats.publish('skyring:events', {
         type: EVENT_STATUS.SUCCESS
       , timer: id
       , node: this[kNode]
-      }), cb)
+      }, cb)
     })
   }
 
@@ -268,14 +268,14 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    **/
   failure(id, error, cb = noop) {
     this[kRemove](id, (err) => {
-      this.nats.publish('skyring:events', JSON.stringify({
+      this.nats.publish('skyring:events', {
         type: EVENT_STATUS.FAIL
       , timer: id
       , node: this[kNode]
       , message: error.message
       , stack: error.stack
       , error: error.code || error.name
-      }), cb)
+      }, cb)
     })
   }
 
@@ -289,12 +289,11 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
   cancel(id, cb = noop) {
     this[kRemove](id, (err) => {
       if (err) return cb(err)
-      this.nats.publish('skyring:events', JSON.stringify({
+      this.nats.publish('skyring:events', {
         type: EVENT_STATUS.CANCELLED
       , timer: id
       , node: this[kNode]
-      }))
-      cb()
+      }, cb)
     })
   }
 
@@ -326,10 +325,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     if(!size) return
 
     rebalance('node %s begin rebalance; timers: %d', this[kNode], size)
-    this.nats.publish('skyring:node', JSON.stringify({
+    this.nats.publish('skyring:node', {
       node: this[kNode]
     , type: EVENT_STATUS.REBALANCE
-    }), noop)
+    }, noop)
 
 
     const records = this.values()
@@ -347,16 +346,16 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 
       rebalance('node %s no longer the owner of %s', this[kNode], obj.id)
 
-      this.nats.publish('skyring:events', JSON.stringify({
+      this.nats.publish('skyring:events', {
         node: this[kNode]
       , type: EVENT_STATUS.EVICT
       , timer: obj.id
-      }), noop)
+      }, noop)
 
       cb(data)
     }
 
-    for( var record of records ) {
+    for(var record of records) {
       run(record)
     }
 
@@ -366,10 +365,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
   }
 
   recover(cb = noop) {
-    this.nats.publish('skyring:node', JSON.stringify({
+    this.nats.publish('skyring:node', {
       node: this[kNode]
     , type: EVENT_STATUS.RECOVERY
-    }), noop)
+    }, noop)
 
     const fn = (data) => {
       store('recover', data.key)
@@ -428,12 +427,12 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
   disconnect(cb = noop) {
     this[storage].close(noop)
     this.transports[shutdown](() => {
-      this.nats.publish('skyring:node', JSON.stringify({
+      this.nats.publish('skyring:node', {
         node: this[kNode]
       , type: EVENT_STATUS.SHUTDOWN
-      }), noop)
+      }, noop)
 
-      this.nats.flush((err) => {
+      this.nats.drainSubscription(this._sid, (err) => {
         if (err) return cb(err)
         this.nats.quit(cb)
       })
@@ -451,11 +450,12 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     if (!size) {
       this[storage].close()
       return this.transports[shutdown](() => {
-        this.nats.publish('skyring:node', JSON.stringify({
+        this.nats.publish('skyring:node', {
           node: this[kNode]
         , type: EVENT_STATUS.SHUTDOWN
-        }), noop)
-        this.nats.flush((err) => {
+        }, noop)
+
+        this.nats.drainSubscription(this._sid, (err) => {
           if (err) return cb(err)
           this.nats.quit(cb)
         })
@@ -476,10 +476,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       const data = Object.assign({}, obj.payload, {
         id: obj.id
       , created: obj.created
-      , count: ++senst
+      , count: ++sent
       })
 
-      this.nats.publish('skyring', JSON.stringify(data), () => {
+      this.nats.request(REBALANCE_SUB, data, (reply) => {
         if (++acks === size) {
           return batch.write(() => {
             store('batch delete finished')
@@ -490,10 +490,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       })
     }
 
-    this.nats.publish('skyring:node', JSON.stringify({
+    this.nats.publish('skyring:node', {
       node: this[kNode]
     , type: EVENT_STATUS.PURGE
-    }), noop)
+    }, noop)
 
     for(let record of this.values()) {
       run(record)
@@ -511,10 +511,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
   watch(key, cb) {
     if (this._bail) return
     const opts = { queue: key }
-    this._sid = this.nats.subscribe('skyring', opts, ( data ) => {
+    this._sid = this.nats.subscribe(REBALANCE_SUB, opts, (data, reply) => {
+      if (reply) this.nats.publish(reply, {node: this[kNode], timer: data.id})
       if(this._bail) return
-      const value = json.parse(data)
-      cb(value.error, value.value)
+      cb(null, data)
     })
     return this._sid
   }
