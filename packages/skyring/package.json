@@ -7,7 +7,7 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "npm run check && tap --cov -Rtap test",
+    "test": "npm run check && tap test",
     "tap": "tap",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
@@ -18,9 +18,10 @@
   },
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
+  "homepage": "https://esatterwhite.github.io/skyring/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring"
+    "url": "https://github.com/esatterwhite/packages/skyring"
   },
   "engines": {
     "node": ">=8.0.0"
