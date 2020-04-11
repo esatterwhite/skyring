@@ -20,7 +20,7 @@
 
 'use strict';
 
-var test = require('tape');
+var {test} = require('tap');
 
 var allocRingpop = require('../lib/alloc-ringpop.js');
 var testRingpopCluster = require('../lib/test-ringpop-cluster.js');

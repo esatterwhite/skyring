@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 var testRingpop = require('../lib/test-ringpop');
-var test = require('tape');
+var {test} = require('tap');
 var SelfEvict = require('../../lib/self-evict');
 var RingPop = require('../../index.js');
 var _ = require('underscore');

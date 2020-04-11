@@ -21,7 +21,7 @@
 'use strict';
 
 
-var test = require('tape');
+var {test} = require('tap');
 var transportMiddleware = require('../../lib/middleware/transport.js').transportServerMiddleware;
 
 

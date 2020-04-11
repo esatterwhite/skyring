@@ -22,7 +22,7 @@ var allocRequest = require('../lib/alloc-request.js');
 var mocks = require('../mock');
 var RequestProxy = require('../../lib/request-proxy/index.js');
 var Ringpop = require('../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 
 function createRingpop() {
     return new Ringpop({

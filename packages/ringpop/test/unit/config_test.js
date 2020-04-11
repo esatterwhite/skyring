@@ -21,7 +21,7 @@
 'use strict';
 
 var Config = require('../../config.js');
-var test = require('tape');
+var {test} = require('tap');
 
 test('set and get interactions', function t(assert) {
     var config = new Config();

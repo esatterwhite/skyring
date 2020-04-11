@@ -20,7 +20,7 @@
 
 'use strict';
 
-var test = require('tape');
+var {test} = require('tap');
 
 var Member = require('../../lib/membership/member');
 var Ringpop = require('../..');

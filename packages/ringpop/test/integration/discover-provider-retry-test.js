@@ -21,7 +21,7 @@
 'use strict';
 
 var fs = require('fs');
-var test = require('tape');
+var {test} = require('tap');
 var tmp = require('tmp');
 
 var testRingpopCluster = require('../lib/test-ringpop-cluster.js');

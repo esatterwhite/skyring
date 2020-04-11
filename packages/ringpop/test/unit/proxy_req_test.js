@@ -21,7 +21,7 @@
 'use strict';
 
 var _ = require('underscore');
-var test = require('tape');
+var {test} = require('tap');
 
 var allocRingpop = require('../lib/alloc-ringpop.js');
 var bootstrap = require('../lib/bootstrap.js');

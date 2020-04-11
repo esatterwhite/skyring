@@ -25,7 +25,7 @@ var Member = require('../../lib/membership/member.js');
 var testRingpop = require('../lib/test-ringpop');
 var mock = require('../mock');
 
-testRingpop('member ship as changes includes all members', function t(deps, assert) {
+testRingpop('member ship as changes includes all members', async function t(deps, assert) {
     var membership = deps.membership;
     var dissemination = deps.dissemination;
 
@@ -44,7 +44,7 @@ testRingpop('member ship as changes includes all members', function t(deps, asse
     assert.ok(addrs.indexOf('127.0.0.1:3003') === -1, 'member not included');
 });
 
-testRingpop('avoids redundant dissemination by filtering changes from source', function t(deps, assert) {
+testRingpop('avoids redundant dissemination by filtering changes from source', async function t(deps, assert) {
     var ringpop = deps.ringpop;
     var membership = deps.membership;
     var dissemination = deps.dissemination;
@@ -75,7 +75,7 @@ testRingpop('avoids redundant dissemination by filtering changes from source', f
     assert.ok(changes.length > 0, 'changes issued');
 });
 
-testRingpop('raise piggyback counter on issueAsReceiver', function t(deps, assert) {
+testRingpop('raise piggyback counter on issueAsReceiver', async function t(deps, assert) {
     var ringpop = deps.ringpop;
     var membership = deps.membership;
     var dissemination = deps.dissemination;
@@ -109,7 +109,7 @@ testRingpop('raise piggyback counter on issueAsReceiver', function t(deps, asser
     assert.equal(disChangeFaulty.piggybackCount, 1, 'piggyback counter is raised');
 });
 
-testRingpop('raise piggyback counter on issueAsSender', function t(deps, assert) {
+testRingpop('raise piggyback counter on issueAsSender', async function t(deps, assert) {
     var membership = deps.membership;
     var dissemination = deps.dissemination;
 
@@ -156,6 +156,7 @@ testRingpop('raise piggyback counter on issueAsSender', function t(deps, assert)
 });
 
 testRingpop('tombstone has priority vs other states', function t(deps, assert) {
+    assert.plan(3);
     var membership = deps.membership;
     var dissemination = deps.dissemination;
 
@@ -174,8 +175,6 @@ testRingpop('tombstone has priority vs other states', function t(deps, assert) {
     membership.makeTombstone(addrAlive, incNo);
     membership.makeTombstone(addrSuspect, incNo);
     membership.makeTombstone(addrFaulty, incNo);
-
-    assert.plan(3);
     dissemination.issueAsSender(function issue(changes, onIssue) {
         changes.forEach(function(change) {
             assert.equal('tombstone', change.status, 'state should be tombstone');
@@ -184,7 +183,7 @@ testRingpop('tombstone has priority vs other states', function t(deps, assert) {
 });
 
 
-testRingpop('issueAsReceiver returns whether a full sync is made', function t(deps, assert) {
+testRingpop('issueAsReceiver returns whether a full sync is made', async function t(deps, assert) {
     var membership = deps.membership;
     var dissemination = deps.dissemination;
 
@@ -206,6 +205,7 @@ testRingpop('issueAsReceiver returns whether a full sync is made', function t(de
 });
 
 testRingpop('tryStartReverseFullSync keeps track of running jobs', function t(deps, assert) {
+    assert.plan(4);
     var dissemination = deps.dissemination;
     var ringpop = deps.ringpop;
     var membership = deps.membership;
@@ -226,7 +226,6 @@ testRingpop('tryStartReverseFullSync keeps track of running jobs', function t(de
     };
     ringpop.client = client;
 
-    assert.plan(4);
     assert.equal(dissemination.reverseFullSyncJobs, 0, 'running reverse full sync jobs is 0');
 
     dissemination.tryStartReverseFullSync(target, 100);

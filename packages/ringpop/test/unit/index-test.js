@@ -24,7 +24,7 @@ var createJoinHandler = require('../../server/protocol/join.js');
 var mock = require('../mock');
 var Ringpop = require('../../index.js');
 var Member = require('../../lib/membership/member.js');
-var test = require('tape');
+var {test} = require('tap');
 var testRingpop = require('../lib/test-ringpop.js');
 var allocRingpop = require('../lib/alloc-ringpop.js');
 

@@ -20,10 +20,10 @@
 
 'use strict';
 
-var Backoff = require('../../lib/backoff');
-var makeTimersMock = require('../lib/timers-mock');
+const Backoff = require('../../lib/backoff')
+const makeTimersMock = require('../lib/timers-mock')
 
-var test = require('tape');
+const {test} = require('tap')
 
 function noRandom(){
     return 0.0;

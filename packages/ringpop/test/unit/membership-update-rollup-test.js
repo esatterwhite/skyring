@@ -22,7 +22,7 @@
 
 var MembershipUpdateRollup = require('../../lib/membership/rollup.js');
 var Ringpop = require('../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 var testRingpop = require('../lib/test-ringpop.js');
 
 var localMemberUpdate = {

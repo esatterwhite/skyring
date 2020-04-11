@@ -30,7 +30,7 @@ var http = require('http');
 var jsonBody = require('body/json');
 var makeTimersMock = require('../lib/timers-mock');
 var strHead = require('../../lib/request-proxy/util.js').strHead;
-var test = require('tape');
+var {test} = require('tap');
 var testRingpopCluster = require('../lib/test-ringpop-cluster.js');
 var tryIt = require('tryit');
 

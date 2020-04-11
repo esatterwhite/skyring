@@ -32,7 +32,8 @@ testRingpopCluster({
     autoGossip: false
 }, 'test bi-directional full syncs', function t(bootRes, cluster, assert) {
     // nodeA will include B in its member list
-    var nodeA = _.find(cluster, function(node) { return node.isReady;});
+
+    var nodeA = _.find(cluster, function(node) {return node.isReady;});
 
     // nodeB will not include A in its member list
     var nodeB = _.find(cluster, function(node) { return !node.isReady;});
@@ -60,7 +61,6 @@ testRingpopCluster({
         nodeA.gossip.tick();
     });
 
-    assert.timeoutAfter(2000);
 });
 
 /*
@@ -141,5 +141,4 @@ testRingpopCluster({
             });
         });
     });
-    assert.timeoutAfter(2000);
 });

@@ -22,7 +22,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 
-var test = require('tape');
+var {test} = require('tap');
 
 var core = require('../../lib/trace/core');
 var makeTimersMock = require('../lib/timers-mock');

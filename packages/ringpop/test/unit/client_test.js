@@ -25,7 +25,7 @@ var ClientErrors = require('../../client_errors.js');
 var EventEmitter = require('events').EventEmitter;
 var makeTimersMock = require('../lib/timers-mock');
 var RingpopErrors = require('../../ringpop_errors.js');
-var test = require('tape');
+var {test} = require('tap');
 var util = require('util');
 
 var noop = function noop() {};

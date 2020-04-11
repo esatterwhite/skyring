@@ -22,7 +22,7 @@
 
 var path = require('path');
 
-var test = require('tape');
+var {test} = require('tap');
 
 var discoverProviderFactory = require('../../discover-providers');
 
@@ -175,7 +175,7 @@ test('retrying discover provider - returns last error after retries', function t
 /**
  * Create a sub-test suite for create from opts.
  */
-test('discoverProvider createFromOpts', function t(assert) {
+test('discoverProvider createFromOpts', async function t(assert) {
     assert.test('with string-argument - uses hostsFile', function t(assert) {
         var filePath = path.join(__dirname, 'discover-providers-example.json');
         var json = require(filePath);

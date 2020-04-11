@@ -22,7 +22,7 @@
 
 var configHandlers = require('../../../../server/admin/config.js');
 var Ringpop = require('../../../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 
 var createConfigGetHandler = configHandlers.configGet.handler;
 var createConfigSetHandler = configHandlers.configSet.handler;

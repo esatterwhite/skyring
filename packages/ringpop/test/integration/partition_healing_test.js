@@ -19,10 +19,7 @@
 // THE SOFTWARE.
 
 'use strict';
-
-var _ = require('underscore');
-var async = require('async');
-
+var _ = require('underscore')
 var testRingpopCluster = require('../lib/test-ringpop-cluster.js');
 var GossipUtils = require('../lib/gossip-utils');
 
@@ -66,8 +63,8 @@ testRingpopCluster({
 });
 
 function assertNoPartition(assert, cluster) {
-    _.each(cluster, function iterator(ringpop) {
-        _.each(ringpop.membership.members, assertAlive);
+    cluster.forEach(function iterator(ringpop) {
+        ringpop.membership.members.forEach(assertAlive);
     });
 
     function assertAlive(member) {

@@ -206,7 +206,14 @@ testRingpop('generate checksums string preserves order of members', function t(d
     var checksumString = membership.generateChecksumString();
     assert.ok(checksumString, 'checksum string is a value');
 
-    assert.deepEqual(membership.members, prevMembers, 'preserves order');
+    // deepEqual was too slow
+    // assert.deepEqual(membership.members, prevMembers, 'preserves order');
+    for (let idx = 0; idx < membership.members.length; idx++) {
+      const current = membership.members[idx]
+      const previous = prevMembers[idx]
+
+      assert.equal(current.id, previous.id, 'current.id, previous.id')
+    }
 });
 
 testRingpop('sets previously stashed updates', function t(deps, assert) {

@@ -22,7 +22,7 @@
 
 var createProtocolJoinHandler = require('../../../../server/protocol/join.js');
 var Ringpop = require('../../../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 
 test('join fails with blacklist error', function t(assert) {
     var ringpop = new Ringpop({

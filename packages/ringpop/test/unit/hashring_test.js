@@ -21,7 +21,7 @@
 var HashRing = require('../../lib/ring');
 var RBTree = require('../../lib/ring/rbtree').RBTree;
 
-var test = require('tape');
+var {test} = require('tap');
 
 test('construct a new HashRing with defaults', function t(assert) {
     var ring = new HashRing();

@@ -20,7 +20,7 @@
 
 'use strict';
 
-var tape = require('tape');
+var tap = require('tap');
 var tapeCluster = require('tape-cluster');
 var TChannel = require('tchannel');
 var parallel = require('async').parallel;
@@ -28,7 +28,7 @@ var parallel = require('async').parallel;
 var RingpopHandler = require('../../ringpop-handler.js');
 var allocCluster = require('./alloc-cluster.js');
 
-TChannelProxyCluster.test = tapeCluster(tape, TChannelProxyCluster);
+TChannelProxyCluster.test = tapeCluster(tap.test, TChannelProxyCluster);
 
 module.exports = TChannelProxyCluster;
 

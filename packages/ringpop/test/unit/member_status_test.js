@@ -20,13 +20,12 @@
 
 'use strict';
 
-var _ = require('underscore');
-var test = require('tape');
+var {test} = require('tap');
 
 var Member = require('../../lib/membership/member');
 var Ringpop = require('../../index');
 
-var ALL_STATUSES = _.values(Member.Status);
+var ALL_STATUSES = Object.values(Member.Status);
 
 test('is status pingable', function(assert) {
     var expectation = {

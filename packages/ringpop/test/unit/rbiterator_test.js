@@ -22,7 +22,7 @@ var RBTree = require('../../lib/ring/rbtree').RBTree;
 var RBIterator = require('../../lib/ring/rbtree').RBIterator;
 var comparator = require('../lib/int-comparator');
 
-var test = require('tape');
+var {test} = require('tap');
 
 test('construct a new RBIterator', function t(assert) {
     var tree = new RBTree(comparator);

@@ -21,8 +21,7 @@
 'use strict';
 
 var Ringpop = require('../../index.js');
-var tape = require('tape');
-
+var tap = require('tap')
 function testRingpop(opts, name, test) {
     if (typeof opts === 'string' && typeof name === 'function') {
         test = name;
@@ -30,7 +29,7 @@ function testRingpop(opts, name, test) {
         opts = {};
     }
 
-    tape(name, function onTest(assert) {
+    tap.test(name, function onTest(assert) {
         var ringpop = new Ringpop({
             app: opts.app || 'test',
             hostPort: opts.hostPort || '127.0.0.1:3000'
@@ -65,8 +64,8 @@ function testRingpop(opts, name, test) {
         }
 
         function cleanup() {
-            assert.end();
             ringpop.destroy();
+            assert.end();
         }
     });
 }

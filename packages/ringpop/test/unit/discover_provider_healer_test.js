@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 var _ = require('underscore');
-var test = require('tape');
+var {test} = require('tap');
 
 var makeTimersMock = require('../lib/timers-mock');
 

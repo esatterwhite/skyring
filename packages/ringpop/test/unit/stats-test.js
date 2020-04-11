@@ -23,7 +23,7 @@
 var EventEmitter = require('events').EventEmitter;
 
 var _ = require('underscore');
-var test = require('tape');
+var {test} = require('tap');
 
 var PeriodicStats = require('../../lib/stats-periodic');
 var makeTimersMock = require('../lib/timers-mock');
@@ -148,8 +148,8 @@ test('start/stop works too', function t(assert) {
 
     assert.end();
 });
-
-test.skip('trace events get traced', function t(assert) {
+return
+test('trace events get traced', function t(assert) {
     var ringpop = new RingpopMock();
     var store = new TracerStore(ringpop);
     var config = core.resolveEventConfig(ringpop, 'membership.checksum.update');
@@ -170,7 +170,7 @@ test.skip('trace events get traced', function t(assert) {
     });
 });
 
-test.skip('trace events can renew, and expire', function t(assert) {
+test('trace events can renew, and expire', function t(assert) {
     var ringpop = new RingpopMock();
     var store = new TracerStore(ringpop, { timers: timers });
     var config = core.resolveEventConfig(ringpop, 'membership.checksum.update');

@@ -22,7 +22,7 @@
 
 var createJoiner = require('../../lib/gossip/joiner.js').createJoiner;
 var Ringpop = require('../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 
 function assertThrows(assert, thrower, assertions) {
     try {

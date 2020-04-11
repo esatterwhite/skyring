@@ -22,7 +22,7 @@
 
 var _ = require('underscore');
 var HashRing = require('../../lib/ring');
-var test = require('tape');
+var {test} = require('tap');
 
 function createServers(size) {
     return _.times(size, function each(i) {

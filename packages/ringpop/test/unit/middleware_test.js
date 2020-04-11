@@ -20,7 +20,7 @@
 
 var middleware = require('../../lib/middleware');
 
-var test = require('tape');
+var {test} = require('tap');
 
 test('empty middleware stack', function t(assert) {
     var m = new middleware.MiddlewareStack();

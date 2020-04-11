@@ -23,7 +23,7 @@
 var ClientRequest = require('../../client_request.js');
 var ClientRequestErrors = require('../../client_request_errors.js');
 var ClientRequestStates = require('../../client_request_states.js');
-var test = require('tape');
+var {test} = require('tap');
 
 var noop = function noop() {};
 

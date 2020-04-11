@@ -63,7 +63,7 @@ function RingpopServer(ringpop, tchannel, middlewares) {
                         res.sendNotOk(null, JSON.stringify(err));
                     } else {
                         if (res2 && !Buffer.isBuffer(res2)) {
-                            res2 = new Buffer(res2);
+                            res2 = Buffer.from(res2);
                         }
 
                         res.sendOk(res1, res2);

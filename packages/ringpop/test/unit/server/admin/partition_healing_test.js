@@ -22,7 +22,7 @@
 
 var partitionHealingHandlers = require('../../../../server/admin/partition-healing');
 var Ringpop = require('../../../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 
 test('healing via discovery provider', function t(assert) {
     assert.plan(2);

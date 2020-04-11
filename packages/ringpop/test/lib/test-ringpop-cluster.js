@@ -23,7 +23,7 @@
 // 3rd party dependencies
 var _ = require('underscore');
 var DebuglogLogger = require('debug-logtron');
-var tape = require('tape');
+var tap = require('tap');
 
 // 1st party dependencies
 var Ringpop = require('../../index.js');
@@ -157,7 +157,7 @@ function testRingpopCluster(opts, name, test) {
         opts = {};
     }
 
-    tape(name, function onTest(assert) {
+    tap.test(name, function onTest(assert) {
         var cluster = createClusterOf(opts);
         var joinResults;
 

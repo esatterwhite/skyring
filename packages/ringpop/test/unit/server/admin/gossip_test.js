@@ -22,7 +22,7 @@
 
 var gossipHandlers = require('../../../../server/admin/gossip.js');
 var Ringpop = require('../../../../index.js');
-var test = require('tape');
+var {test} = require('tap');
 
 var createGossipStartHandler = gossipHandlers.gossipStart.handler;
 var createGossipStopHandler= gossipHandlers.gossipStop.handler;

@@ -20,7 +20,7 @@
 
 'use strict';
 
-var test = require('tape');
+var {test} = require('tap');
 
 var Ringpop = require('../../index.js');
 

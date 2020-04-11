@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 var RingNode = require('../../lib/ring/rbtree').RingNode;
-var test = require('tape');
+var {test} = require('tap');
 
 test('construct a new red node with supplied values', function t(assert) {
     var val = 12345;

@@ -60,6 +60,7 @@
     "leaked-handles": "^5.1.0",
     "opn": "^1.0.1",
     "pre-commit": "^0.0.9",
+    "tap": "^14.10.7",
     "tape": "^3.0.3",
     "tape-cluster": "2.1.0",
     "tchannel": "^4.0.0",
