@@ -48,6 +48,8 @@ function createClient(options) {
   const opts = Object.assign({json: true}, options, {servers});
   debug('creating nats client', opts);
   const client = nats.connect(opts);
+
+  /* istanbul ignore next*/
   client.on('error', (err) => {
     console.error('nats error', err);
   });
@@ -56,15 +58,17 @@ function createClient(options) {
     debug('nats connection successful');
   });
 
-  client.on('end', () => {
+  /* istanbul ignore next*/
+  client.on('close', () => {
     debug('nats connection closed');
     client.removeAllListeners();
   });
 
-  client.on('ready', () => {
-    debug('nats connection ready');
+  client.on('disconnect', () => {
+    debug('nats connection disconnected');
   });
 
+  /* istanbul ignore next*/
   client.on('reconnecting', () => {
     debug('nats client reconnecting');
   });

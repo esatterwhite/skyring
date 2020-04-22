@@ -107,7 +107,7 @@ Response.prototype.status = function status( code ) {
  * @returns {module:skyring/lib/server/response}
  */
 Response.prototype.send = function send( str ) {
-  this.res.write( str );
+  this.res.write(str);
   return this;
 };
 

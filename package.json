@@ -3,8 +3,10 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
-    "lint": "eslint.",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
     "tap": "tap",
+    "test": "npm run local tap -- --coverage-report=text --coverage-report=json",
     "lint:fix": "npm run lint -- --fix",
     "local": "env $(cat local.env)",
     "docs": "jsdoc -c jsdoc.json && apidoc -i packages/skyring/lib/server -o docs/api",

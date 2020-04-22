@@ -49,6 +49,35 @@ test('timers', (t) => {
 
     })
 
+    tt.test('immediately execute stale timer', (ttt) => {
+      ttt.plan(1)
+      const id = uuid.v4()
+      const start = Date.now()
+      class TapTransport {
+        exec(a, b, c, d, e) {
+          const end = Date.now()
+          ttt.pass(start, end, end - start)
+        }
+      }
+      Object.defineProperty(TapTransport, 'name', {value: 'tap'})
+      ttt.on('end', () => {
+        clearAll(timers)
+      })
+      const timers = new Timer({
+        transports: [TapTransport]
+      }, () => {
+        timers.create(id, {
+          timeout: 5000
+        , created: (Date.now() - 6000)
+        , callback: {
+            method: 'hook'
+          , transport: 'tap'
+          , url: '#'
+          }
+        }, new Function)
+      })
+    })
+
     tt.test('duplicate timers', (ttt) => {
       timers = new Timer(null, () => {
         series([

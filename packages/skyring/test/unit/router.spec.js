@@ -30,8 +30,9 @@ test('router', async (t) => {
     })
 
     tt.test('/foo/:bar', (ttt) => {
+      ttt.plan(5)
 
-      router.get('/foo/:bar', (req, res, node, cb) => {
+      const route = router.get('/foo/:bar', (req, res, node, cb) => {
         const header = req.$.get('x-manual-header')
         ttt.equal(header, 'foobar', 'x-manual-header = foobar')
         ttt.match(req.$.params, {bar: '1'})
@@ -40,13 +41,17 @@ test('router', async (t) => {
         cb()
       })
 
+      ttt.strictEqual(null, route.match('/foo'), 'invalid url == null')
+      ttt.match(route.match('/foo/fake'), {
+        bar: 'fake'
+      })
+
       request
         .get('/foo/1')
         .set({'x-manual-header': 'foobar'})
         .expect(200)
         .end((err, res) => {
           ttt.error(err)
-          ttt.end()
         })
     })
     tt.end()
@@ -362,6 +367,51 @@ test('router', async (t) => {
     })
     tt.end()
   })
+
+  testCase(t, {
+    code: 200
+  , description: '#json'
+  }, (tt) => {
+    let server, request
+    const router = new Router()
+    tt.on('end', () => {
+      server && server.close()
+    })
+
+    tt.test('setup http', (ttt) => {
+      server = http.createServer((req, res) => {
+        router.handle(req, res)
+      }).listen(0, (err) => {
+        ttt.error(err)
+        request = supertest(`http://localhost:${server.address().port}`)
+        ttt.end()
+      })
+    })
+
+    testCase(tt, {
+      code: 'GET'
+    , description: '/chunks'
+    }, (ttt) => {
+      router.get('/chunks', (req, res, node, cb) => {
+        res.$.status(200)
+        res.$.json({"foo": "bar"})
+      })
+
+      request
+        .get('/chunks')
+        .set({Accept: 'application/json'})
+        .expect(200)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.match(res, {
+            body: { foo: "bar" }
+          })
+          ttt.end()
+        })
+    })
+    tt.end()
+  })
+
   testCase(t, {
     code: 404
   , description: 'Route not found'

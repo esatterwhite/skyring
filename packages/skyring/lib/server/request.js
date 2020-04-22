@@ -23,20 +23,19 @@ const {Url} = require('url')
  */
 function Request( req ) {
 
-  const parsed = parseurl(req);
-  this._body  = false;
-  this.body   = null;
+  this.query   = Object.create(null);
+  this.path    = null;
+  this._body   = false;
+  this.body    = null;
   this.timers  = null;
   this.res     = null;
+  this.headers = req.headers;
 
-  if ( parsed ) {
+  const parsed = parseurl(req);
+  if (parsed) {
     this.query = parsed.query;
     this.path = parsed.pathname;
-  } else {
-    this.query = Object.create(null);
-    this.path = null;
   }
-  this.headers = req.headers;
 }
 /**
  * Returns the value of a header, if it exists

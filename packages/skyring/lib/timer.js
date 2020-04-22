@@ -207,7 +207,6 @@ timers.create(id, options, (err) => {
     }
 
     this[storage].put(id, data, (err) => {
-      debug('setting timer', id)
 
       if (err) {
         console.error(err)
@@ -215,6 +214,7 @@ timers.create(id, options, (err) => {
         return null
       }
 
+      debug('setting timer', id)
       this.nats.publish('skyring:events', {
         type: EVENT_STATUS.CREATED
       , timer: id

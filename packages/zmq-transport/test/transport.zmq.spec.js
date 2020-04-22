@@ -3,9 +3,11 @@
 const zmq = require('zeromq')
 const os = require('os')
 const path = require('path')
-const {test} = require('tap')
+const {test, threw} = require('tap')
+const sinon = require('sinon')
 const supertest = require('supertest')
 const Skyring = require('skyring')
+const Transport = require('../lib/zmq')
 const {sys} = require('../../../test')
 const ZMQ_BIND = !!process.env.ZMQ_BIND
 
@@ -17,6 +19,44 @@ if (!process.env.TEST_HOST) {
 } else {
   hostname = process.env.TEST_HOST
 }
+
+test('zmq:transport', async (t) => {
+  const mock_store = {
+    success: sinon.spy()
+  , failure: sinon.spy()
+  }
+
+  t.test('class instance', async (tt) => {
+    const transport = new Transport()
+    t.ok(transport instanceof Transport, 'is instance of transport')
+    t.equal(transport.toString(), '[object ZMQTransport]', 'string representation')
+  })
+
+  t.test('monitor events errors', (tt) => {
+    const addr = 'ipc://tap'
+    const one = new Transport({
+      debug: true
+    , bind: false
+    })
+
+    const handler = zmq.socket('pull')
+    handler.bind(addr)
+    tt.on('end', () => {
+      handler.removeAllListeners()
+      handler.disconnect(addr)
+      handler.close()
+      one.shutdown()
+    })
+
+    one.exec('push', addr, {}, 1, mock_store)
+
+    setImmediate(() => {
+      tt.ok(mock_store.success.called, 'timer success')
+      const socket = one.connection(addr)
+      tt.end()
+    })
+  })
+}).catch(threw)
 
 test('zmq:push', async (t) => {
   let request, server, handler
@@ -85,10 +125,13 @@ test('zmq:push', async (t) => {
 })
 
 test('error case', (t) => {
-  t.throws(() => {
-    const transport = new (require('../lib/zmq'))
-    transport.exec('fake', 'zmq://0.0.0.0:3333', '{}', '1', null)
-  }, /unable to create connection for fake/)
+  const mock_timers = {
+    success: sinon.spy()
+  , failure: sinon.spy()
+  }
+  const transport = new (require('../lib/zmq'))
+  transport.exec('fake', 'zmq://0.0.0.0:3333', '{}', '1', mock_timers)
+  t.ok(mock_timers.failure.called, 'timer.failure() called')
   t.end()
 })
 

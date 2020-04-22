@@ -24,35 +24,20 @@ const MONITOR_EVENTS = new Set([
 
 const noop = () => {}
 
+function has(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop)
+}
 module.exports = class ZMQ {
-  constructor(opts) {
+  constructor(opts = {}) {
     this.name = TRANSPORT
-  }
+    this.connections = new Map()
+    this.bind = has(opts, 'bind')
+      ? !!opts.bind
+      : ZMQ_BIND
 
-  exec(method, url, payload, id, storage) {
-    const conn = getConnection(url, method)
-    if (!conn) {
-      const err = new Error(`unable to create connection for ${method} - ${url}`)
-      err.code = 'ENOZMQCONN'
-      throw err
-    }
-
-    debug('execute zmq timer', 'timeout', payload)
-    conn
-      .send('timeout', Zmq.ZMQ_SNDMORE)
-      .send(payload)
-    storage.success(id)
-  }
-
-  shutdown(cb = noop) {
-    for (const [addr, socket] of connections.entries()) {
-      debug('shutdown - %s', addr)
-      socket.removeAllListeners()
-      socket.disconnect(addr)
-      socket.close()
-      connections.delete(addr)
-    }
-    cb()
+    this.debug = has(opts, 'debug')
+      ? !!opts.debug
+      : ZMQ_DEBUG
   }
 
   static [Symbol.hasInstance](instance) {
@@ -66,35 +51,69 @@ module.exports = class ZMQ {
   get [Symbol.toStringTag]() {
     return 'ZMQTransport';
   }
-}
 
-function getConnection(addr, type) {
-  if (connections.has(addr)) return connections.get(addr)
-  if (!METHODS.has(type)) {
-    console.error('zmq error: unsupported transport method %s', type)
-    return null
+  exec(method, url, payload, id, storage) {
+    const conn = this.connection(url, method)
+    if (!conn) {
+      const err = new Error(`unable to create connection for ${method} - ${url}`)
+      err.code = 'ENOZMQCONN'
+      storage.failure(id, err)
+      return
+    }
+
+    debug('execute zmq timer', 'timeout', payload)
+    conn
+      .send('timeout', Zmq.ZMQ_SNDMORE)
+      .send(payload)
+    storage.success(id)
   }
 
-  debug(`creating ${type} socket to ${addr}`)
-  const socket = Zmq.socket(type)
-  if (ZMQ_BIND) {
-    debug('binding to %s', addr)
-    const err = tryBind(socket, addr)
-    if (err) throw err
-  } else {
-    debug('connecting to %s', addr)
-    socket.connect(addr)
+  shutdown(cb = noop) {
+    const connections = this.connections
+    for (const [addr, socket] of connections.entries()) {
+      debug('shutdown - %s', addr)
+      socket.removeAllListeners()
+      socket.disconnect(addr)
+      socket.close()
+      connections.delete(addr)
+    }
+    cb()
   }
-  if (ZMQ_DEBUG) startMonitor(socket)
-  socket.on('error', (err) => {
-    console.error('zmq error: destroying socket %s', addr, err.message)
-    socket.removeAllListeners()
-    socket.disconnect(addr)
-    socket.close()
-    connections.delete(addr)
-  })
-  connections.set(addr, socket)
-  return socket
+
+  connection(addr, type) {
+    const connections = this.connections
+    let socket = connections.get(addr)
+    if (socket) return socket
+
+    if (!METHODS.has(type)) {
+      console.error('zmq error: unsupported transport method %s', type)
+      return null
+    }
+
+    debug(`creating ${type} socket to ${addr}`)
+    socket = Zmq.socket(type)
+    if (this.debug) startMonitor(socket)
+
+    if (this.bind) {
+      debug('binding to %s', addr)
+      const err = tryBind(socket, addr)
+      if (err) throw err
+    } else {
+      debug('connecting to %s', addr)
+      socket.connect(addr)
+    }
+
+
+    socket.on('error', (err) => {
+      console.error('zmq error: destroying socket %s', addr, err.message)
+      socket.removeAllListeners()
+      socket.disconnect(addr)
+      socket.close()
+      connections.delete(addr)
+    })
+    connections.set(addr, socket)
+    return socket
+  }
 }
 
 function startMonitor(socket) {

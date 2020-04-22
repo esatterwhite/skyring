@@ -13,6 +13,7 @@
     "zeromq": "^5.0.0"
   },
   "devDependencies": {
+    "sinon": "^9.0.2",
     "skyring": "^9.0.0",
     "supertest": "^3.0.0",
     "tap": "^10.3.3"
