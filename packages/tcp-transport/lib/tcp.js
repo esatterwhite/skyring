@@ -4,7 +4,7 @@ const Url = require('url')
 const net = require('net')
 const Pool = require('generic-pool')
 const debug = require('debug')('skyring:transports:tcp')
-const kType = Symbol.for('skyringType')
+const kType = Symbol.for('SkyringTransport')
 const connections = new Map()
 const TRANSPORT = 'tcptransport'
 const noop = () => {}
@@ -12,24 +12,26 @@ const noop = () => {}
 module.exports = class TCP {
   constructor(opts) {
     this.name = TRANSPORT
+    this.opts = opts
   }
 
   exec(method, url, payload, id, storage) {
-    const pool = getPool(url)
+    const pool = getPool(url, this.opts)
     pool.acquire().then((conn) => {
       const out = typeof payload === 'object' ? JSON.stringify(payload) : payload
-      storage.cancel(id)
       conn.write(out + '\n', 'utf8', () => {
+        storage.success(id)
         pool.release(conn)
       })
     })
     .catch((e) => {
-      debug('error', e)
       const err = new Error(`Unable to exeute tcp transport for timer ${id}`)
       err.name = 'ETCPERR'
+      storage.failure(id, err)
       console.error(err)
     })
   }
+
   shutdown(cb = noop) {
     const entries = connections.entries()
     const run = () => {
@@ -81,21 +83,4 @@ function getPool(addr, opts) {
   })
   connections.set(addr, pool)
   return pool
-}
-
-function shutdown(cb = ()=>{}) {
-  const entries = connections.entries()
-  const run = () => {
-    const next = entries.next()
-    if (next.done) return cb()
-    const [key, value] = next.value
-    debug('disconnecting %s', key)
-    value.drain().then(() => {
-      value.clear()
-      debug(`removing tcp connection to ${key}`)
-      connections.delete(key)
-      run()
-    })
-  }
-  run()
 }

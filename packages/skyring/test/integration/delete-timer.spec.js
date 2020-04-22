@@ -5,7 +5,7 @@ const {test}    = require('tap')
 const uuid      = require('uuid')
 const supertest = require('supertest')
 const Server    = require('../../lib')
-const {ports}   = require('../util')
+const {sys}      = require('../../../../test')
 
 let hostname = null;
 
@@ -18,7 +18,7 @@ if (!process.env.TEST_HOST) {
 
 test('skyring:api', async (t) => {
   let server, request;
-  const [ring_port, callback_port] = await ports(2)
+  const [ring_port, callback_port] = await sys.ports(2)
   t.test('set up skyring server', (tt) => {
     server = new Server({
       seeds: [`${hostname}:${ring_port}`]

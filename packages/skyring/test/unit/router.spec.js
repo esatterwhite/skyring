@@ -143,7 +143,9 @@ test('router', async (t) => {
           baz: 'foobar'
         })
         res.$.status(202)
-        cb(null, {baz: 'foo'})
+        res.$
+          .send('created')
+          .end()
       })
 
       route.before([
@@ -202,6 +204,12 @@ test('router', async (t) => {
           baz: 'resource'
         })
         res.$.status(202)
+        res.$.set('Content-Type', 'text/plain')
+        ttt.equal(
+          res.$.get('content-type')
+        , 'text/plain'
+        , 'content-type header set'
+        )
         cb()
       })
 
@@ -476,6 +484,84 @@ test('router', async (t) => {
       request
         .get('/error')
         .expect(501)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.end()
+        })
+    })
+    tt.end()
+  })
+
+  testCase(t, {
+    code: 500
+  , description: 'default error case'
+  }, (tt) => {
+    let server = null
+    let request = null
+    const router = new Router()
+    tt.on('end', () => {
+      server && server.close()
+    })
+
+    tt.test('setup http', (ttt) => {
+      server = http.createServer((req, res) => {
+        router.handle(req, res)
+      }).listen(0, (err) => {
+        ttt.error(err)
+        request = supertest(`http://localhost:${server.address().port}`)
+        ttt.end()
+      })
+    })
+
+    tt.test('/error', (ttt) => {
+      router.route('/error', 'GET', (req, res, node, cb) => {
+        const error = new Error('Broken')
+        res.$.error(error)
+      })
+
+      request
+        .get('/error')
+        .expect(500)
+        .end((err, res) => {
+          ttt.error(err)
+          ttt.match(res.headers, {
+            'x-skyring-reason': /internal server error/i
+          })
+          ttt.end()
+        })
+    })
+    tt.end()
+  })
+
+  testCase(t, {
+    code: 503
+  , description: 'error return as a number'
+  }, (tt) => {
+    let server = null
+    let request = null
+    const router = new Router()
+    tt.on('end', () => {
+      server && server.close()
+    })
+
+    tt.test('setup http', (ttt) => {
+      server = http.createServer((req, res) => {
+        router.handle(req, res)
+      }).listen(0, (err) => {
+        ttt.error(err)
+        request = supertest(`http://localhost:${server.address().port}`)
+        ttt.end()
+      })
+    })
+
+    tt.test('/error', (ttt) => {
+      router.route('/error', 'GET', (req, res, node, cb) => {
+        res.$.error(503, http.STATUS_CODES['503']) 
+      })
+
+      request
+        .get('/error')
+        .expect(503)
         .end((err, res) => {
           ttt.error(err)
           ttt.end()

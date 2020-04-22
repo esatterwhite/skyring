@@ -71,7 +71,7 @@ if (err) throw err
   join(seed_arr, cb) {
     const nodes = seed_arr || ring_seeds
     if (!Array.isArray(nodes)) {
-      const err = new TypeError('seeds must be and array')
+      const err = new TypeError('seeds must be an array')
       return cb(err)
     }
 
@@ -110,21 +110,6 @@ if (err) throw err
   }
 
   /**
-   * Removes itself from the active ring and destroys existing connections
-   * @method module:skyring/lib/server/node#leave
-   * @param {Function} callback Callback function to call when the eviction process is complete
-   **/
-  leave(cb) {
-    this._ring.selfEvict((err) => {
-      if (err) return cb(err)
-      this._tchannel.drain('leaving ring', () => {
-        this._ring.destroy()
-      })
-      cb()
-    })
-  }
-
-  /**
    * Adds a request handler to the active ringpop instance
    * @method module:skyring/lib/server/node#handle
    * @param {Function} handler A request handler for incoming requests from the ring
@@ -156,7 +141,7 @@ if (!handle) return;
    * @return {Boolean}
    **/
   owns(key) {
-    return this._ring.lookup(key) == this._ring.whoami()
+    return this.lookup(key) == this._ring.whoami()
   }
 
   /**
@@ -168,6 +153,17 @@ if (!handle) return;
   lookup(key) {
     return this._ring.lookup(key)
   }
+
+  /**
+   * Deprecated: use close method
+   * @deprecated 10.0.0
+   * @method module:skyring/lib/server/node#leave
+   * @param {Function} callback Callback function to call when the eviction process is complete
+   **/
+  leave(cb) {
+    this.close(cb)
+  }
+
 
   /**
    * Removes itself from the ring and closes and connections

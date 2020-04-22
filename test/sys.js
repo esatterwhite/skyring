@@ -6,17 +6,18 @@ module.exports = {
   genPorts, ports
 }
 const gen = genPorts()
-async function* genPorts() {
+function* genPorts() {
   while (true) {
-    let port = await getPort()
-    yield port
+    yield getPort()
   }
 }
 
 function ports(n = 1) {
   const todo = new Array(n)
   for (let x = 0; x < n; x++) {
-    todo[x] = gen.next().then(res => res.value)
+    const {value} = gen.next()
+    todo[x] = value
+
   }
 
   return Promise.all(todo)

@@ -7,7 +7,7 @@ const connections = new Map()
 const METHODS = new Set(['push', 'pub'])
 const ZMQ_DEBUG = !!process.env.ZMQ_DEBUG
 const ZMQ_BIND = !!process.env.ZMQ_BIND
-const kType = Symbol.for('skyringType')
+const kType = Symbol.for('SkyringTransport')
 const TRANSPORT = 'zmqtransport'
 const MONITOR_EVENTS = new Set([
   'connect'
@@ -53,16 +53,21 @@ module.exports = class ZMQ {
   }
 
   exec(method, url, payload, id, storage) {
-    const conn = this.connection(url, method)
-    if (!conn) {
+    const {socket, error} = this.connection(url, method)
+    if (!socket) {
       const err = new Error(`unable to create connection for ${method} - ${url}`)
       err.code = 'ENOZMQCONN'
       storage.failure(id, err)
       return
     }
 
+    if (error) {
+      storage.failure(id, error)
+      return
+    }
+
     debug('execute zmq timer', 'timeout', payload)
-    conn
+    socket
       .send('timeout', Zmq.ZMQ_SNDMORE)
       .send(payload)
     storage.success(id)
@@ -83,11 +88,13 @@ module.exports = class ZMQ {
   connection(addr, type) {
     const connections = this.connections
     let socket = connections.get(addr)
-    if (socket) return socket
+    if (socket) return {socket: socket, error: null}
 
     if (!METHODS.has(type)) {
-      console.error('zmq error: unsupported transport method %s', type)
-      return null
+      const err = new Error(`zmq error: unsupported transport method ${type}`)
+      err.code = 'ENOZMQTYPE'
+      err.meta = {type: type, address: addr}
+      return {socket: null, error: err}
     }
 
     debug(`creating ${type} socket to ${addr}`)
@@ -97,12 +104,11 @@ module.exports = class ZMQ {
     if (this.bind) {
       debug('binding to %s', addr)
       const err = tryBind(socket, addr)
-      if (err) throw err
+      if (err) return {socket: null, error: err}
     } else {
       debug('connecting to %s', addr)
       socket.connect(addr)
     }
-
 
     socket.on('error', (err) => {
       console.error('zmq error: destroying socket %s', addr, err.message)
@@ -112,7 +118,7 @@ module.exports = class ZMQ {
       connections.delete(addr)
     })
     connections.set(addr, socket)
-    return socket
+    return {socket: socket, error: null}
   }
 }
 
@@ -129,6 +135,8 @@ function tryBind(socket, addr) {
   try {
     socket.bindSync(addr)
   } catch (e) {
+    socket.removeAllListeners()
+    socket.close()
     e.meta = {
       address: addr
     }

@@ -1,21 +1,23 @@
-'use strict';
+'use strict'
 
 const os = require('os')
+const http = require('http')
 const path = require('path')
-const crypto = require('crypto')
-const series = require('async').series
+const {series} = require('async')
 const {test} = require('tap')
+const sinon = require('sinon')
 const uuid   = require('uuid')
 const conf   = require('keef')
 const Timer  = require('../../lib/timer')
 const Node   = require('../../lib/server/node')
+const {rand} = require('../../../../test')
 
 function clearAll(timers, cb) {
-  for(var t of timers.values()){
-    clearTimeout(t.timer);
+  for(const t of timers.values()){
+    clearTimeout(t.timer)
   }
-  timers.clear();
-  timers.nats.quit(()=>{
+  timers.clear()
+  timers.nats.quit(() => {
     timers.close(cb)
   })
 }
@@ -79,7 +81,7 @@ test('timers', (t) => {
     })
 
     tt.test('duplicate timers', (ttt) => {
-      timers = new Timer(null, () => {
+      timers = new Timer(undefined, () => {
         series([
           (cb) => {
             timers.create("1", {
@@ -114,7 +116,7 @@ test('timers', (t) => {
       timers = new Timer({
         storage: {
           backend: 'memdown'
-        , path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+        , path: path.join(os.tmpdir(), rand.bytes(10))
         }
       }, ttt.end)
     })
@@ -138,10 +140,10 @@ test('timers', (t) => {
       }, (err, id) => {
         ttt.error(err)
       })
-    });
+    })
 
     tt.end()
-  });
+  })
 
   t.test('update', (tt) => {
     let timers = null
@@ -150,13 +152,13 @@ test('timers', (t) => {
       timers = new Timer({
         storage: {
           backend: 'memdown'
-        , path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+        , path: path.join(os.tmpdir(), rand.bytes(10))
         }
       }, ttt.end)
     })
 
     tt.test('should replace a timer in place', (ttt) => {
-      const id = uuid.v4();
+      const id = uuid.v4()
       const one = () => {
         ttt.fail('function one called')
       }
@@ -187,10 +189,10 @@ test('timers', (t) => {
         }, (err) => {
           ttt.error(err)
         })
-      });
-    });
+      })
+    })
     tt.end()
-  });
+  })
 
   t.test('cancel', (tt) => {
     let timers = null
@@ -198,7 +200,7 @@ test('timers', (t) => {
       timers = new Timer({
         storage: {
           backend: 'memdown'
-        , path: path.join(os.tmpdir(), crypto.randomBytes(10).toString('hex'))
+        , path: path.join(os.tmpdir(), rand.bytes(10))
         }
       }, ttt.end)
     })
@@ -210,6 +212,7 @@ test('timers', (t) => {
         timeout: 2000
       , data: {
           "fake 2": (uri, guid) => {
+            called = true
             ttt.fail('timer callback called')
           }
         }
@@ -226,9 +229,124 @@ test('timers', (t) => {
           })
         }, 50)
       })
-    });
+    })
     tt.end()
-  });
-  t.end();
-});
+  })
+  t.test('failure', (tt) => {
+    let timers = null
+    tt.test('setup timer cache', (ttt) => {
+      timers = new Timer({
+        storage: {
+          backend: 'memdown'
+        }
+      }, ttt.end)
+    })
+
+    tt.test('fail timer', (ttt) => {
+      const id = uuid.v4()
+      let called = false
+      timers.create(id, {
+        timeout: 2000
+      , data: {
+          "fake 3": (uri, guid) => {
+            called = true
+            ttt.fail('timer callback called')
+          }
+        }
+      , callback: {
+          transport: 'callback'
+        , method: 'fake 3'
+        , uri: 'fake 3'
+        }
+      }, (err) => {
+        setTimeout(() => {
+          const e = new Error('broke')
+          timers.failure(id, e, () => {
+            ttt.ok(!called)
+            clearAll(timers, ttt.end)
+          })
+        }, 50)
+      })
+    })
+    tt.end()
+  })
+
+  t.test('recovery', (tt) => {
+    const state = {
+      timers: null
+    , server: null
+    , request: null
+    , id: uuid.v4()
+    , storage_path: path.join(os.tmpdir(), `skyring-${rand.bytes(10)}`)
+    }
+
+    tt.on('end', () => {
+      state.server && state.server.close()
+      clearAll(state.timers)
+    })
+
+    series([
+      (cb) => {
+        state.server = http.createServer((req, res) => {
+          let body = ''
+          tt.pass('recovered timer called')
+          debugger;
+          req.on('data', (chunk) => {
+            body += chunk
+          })
+
+          req.once('end', (chunk) => {
+            body += (chunk || '')
+            const out = JSON.parse(body)
+            tt.match(out, {
+              foo: {bar: 100}
+            })
+            res.writeHead(204)
+            res.end()
+            setTimeout(tt.end, 50)
+          })
+        }).listen(0, cb)
+      }
+    , (cb) => {
+        state.timers = new Timer({
+          storage: {
+            backend: 'leveldown'
+          , path: state.storage_path
+          }
+        }, cb)
+      }
+    , (cb) => {
+        tt.comment(`setting timer ${state.id}`)
+        state.timers.create(state.id, {
+          timeout: 500
+        , data: {foo: {bar: 100}}
+        , callback: {
+            transport: 'http'
+          , method: 'POST'
+          , uri: `http://localhost:${state.server.address().port}`
+          }
+        }, cb)
+      }
+    , (cb) => {
+        tt.comment('clearing timers')
+        clearAll(state.timers, cb)
+      }
+
+    , (cb) => {
+        tt.comment('re create timers')
+        state.timers = new Timer({
+          storage: {
+            backend: 'leveldown'
+          , path: state.storage_path
+          }
+        }, cb)
+        sinon.spy(state.timers, 'recover')
+      }
+    ], (err) => {
+      tt.error(err)
+      tt.ok(state.timers.id, 'timer instance has unique id')
+    })
+  })
+  t.end()
+})
 

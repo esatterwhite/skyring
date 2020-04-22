@@ -11,22 +11,25 @@
  * @requires skyring/lib/server
  **/
 
-const conf      = require('./conf')
-    , Server    = require('./lib/server')
-    , Transport = require('./lib/transports/transport')
-    , debug     = require('debug')('skyring:main')
+const conf       = require('./conf')
+    , Server     = require('./lib/server')
+    , Transports = require('./lib/transports')
+    , Transport  = require('./lib/transports/transport')
+    , debug      = require('debug')('skyring:main')
     ;
 
 module.exports = Server;
 module.exports.Transport = Transport;
+module.exports.Transports = Transports
 
-if( require.main === module ){
+if(require.main === module){
   process.title = 'skyring';
   process.chdir(__dirname);
 
   const server = new Server();
 
   server.listen(conf.get('port'), (err) => {
+    /* istanbul ignore if */
     if(err) {
       process.exitCode = 1;
       console.error(err);

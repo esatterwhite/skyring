@@ -17,3 +17,8 @@ ratings:
 exclude_paths:
 - test/
 - docs/
+- assets/
+- compose/
+- scripts/
+- tutorials/
+

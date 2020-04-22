@@ -6,7 +6,7 @@ const {test}    = require('tap')
 const supertest = require('supertest')
 const nats      = require('../../lib/nats')
 const Server    = require('../../lib')
-const {ports}   = require('../util')
+const {sys}     = require('../../../../test')
 
 let hostname = null;
 
@@ -18,7 +18,7 @@ if(!process.env.TEST_HOST) {
 }
 
 test('skyring:api', async (t) => {
-  const [http_port, ring_port] = await ports(2)
+  const [http_port, ring_port] = await sys.ports(2)
   const request = supertest(`http://localhost:${http_port}`)
   t.test('setup skyring server', (tt) => {
     server = new Server({

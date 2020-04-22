@@ -21,7 +21,7 @@ const {Url} = require('url')
  * @param {IncommingMessage} req An {@link https://nodejs.org/api/http.html#http_class_http_incomingmessage|IncomingMessage}
  * from the node http module
  */
-function Request( req ) {
+function Request(req) {
 
   this.query   = Object.create(null);
   this.path    = null;

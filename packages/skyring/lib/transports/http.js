@@ -16,7 +16,8 @@ const request = require('request')
 const debug   = require('debug')('skyring:transport:http')
 const Transport = require('./transport')
 const method_exp = /^(post|put|patch|delete|get|options|head)$/i
-
+const kType = Symbol.for('SkyringTransport')
+const TRANSPORT = 'httptransport'
 /**
  * Dispatches an http request
  * @function
@@ -33,7 +34,11 @@ class Http extends Transport {
     this.name = 'http'
   }
 
-  exec( method, url, payload, id, cache ) {
+  static [Symbol.hasInstance](instance) {
+    return instance[kType] === TRANSPORT
+  }
+
+  exec(method, url, payload, id, cache) {
     const isJSON = typeof payload === 'object'
     const _method = method.toLowerCase()
     const options = {
@@ -41,9 +46,11 @@ class Http extends Transport {
     , body: payload || ''
     }
 
-    if( method_exp.test(method) && typeof request[_method] !== 'function' ) {
+    if (!method_exp.test(method) || typeof request[_method] !== 'function') {
       const pending = cache.get(id)
       pending && clearTimeout(pending.timer)
+      const err = new Error(`Invalid http verb ${method}`)
+      err.code = 'ESRHTTP'
       cache.failure(id, err)
       debug('unable to execute http transport', method, id)
       return
@@ -51,11 +58,12 @@ class Http extends Transport {
 
     debug('executing http transport %s', id, method)
     request[_method](url, options, (err, res, body) => {
-      if(err){
+      if (err) {
         debug('timer err', err)
         return cache.failure(id, err)
       }
-      if(res.statusCode > 299 ){
+
+      if (res.statusCode > 299) {
         debug('timer fail', res.statusCode, body)
         const error = new Error(STATUS_CODES[res.statusCode])
         error.code = res.statusCode = res.statusCode
@@ -66,6 +74,10 @@ class Http extends Transport {
       debug('timer sucess')
       return cache.success(id)
     })
+  }
+
+  get [kType]() {
+    return TRANSPORT
   }
 
   get [Symbol.toStringTag]() {

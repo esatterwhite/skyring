@@ -5,7 +5,7 @@ const {test} = require('tap')
 const uuid = require('uuid')
 const supertest = require('supertest')
 const Server = require('../../lib')
-const {ports} = require('../util')
+const {sys} = require('../../../../test')
 
 let hostname = null
 
@@ -18,7 +18,7 @@ if(!process.env.TEST_HOST) {
 
 test('skyring:api', async (t) => {
   let server, request
-  const [http_port, ring_port] = await ports(2)
+  const [http_port, ring_port] = await sys.ports(2)
   t.test('set up ring server', ( tt ) => {
     server = new Server({
       seeds: [`${hostname}:${ring_port}`]
@@ -79,20 +79,20 @@ test('skyring:api', async (t) => {
         })
       }).listen(9999, (err) => {
         ttt.error(err, 'server started')
-      })
-      request
-        .put(url)
-        .send({
-          timeout: 250
-        , data: 'put 1'
-        , callback: {
-            uri: `http://${hostname}:9999`
-          , method: 'post'
-          , transport: 'http'
-          }
+        request
+          .put(url)
+          .send({
+            timeout: 250
+          , data: 'put 1'
+          , callback: {
+              uri: `http://${hostname}:9999`
+            , method: 'post'
+            , transport: 'http'
+            }
+          })
+          .expect(200)
+          .end(ttt.error)
         })
-        .expect(200)
-        .end(ttt.error)
     })
 
     tt.test('should 404 for a timer that does not exist', (ttt) => {

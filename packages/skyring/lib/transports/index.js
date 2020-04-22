@@ -11,14 +11,14 @@
  */
 
 const debug     = require('debug')('skyring:transports')
-const conf      = require('../../conf')
 const Callback  = require('./callback')
 const Http      = require('./http')
+const toArray   = require('../lang/array/to-array')
+const conf      = require('../../conf')
 const kLoad     = Symbol('kLoad')
 const kShutdown = Symbol.for('kShutdown')
 const ENV       = conf.get('node_env')
 const defaults  = toArray(conf.get('transport'))
-
 
 /**
  *
@@ -31,45 +31,71 @@ const defaults  = toArray(conf.get('transport'))
  **/
 
 /**
- * @alias module:skyring/lib/transports
+ * @alias module:skyring/lib/transports
  * @constructor
- * @param {TransportHandler|TransportHandler[]|String|String[]} transports Custome transports to registe
+ * @param {TransportHandler|TransportHandler[]|String|String[]} transports Custom transports to register
+ *    This can be a Transport class or a
  * @example const path = require('path')
 const Skyring = require('skyring')
+const kType = Symbol.for('SkyringTransport')
 
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.success(id)
+class Fizzbuzz extends Skyring.Transport {
+  constructor(opts) {
+    super(opts)
+    this.name = 'fizzbuzz'
+  }
+  exec (method, uri, payload, id, timer_store) {
+   // send payload to uri...
+   timer_store.success(id)
+  }
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+    cb()
+  }
+
+  static [Symbol.hasInstance](instance) {
+    return instance[kType] === 'fizzbuzztransport'
+  }
+  get [Symbol.toStringTag]() {
+    return 'FizzbuzzTransport'
+  }
+
+  get [kType]() {
+    return 'fizzbuzztransport'
+  }
 }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
-}
 
 const server = new Skyring({
   transports: [
     'my-transport-module'
-  , fizzbuz
+  , Fizzbuzz
   , path.resolve(__dirname, '../transports/fake-transport')
   ]
 })
- * @example const Transports = require('skyring/lib/transports')
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
-}
+ * @example const {Transports, Transport} = require('skyring')
+class Fizzbuzz extends Transport {
+  constructor(opts) {
+    super(opts)
+    this.name = 'fizzbuzz'
+  }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
+  exec (method, uri, payload, id, timer_store) {
+   // send payload to uri...
+   timer_store.remove(id)
+  }
+
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+    cb()
+  }
 }
 
 const t = new Transports([
   'my-transport-module'
-, fizzbuz
+, Fizzbuz
 , path.resolve(__dirname, '../transports/fake-transport')
 ])
  **/
@@ -81,8 +107,8 @@ module.exports = class Transports extends Map {
      * @memberof module:skyring/lib/transports
      * @property {Object} http The default HTTP transport
      **/
-    this.set('http',  new Http())
-    if(ENV === 'development' || ENV === 'test') {
+    this.set(Http.name.toLowerCase(),  new Http())
+    if(ENV === 'test') {
       this.set('callback', new Callback())
     }
     this[kLoad](toArray(transports))
@@ -139,13 +165,3 @@ module.exports = class Transports extends Map {
   }
 }
 
-
-function toArray(item) {
-  if (!item) return []
-  if (Array.isArray(item)) return item
-  return typeof item === 'string' ? item.split(',') : [item]
-}
-
-function hasOwn(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop)
-}

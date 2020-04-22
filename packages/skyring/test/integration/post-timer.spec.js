@@ -39,13 +39,17 @@ function toServer(port, expect = 'hello', method = 'post', time = 1000, t){
   return s
 }
 
-test('skyring:api', (t) => {
+test('skyring:api', async (t) => {
   let request, server
+  const [node_port] = await sys.ports(1)
   t.test('setup skyring server', (tt) => {
     server = new Server({
-      seeds: [`${hostname}:3455`]
+      seeds: [`${hostname}:${node_port}`]
+    , node: {
+        port: node_port
+      }
     });
-    server.listen(3333, (err) => {
+    server.listen(0, (err) => {
       tt.error(err, 'starting the server should not error')
       request = supertest(`http://localhost:${server.address().port}`);
       tt.end()
@@ -235,5 +239,4 @@ test('skyring:api', (t) => {
   t.test('close server', (tt) => {
     server.close(tt.end)
   })
-  t.end()
 });

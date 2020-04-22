@@ -1,6 +1,6 @@
 'use strict'
 
-const kType = Symbol.for('skyringType')
+const kType = Symbol.for('SkyringTransport')
 const noop = new Function()
 const TRANSPORT = 'transport'
 
@@ -9,6 +9,7 @@ module.exports = class Transport {
     this.name = TRANSPORT
   }
 
+  /* istanbul ignore next */
   exec(method, url, payload, id, cache) {}
 
   shutdown(cb = noop) {

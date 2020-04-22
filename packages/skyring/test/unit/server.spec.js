@@ -42,6 +42,7 @@ test('server', async (t) => {
             path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'leveldown'
           }
+        , autobalance: true
         })
         .listen(http_one, cb)
       }
@@ -57,6 +58,7 @@ test('server', async (t) => {
             path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'leveldown'
           }
+      , autobalance: true
         })
         .listen(http_two, cb)
       }
@@ -84,13 +86,12 @@ test('server', async (t) => {
         , app: 'rebalance'
         }
       , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
-      , autobalance: true
       , storage:{
           path: path.join(os.tmpdir(), rand.bytes())
         , backend: 'memdown'
         }
       })
-      tt.end()
+      sthree.listen(0, tt.end)
     })
   })
 
@@ -115,7 +116,25 @@ test('server', async (t) => {
     tt.end()
   })
 
-  t.test('rebalance on shutdown', function(tt) {
+  t.test('route() adds custom rout', async (tt) => {
+    sone.route({
+      method: 'GET'
+    , path: '/foo/bar'
+    , handler: (req, res, node, cb) => {
+        setImmediate(() => {
+          res.$.body = {foo: 1}
+          cb()
+        })
+      }
+    })
+
+    const {body} = await supertest(`http://localhost:${sone.address().port}`)
+      .get('/foo/bar')
+      .expect(200)
+
+    tt.deepEquals(body, {foo: 1})
+  })
+  t.test('rebalance on shutdown', (tt) => {
     let count = 0, postback
 
     tt.on('end',(done) => {

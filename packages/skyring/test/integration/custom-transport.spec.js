@@ -8,8 +8,8 @@ const supertest  = require('supertest')
 const async      = require('async')
 const conf       = require('keef')
 const {test, ok} = require('tap')
-const {ports}     = require('../util')
 const Server     = require('../../lib/server')
+const {sys}      = require('../../../../test')
 
 test('server', async (t) => {
   let hostname;
@@ -20,7 +20,7 @@ test('server', async (t) => {
     hostname = process.env.TEST_HOST;
   }
 
-  const [ring_port, http_port] = await ports(3)
+  const [ring_port, http_port] = await sys.ports(3)
   t.test('register custom transport as a function', (tt) => {
     let server = null
     tt.test('create server', (ttt) => {
@@ -41,7 +41,7 @@ test('server', async (t) => {
         }
       , transports: [Foobar]
       })
-      .listen(http_port, null, null, (err) => {
+      .listen(http_port, (err) => {
         ttt.error(err)
         new Promise((resolve) => {
           setTimeout(resolve, 300)
@@ -77,7 +77,7 @@ test('server', async (t) => {
 
   t.test('register custom transport as a string', async (tt) => {
     let server = null
-    const [ring_port, http_port] = await ports(2)
+    const [ring_port, http_port] = await sys.ports(2)
     tt.test('create server', (ttt) => {
       server = new Server({
         node: {

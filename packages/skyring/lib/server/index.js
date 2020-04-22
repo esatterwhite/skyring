@@ -73,7 +73,9 @@ class Server extends http.Server {
     , transports: []
     , autobalance: conf.get('autobalance')
     }, opts)
-    if( opts.node ){
+
+    /* istanbul ignore else */
+    if(opts.node) {
       this._node = opts.node instanceof Node
         ? opts.node
         : new Node(
@@ -93,8 +95,8 @@ class Server extends http.Server {
 
   route(opts) {
     const route = this._router.route(opts.path, opts.method, opts.handler)
-    item.middleware && route.before( item.middleware )
-    debug('loaded: %s %s', item.method, item.path)
+    opts.middleware && route.before( opts.middleware )
+    debug('loaded: %s %s', opts.method, opts.path)
   }
 
   /**
@@ -135,21 +137,14 @@ class Server extends http.Server {
       // If this node is not the owner, sent it back in the ring
 
       if (this.options.autobalance) {
-        this._node.on('ringchange', (evt) => {
-          this._timers.rebalance(evt, this._node, (data) => {
-            this.proxy(data)
-          })
-        })
+        this._node.on('ringchange', this._rebalance.bind(this))
       }
 
-      process.on('SIGUSR2', () => {
-        this._timers.rebalance({}, this._node, (data) => {
-          this.proxy(data)
-        })
-      })
+      process.on('SIGUSR2', this._rebalance.bind(this))
 
       // Join the ring
       this._node.join(this.options.seeds, (err) => {
+        /* istanbul ignore if */
         if (err) {
           return isFunction(callback) ? callback(err) : null
         }
@@ -172,6 +167,12 @@ class Server extends http.Server {
     return this
   }
 
+  _rebalance(evt = {}) {
+    this._timers.rebalance(evt, this._node, (data) => {
+      this.proxy(data)
+    })
+  }
+
   proxy(data) {
     debug('fabricating request', data.id)
     const opts = {
@@ -183,9 +184,9 @@ class Server extends http.Server {
     , payload: JSON.stringify(data)
     }
     const res = new mock.Response()
-    const req = new mock.Request( opts )
+    const req = new mock.Request(opts)
     debug('routing fabricated request', data.id)
-    this._router.handle( req, res )
+    this._router.handle(req, res)
     this.emit('proxy', data)
   }
   /**

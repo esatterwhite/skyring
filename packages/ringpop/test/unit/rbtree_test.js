@@ -75,7 +75,7 @@ function validateRBTree(node) {
     var leftHeight = validateRBTree(leftNode);
     var rightHeight = validateRBTree(rightNode);
 
-    if (leftNode !== null && leftNode.key >= root.key || rightNode !== null && rightNode.key <= root.key) {
+    if (leftNode !== null && leftNode.key >= node.key || rightNode !== null && rightNode.key <= node.key) {
         throw new Error('binary tree violation at node key ' + node.key);
     }
 

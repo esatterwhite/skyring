@@ -1,15 +1,26 @@
 'use strict'
 
 const path = require('path')
-const { test } = require('tap')
+const {test, threw} = require('tap')
 const Transports = require('../../lib/transports')
+const Transport = require('../../lib/transports/transport')
+const HTTP = require('../../lib/transports/http')
 
-test('transports', (t) => {
+test('transports', async (t) => {
+  const defaults = new Transports()
+  t.ok(defaults.get('http') instanceof HTTP, 'auto register http transport')
   t.throws(() => {
     new Transports([
       path.join(__dirname, 'dummy.transport')
     ])
   }, /A Transport must export a function/)
+
+  t.throws(() => {
+    new Transports([
+      class fake {
+      }
+    ])
+  }, /Transport must have an "exec" function/i)
 
   t.throws(() => {
     new Transports([
@@ -37,5 +48,16 @@ test('transports', (t) => {
        }
     ])
   }, /A transport with name test is already defined/)
-  t.end()
-})
+
+  t.test('base class', (tt) => {
+    const base = new Transport()
+    t.equal(base.toString(), '[object SkyringTransport]', 'string repr')
+    t.ok(base instanceof Transport, 'instancof Transport')
+    t.doesNotThrow(() => {
+      base.shutdown()
+    })
+    base.shutdown(() => {
+      tt.end()
+    })
+  })
+}).catch(threw)

@@ -208,6 +208,7 @@ timers.create(id, options, (err) => {
 
     this[storage].put(id, data, (err) => {
 
+      /* istanbul ignore if */
       if (err) {
         console.error(err)
         cb(err, null)

@@ -21,10 +21,6 @@ if (!process.env.TEST_HOST) {
 }
 
 test('zmq:transport', async (t) => {
-  const mock_store = {
-    success: sinon.spy()
-  , failure: sinon.spy()
-  }
 
   t.test('class instance', async (tt) => {
     const transport = new Transport()
@@ -36,11 +32,15 @@ test('zmq:transport', async (t) => {
     const addr = 'ipc://tap'
     const one = new Transport({
       debug: true
-    , bind: false
+    , bind: true
     })
 
+    const mock_store = {
+      success: sinon.spy()
+    , failure: sinon.spy()
+    }
     const handler = zmq.socket('pull')
-    handler.bind(addr)
+    handler.connect(addr)
     tt.on('end', () => {
       handler.removeAllListeners()
       handler.disconnect(addr)
@@ -55,6 +55,22 @@ test('zmq:transport', async (t) => {
       const socket = one.connection(addr)
       tt.end()
     })
+  })
+
+  t.test('cannon bind lto restricted ports', (tt) => {
+    const addr = 'tcp://0.0.0.0:80'
+    const mock_store = {
+      success: sinon.spy()
+    , failure: sinon.spy()
+    }
+    const one = new Transport({
+      bind: true
+    })
+
+    one.exec('push', addr, {}, 1, mock_store)
+    tt.ok(mock_store.failure.called, 'timer failed')
+
+    one.shutdown(tt.end)
   })
 }).catch(threw)
 

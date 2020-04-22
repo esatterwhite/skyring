@@ -18,10 +18,10 @@ client.publish('foobar', JSON.stringify({'foo':'bar'}), () => {
  */
 
 const nats        = require('nats')
-    , config      = require('../conf')
+    , parseHosts  = require('./parse-hosts')
+    , config      = require('../../conf')
     , debug       = require('debug')('skyring:nats')
     , nats_hosts  = config.get('nats:hosts')
-    , csv_exp     = /\s?,\s?/g;
 
 /**
  * Creates a new nats client
@@ -36,15 +36,9 @@ nats.createClient({
  **/
 exports.createClient = createClient;
 
-Object.defineProperty(exports, 'client', {
-  get: function() {
-    return createClient();
-  }
-});
-
 function createClient(options) {
   const hosts = (options && options.hosts) || nats_hosts;
-  const servers = Array.isArray(hosts) ? hosts : parse(hosts);
+  const servers = parseHosts(hosts);
   const opts = Object.assign({json: true}, options, {servers});
   debug('creating nats client', opts);
   const client = nats.connect(opts);
@@ -64,6 +58,7 @@ function createClient(options) {
     client.removeAllListeners();
   });
 
+  /* istanbul ignore next*/
   client.on('disconnect', () => {
     debug('nats connection disconnected');
   });
@@ -81,17 +76,3 @@ function createClient(options) {
 
   return client;
 }
-
-function parse(str) {
-  if (typeof str !== 'string') {
-    throw new TypeError('nats hosts must be a string');
-  }
-
-  const items = str.split(csv_exp);
-  return items.map(parseItem);
-}
-
-function parseItem(str) {
-  return str.indexOf('nats://') === 0 ? str : `nats://${str}`;
-}
-
