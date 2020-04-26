@@ -14,9 +14,9 @@
   ],
   "version": "11.1.0",
   "engines": {
-    "node": ">=7.0"
+    "node": ">=8.0"
   },
-  "repository": "https://github.com/esatterwhite/ringpop-node",
+  "repository": "https://github.com/esatterwhite/skyring/packages/ringpop",
   "bin": {
     "ringpop": "./main.js"
   },

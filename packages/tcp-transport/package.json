@@ -4,7 +4,7 @@
   "description": "A TCP transport for skyring service",
   "main": "index.js",
   "scripts": {
-    "test": "TEST_HOST=localhost tap --cov -Rtap test"
+    "test": "TEST_HOST=localhost tap --coverage-report=text -Rclassic test"
   },
   "keywords": [
     "skyring",
@@ -15,16 +15,17 @@
   ],
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
+  "homepage": "https://github.com/esatterwhite/skyring/packages/skyring-tcp-transport",
   "engines": {
     "node": ">= 8.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring-tcp-transport"
+    "url": "https://github.com/esatterwhite/skyring/packages/skyring-tcp-transport"
   },
   "bugs": {
     "email": "esatterwhite@wi.rr.com",
-    "url": "https://github.com/esatterwhite/skyring-tcp-transport/issues"
+    "url": "https://github.com/esatterwhite/skyring/issues"
   },
   "dependencies": {
     "debug": "^4.1.1",

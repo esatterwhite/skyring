@@ -21,7 +21,7 @@
   "homepage": "https://esatterwhite.github.io/skyring/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/packages/skyring"
+    "url": "https://github.com/esatterwhite/skyring/packages/skyring"
   },
   "engines": {
     "node": ">=8.0.0"

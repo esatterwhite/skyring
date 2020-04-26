@@ -1,13 +1,21 @@
 {
   "name": "@skyring/zmq-transport",
   "version": "1.0.3",
-  "description": "",
+  "description": "ZeroMQ Transport for Skyring",
   "main": "index.js",
   "scripts": {
-    "test": "ZMQ_DEBUG=1 tap --cov -Rtap test"
+    "test": "ZMQ_DEBUG=1 tap --coverage-report=text -Rclassic test"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/esatterwhite/skyring/packages/zmq-transport#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esatterwhite/skyring/packages/zmq-transport"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "dependencies": {
     "debug": "^4.1.1",
     "zeromq": "^5.0.0"
