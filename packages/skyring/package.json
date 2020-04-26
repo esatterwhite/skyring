@@ -52,9 +52,9 @@
     "async": "^3.2.0",
     "check-pkg": "^2.1.1",
     "codeclimate-test-reporter": "^0.5.1",
-    "supertest": "^3.1.0",
     "sinon": "^9.0.2",
-    "tap": "^12.6.2"
+    "supertest": "^3.1.0",
+    "tap": "^14.10.7"
   },
   "contributors": [
     {
