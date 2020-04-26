@@ -1,8 +1,10 @@
 node_modules/
-.nyc_output
-packages/
-npm-debug.log
-*.tgz
 coverage/
+.nyc_output
+npm-debug.log
+lerna-debug.log
+*.tgz
 *.save
-.test
+*.test
+*.vim
+*.swap

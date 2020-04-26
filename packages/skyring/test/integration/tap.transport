@@ -1,0 +1,15 @@
+'use strict'
+
+// if being executed directly, skip
+if (require.main === module) return
+
+module.exports =  class Tap {
+  constructor(opts) {
+    super(opts)
+    this.name = 'tap'
+  }
+  exec(method, url, payload, id, cache) {
+    payload[method](1, 'tap transport')
+    cache.cancel(id)
+  }
+}

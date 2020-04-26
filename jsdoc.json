@@ -2,13 +2,13 @@
     "source":{
        "excludePattern":"\\.spec*",
        "include": [
-            "./README.md"
-          , "./index.js"
-          , "./lib"
-          , "./conf"
-          , "node_modules/keef/index.js"
+            "./packages/skyring/README.md"
+          , "./packages/skyring/index.js"
+          , "./packages/skyring/lib"
+          , "./packages/skyring/conf"
+          , "./packages/skyring/node_modules/keef/index.js"
       ],
-       "exclude":["test/", "./**/node_modules/", "./lib/server/api/"]
+       "exclude":["/**/test/", "./**/node_modules/", "./packages/skyring/lib/server/api/"]
     }
     ,"tags":{
         "allowUnknownTags":true

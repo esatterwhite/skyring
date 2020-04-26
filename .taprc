@@ -1,0 +1,17 @@
+files:
+- packages/skyring/test/**/*.js
+- packages/scylladown/test/**/*.js
+- packages/zmq-transport/test/**/*.js
+- packages/tcp-transport/test/**/*.js
+- packages/ringpop/test/unit/**/*.js
+- packages/ringpop/test/integration/*.js
+jobs: 4
+check-coverage: true
+esm: false
+ts: false
+jsx: false
+timeout: 45
+lines: 90
+functions: 90
+branches: 75
+statements: 90

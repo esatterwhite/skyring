@@ -1,0 +1,11 @@
+'use string'
+
+if (require.main === module) return
+
+class test {
+  exec (method, url ,payload, id, storage) {
+    storage.cancel(id)
+  }
+}
+
+module.exports = test
