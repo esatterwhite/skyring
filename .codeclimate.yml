@@ -1,4 +1,4 @@
----
+version: "2"
 engines:
   csslint:
     enabled: false
@@ -14,6 +14,16 @@ engines:
 ratings:
   paths:
   - "**.js"
+checks:
+  method-lines:
+    enabled: false
+  file-lines:
+    enabled: false
+  complex-logic:
+    enabled: false
+  method-complexity:
+    config:
+      threshold: 9
 exclude_paths:
 - test/
 - docs/
@@ -21,4 +31,6 @@ exclude_paths:
 - compose/
 - scripts/
 - tutorials/
-
+- packages/ringpop/
+- packages/**/test/
+- packages/skyring/lib/server/api/validators/timer.js 
