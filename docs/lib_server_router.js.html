@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -92,7 +92,7 @@
     <article>
         <pre
             class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
-'use strict';
+'use strict'
 /**
  * Simple router class for directing requests
  * @module skyring/lib/server/router
@@ -104,10 +104,9 @@
  */
 
 const Route    = require('./route')
-    , Request  = require('./request')
-    , Response = require('./response')
-    , debug    = require('debug')('skyring:server:router')
-    ;
+const Request  = require('./request')
+const Response = require('./response')
+const debug    = require('debug')('skyring:server:router')
 
 /**
  * @constructor
@@ -118,10 +117,10 @@ const Route    = require('./route')
 router.handle(req, res)
  */
 function Router( node, timers ) {
-  this.routes        = new Map();
-  this.route_options = new Map();
-  this.node          = node;
-  this.timers        = timers;
+  this.routes        = new Map()
+  this.route_options = new Map()
+  this.node          = node
+  this.timers        = timers
 }
 
 /**
@@ -130,8 +129,8 @@ function Router( node, timers ) {
  * @param {Function} handler The handler function to call when the route is matched
  **/
 Router.prototype.get = function get( path, fn ) {
-  this.route( path, 'GET', fn );
-};
+  return this.route( path, 'GET', fn )
+}
 
 /**
  * Adds a new put handler to the router
@@ -139,8 +138,8 @@ Router.prototype.get = function get( path, fn ) {
  * @param {Function} handler The handler function to call when the route is matched
  **/
 Router.prototype.put = function put( path, fn ) {
-  this.route( path, 'PUT', fn);
-};
+  return this.route( path, 'PUT', fn)
+}
 
 /**
  * Adds a new post handler to the router
@@ -148,8 +147,8 @@ Router.prototype.put = function put( path, fn ) {
  * @param {Function} handler The handler function to call when the route is matched
  **/
 Router.prototype.post = function post( path, fn ) {
-  this.route( path, 'POST', fn);
-};
+  return this.route( path, 'POST', fn)
+}
 
 /**
  * Adds a new patch handler to the router
@@ -157,8 +156,8 @@ Router.prototype.post = function post( path, fn ) {
  * @param {Function} handler The handler function to call when the route is matched
  **/
 Router.prototype.patch = function patch( path, fn ) {
-  this.route( path, 'PATCH', fn);
-};
+  return this.route( path, 'PATCH', fn)
+}
 
 /**
  * Adds a new delete handler to the router
@@ -166,8 +165,8 @@ Router.prototype.patch = function patch( path, fn ) {
  * @param {Function} handler The handler function to call when the route is matched
  **/
 Router.prototype.delete = function( path, fn ) {
-  this.route( path, 'DELETE', fn );
-};
+  return this.route( path, 'DELETE', fn )
+}
 
 /**
  * Adds a new opts handler to the router
@@ -175,8 +174,8 @@ Router.prototype.delete = function( path, fn ) {
  * @param {Function} handler The handler function to call when the route is matched
  **/
 Router.prototype.options = function options( path, fn ) {
-  this.route( path, 'OPTIONS', fn );
-};
+  return this.route( path, 'OPTIONS', fn )
+}
 
 /**
  * Adds a new route handler to the router
@@ -185,22 +184,22 @@ Router.prototype.options = function options( path, fn ) {
  * @param {Function} The handler function to call when the route is matched
  * @returns {module:skyring/lib/server/route}
  **/
-Router.prototype.route = function route( path, method, fn ) {
-  const _method = method.toUpperCase();
-  const map = this.routes.get(_method) || new Map();
+Router.prototype.route = function route(path, method, fn) {
+  const _method = method.toUpperCase()
+  const map = this.routes.get(_method) || new Map()
 
-  if ( map.has( path ) ) {
-    const rte = map.get( path );
-    rte.use( fn );
-    return rte;
+  if (map.has(path)) {
+    const rte = map.get(path)
+    rte.use(fn)
+    return rte
   }
 
-  const rte = new Route( path, _method);
-  rte.use( fn );
-  map.set( path, rte );
-  this.routes.set( _method, map );
-  return rte;
-};
+  const rte = new Route(path, _method)
+  rte.use(fn)
+  map.set(path, rte)
+  this.routes.set(_method, map)
+  return rte
+}
 
 /**
  * Entrypoint for an incoming request
@@ -213,33 +212,33 @@ http.createServer((req, res) => {
   router.handle(req, res)
 })
  **/
-Router.prototype.handle = function handle( req, res ) {
-  req.$ = new Request( req );
-  res.$ = new Response( res );
-  req.$.timers = this.timers;
+Router.prototype.handle = function handle(req, res) {
+  req.$ = new Request(req)
+  res.$ = new Response(res)
+  req.$.timers = this.timers
 
-  const path = req.$.path;
-  const method = req.method.toUpperCase();
-  const map = this.routes.get( method );
+  const path = req.$.path
+  const method = req.method.toUpperCase()
+  const map = this.routes.get(method)
 
-  if( map ) {
-    let rte = map.get( path );
-    if ( rte ) {
-      req.$.params = Object.create(null);
-      return this.handleRoute( rte, req, res );
+  if (map) {
+    let rte = map.get(path)
+    if (rte) {
+      req.$.params = Object.create(null)
+      return this.handleRoute(rte, req, res)
     }
 
-    for ( const route of map.values() ){
-      const params = route.match( path );
-      if ( params ) {
-        req.$.params = params;
-        return this.handleRoute( route, req, res );
+    for (const route of map.values()) {
+      const params = route.match(path)
+      if (params) {
+        req.$.params = params
+        return this.handleRoute(route, req, res)
       }
     }
   }
 
-  return notFound( req, res );
-};
+  return notFound(req, res)
+}
 
 /**
  * Responsible for executing the middleware stack on the route ( including the end handler )
@@ -247,23 +246,23 @@ Router.prototype.handle = function handle( req, res ) {
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  **/
-Router.prototype.handleRoute = function handleRoute( route, req, res ) {
+Router.prototype.handleRoute = function handleRoute(route, req, res) {
   debug('routing ', route.method, route.path)
-  route.process(req, res, this.node, ( err ) => {
-    if ( err ) return res.$.error( err );
-    if ( res.$.body ) return res.$.json( res.$.body );
-    return res.$.end();
-  });
-};
+  route.process(req, res, this.node, (err) => {
+    if (err) return res.$.error(err)
+    if (res.$.body) return res.$.json(res.$.body)
+    return res.$.end()
+  })
+}
 
 function notFound( req, res ) {
   res.writeHead(404,{
     'Content-Type': 'application/json'
-  });
-  res.end( JSON.stringify({message: 'Not Found' }) );
+  })
+  res.end(JSON.stringify({message: 'Not Found' }))
 }
 
-module.exports = Router;
+module.exports = Router
 
 </pre>
     </article>
@@ -308,9 +307,9 @@ module.exports = Router;
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:54-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

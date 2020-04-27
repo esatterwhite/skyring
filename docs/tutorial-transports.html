@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -100,7 +100,8 @@
 
 <article>
     <p>The Transports systems is how skyring executes timeouts. When a timer lapses, a message is delivered to destination that you have defined. <em>How</em> that message is delivered is configurable. Out of the box, Skyring comes with an <a href="module-skyring_lib_transports_http.html">HTTP</a> transport. Defining your own transport is pretty simple, and you can use any of the tools you are currently used to using.</p>
-<h4>STDOUT Transport</h4><p>To illustrate the process, we're going to make a simple transport handler to write the data to <code>stdout</code>. Basically, speaking a transport is just a node.js module that exports a <code>class</code>.
+<h4>STDOUT Transport</h4>
+<p>To illustrate the process, we're going to make a simple transport handler to write the data to <code>stdout</code>. Basically, speaking a transport is just a node.js module that exports a <code>class</code>.
 The class must, at the very least, have an <code>exec</code> function.</p>
 <pre class="prettyprint source"><code>'use strict'
 
@@ -118,13 +119,15 @@ module.exports = class Stdout {
     process.stdout(os.EOL);
 
     // clear the timer
-    storage.remove(id);
+    storage.uccessid);
   }
 
   get [Symbol.toStringTag]() {
     return 'SkyringSTDOutTransport'
   }
-};</code></pre><p>Pretty simple. We just write the data to the stdout out stream attached to the process, of course, be sure to remove the timer reference from the <a href="https://github.com/esatterwhite/skyring">skyring</a> internal <code>storage</code>. To load your transport into a skyring server, you can pass an array of <code>transports</code> when instantiating as server instance. The array can contain references to the transport itself, or as string that can be passed to <a href="https://nodejs.org/api/globals.html#globals_require">require</a></p>
+};
+</code></pre>
+<p>Pretty simple. We just write the data to the stdout out stream attached to the process, of course, be sure to remove the timer reference from the <a href="https://github.com/esatterwhite/skyring">skyring</a> internal <code>storage</code>. To load your transport into a skyring server, you can pass an array of <code>transports</code> when instantiating as server instance. The array can contain references to the transport itself, or as string that can be passed to <a href="https://nodejs.org/api/globals.html#globals_require">require</a></p>
 <pre class="prettyprint source"><code>'use strict'
 
 const Skyring = require('skyring')
@@ -134,7 +137,9 @@ const server = new Skyring({
 , seeds: ['localhost:3455']
 })
 
-server.listen(3000)</code></pre><p>Done. Just be sure that <strong>every</strong> skyring node in the cluster has all of the same transports loaded so they have the capability to execute all of the timers. Other than that, we can start using our new transport by referencing it by name in the <code>transport</code> field of the request to create a new timer.</p>
+server.listen(3000)
+</code></pre>
+<p>Done. Just be sure that <strong>every</strong> skyring node in the cluster has all of the same transports loaded so they have the capability to execute all of the timers. Other than that, we can start using our new transport by referencing it by name in the <code>transport</code> field of the request to create a new timer.</p>
 <pre class="prettyprint source lang-bash"><code>curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '{
   &quot;timeout&quot;:3000
 , &quot;data&quot;:&quot;hello world!&quot;
@@ -143,7 +148,9 @@ server.listen(3000)</code></pre><p>Done. Just be sure that <strong>every</strong
   , &quot;method&quot;:&quot;unused&quot;
   , &quot;uri&quot;: &quot;unused&quot;
   }
-}'</code></pre><p>It is pretty simple and straight forward to build your own transport layer for <a href="https://github.com/esatterwhite/skyring">Skyring</a>. It can be a simple function, or for more complex use cases, you can build out entire npm packages using whatever tools you want. This makes the <code>transport</code> system in skyring very flexible, powerful, and easy to use.</p>
+}'
+</code></pre>
+<p>It is pretty simple and straight forward to build your own transport layer for <a href="https://github.com/esatterwhite/skyring">Skyring</a>. It can be a simple function, or for more complex use cases, you can build out entire npm packages using whatever tools you want. This makes the <code>transport</code> system in skyring very flexible, powerful, and easy to use.</p>
 </article>
 
 </section>
@@ -183,9 +190,9 @@ server.listen(3000)</code></pre><p>Done. Just be sure that <strong>every</strong
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:55-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

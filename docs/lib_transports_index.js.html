@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -91,8 +91,7 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
+            class="sunlight-highlight-javascript ">'use strict';
 /**
  * Loads and maintains all transports
  * @module skyring/lib/transports
@@ -105,14 +104,14 @@
  */
 
 const debug     = require('debug')('skyring:transports')
-    , conf      = require('../../conf')
-    , Callback  = require('./callback')
-    , Http      = require('./http')
-    , kLoad     = Symbol('kLoad')
-    , kShutdown = Symbol.for('kShutdown')
-    , ENV       = conf.get('node_env')
-    , defaults  = toArray(conf.get('transport'))
-    ;
+const Callback  = require('./callback')
+const Http      = require('./http')
+const toArray   = require('../lang/array/to-array')
+const conf      = require('../../conf')
+const kLoad     = Symbol('kLoad')
+const kShutdown = Symbol.for('kShutdown')
+const ENV       = conf.get('node_env')
+const defaults  = toArray(conf.get('transport'))
 
 /**
  *
@@ -125,45 +124,71 @@ const debug     = require('debug')('skyring:transports')
  **/
 
 /**
- * @alias module:skyring/lib/transports
+ * @alias module:skyring/lib/transports
  * @constructor
- * @param {TransportHandler|TransportHandler[]|String|String[]} transports Custome transports to registe
+ * @param {TransportHandler|TransportHandler[]|String|String[]} transports Custom transports to register
+ *    This can be a Transport class or a
  * @example const path = require('path')
 const Skyring = require('skyring')
+const kType = Symbol.for('SkyringTransport')
 
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
+class Fizzbuzz extends Skyring.Transport {
+  constructor(opts) {
+    super(opts)
+    this.name = 'fizzbuzz'
+  }
+  exec (method, uri, payload, id, timer_store) {
+   // send payload to uri...
+   timer_store.success(id)
+  }
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+    cb()
+  }
+
+  static [Symbol.hasInstance](instance) {
+    return instance[kType] === 'fizzbuzztransport'
+  }
+  get [Symbol.toStringTag]() {
+    return 'FizzbuzzTransport'
+  }
+
+  get [kType]() {
+    return 'fizzbuzztransport'
+  }
 }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
-}
 
 const server = new Skyring({
   transports: [
     'my-transport-module'
-  , fizzbuz
+  , Fizzbuzz
   , path.resolve(__dirname, '../transports/fake-transport')
   ]
 })
- * @example const Transports = require('skyring/lib/transports')
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
-}
+ * @example const {Transports, Transport} = require('skyring')
+class Fizzbuzz extends Transport {
+  constructor(opts) {
+    super(opts)
+    this.name = 'fizzbuzz'
+  }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
+  exec (method, uri, payload, id, timer_store) {
+   // send payload to uri...
+   timer_store.remove(id)
+  }
+
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+    cb()
+  }
 }
 
 const t = new Transports([
   'my-transport-module'
-, fizzbuz
+, Fizzbuz
 , path.resolve(__dirname, '../transports/fake-transport')
 ])
  **/
@@ -175,72 +200,64 @@ module.exports = class Transports extends Map {
      * @memberof module:skyring/lib/transports
      * @property {Object} http The default HTTP transport
      **/
-    this.set('http',  new Http());
-    if(ENV === 'development' || ENV === 'test') {
-      this.set('callback', new Callback());
+    this.set(Http.name.toLowerCase(),  new Http())
+    if(ENV === 'test') {
+      this.set('callback', new Callback())
     }
-    this[kLoad](toArray(transports));
+    this[kLoad](toArray(transports))
   }
 
   [kLoad](paths) {
-    const transports = new Set(defaults.concat(toArray(paths)));
+    const transports = new Set(defaults.concat(toArray(paths)))
     for (const path of transports) {
-      const transport = typeof path === 'string' ? require(path) : path;
+      const transport = typeof path === 'string' ? require(path) : path
       if (typeof transport !== 'function') {
-        throw new TypeError('A Transport must export a function');
+        throw new TypeError('A Transport must export a function')
       }
 
       if (typeof transport.prototype.exec !== 'function') {
-        throw new TypeError('A Transport must have an "exec" function');
+        throw new TypeError('A Transport must have an "exec" function')
       }
 
       if (transport.prototype.exec.length !== 5) {
-        throw new Error('Transports must accept five parameters');
+        throw new Error('Transports must accept five parameters')
       }
 
       if (typeof transport.name !== 'string' || transport.name.length &lt;= 0) {
-        throw new TypeError('transports.name is required and must be a string');
+        throw new TypeError('transports.name is required and must be a string')
       }
 
       const name = transport.name.toLowerCase()
       if (this.has(name)) {
-        const error = new Error(`A transport with name ${name} is already defined`);
-        error.name = 'EEXIST';
-        throw error;
+        const error = new Error(`A transport with name ${name} is already defined`)
+        error.name = 'EEXIST'
+        throw error
       }
 
-      debug('loading %s transport', name);
+      debug('loading %s transport', name)
       const instance = new transport(
         conf.get(`transports:${name}`)
       )
-      this.set(name, instance);
+
+      this.set(name, instance)
     }
   }
+
   [kShutdown](cb) {
-    const keys = Object.keys(this);
+    const keys = Array.from(this.values())
     const run = () => {
-      if (!keys.length) return cb();
-      const key = keys.pop();
-      if (typeof this[key].shutdown === 'function') {
-        debug(`shutdown ${key} transport`);
-        return this[key].shutdown(run);
+      if (!keys.length) return cb()
+      const transport = keys.pop()
+      if (typeof transport.shutdown === 'function') {
+        debug(`shutdown ${transport.name} transport`)
+        return transport.shutdown(run)
       }
-      run();
-    };
-    run();
+      run()
+    }
+    run()
   }
-};
-
-
-function toArray(item) {
-  if (!item) return [];
-  if (Array.isArray(item)) return item;
-  return typeof item === 'string' ? item.split(',') : [item];
 }
 
-function hasOwn(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
 </pre>
     </article>
 </section>
@@ -284,9 +301,9 @@ function hasOwn(obj, prop) {
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:54-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

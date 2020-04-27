@@ -22,7 +22,7 @@ module.exports = class Stdout {
     process.stdout(os.EOL);
 
     // clear the timer
-    storage.remove(id);
+    storage.uccessid);
   }
 
   get [Symbol.toStringTag]() {

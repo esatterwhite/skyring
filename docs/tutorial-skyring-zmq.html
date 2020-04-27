@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -95,7 +95,11 @@
 <article>
     <p>An Officially support ZMQ transport allowing for transports over <code>PUSH</code> or <code>PUB</code>
 socket types</p>
-<h2>Installation</h2><pre class="prettyprint source lang-bash"><code>$ npm install @skyring/zmq-transport --save</code></pre><h2>Usage</h2><p>Skyring accepts an array property <code>transports</code>. Each entry can be a string or a named function.
+<h2>Installation</h2>
+<pre class="prettyprint source lang-bash"><code>$ npm install @skyring/zmq-transport --save
+</code></pre>
+<h2>Usage</h2>
+<p>Skyring accepts an array property <code>transports</code>. Each entry can be a string or a named function.
 If given a string, skyring will pass it to <code>require</code> which must resolve to a named function. Use
 the <code>method</code> option of the <code>timer</code> definition to specify the socket type on the connection.</p>
 <p><em>NOTE</em> That connections are long lived and once a type of socket has been created for a given host, it is not possible ( or recommeded ) to change them. I.E., attempting to transition from <code>PUSH</code> to <code>PUB</code></p>
@@ -106,7 +110,10 @@ const server = new Skyring({
 })
 
 server
-  .listen(3000)</code></pre><h3>Example PUSH handler</h3><pre class="prettyprint source"><code>'use strict'
+  .listen(3000)
+</code></pre>
+<h3>Example PUSH handler</h3>
+<pre class="prettyprint source"><code>'use strict'
 
 let count = 0
 const port = process.env.PORT || 5555
@@ -125,7 +132,9 @@ process.once('SIGTERM', onSignal)
 function onSignal() {
   socket.disconnect()
   socket.close()
-}</code></pre><pre class="prettyprint source lang-bash"><code>$ curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '{
+}
+</code></pre>
+<pre class="prettyprint source lang-bash"><code>$ curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '{
   &quot;timeout&quot;:3000
 , &quot;data&quot;:&quot;hello world!&quot;
 , &quot;callback&quot;: {
@@ -133,7 +142,12 @@ function onSignal() {
   , &quot;method&quot;:&quot;push&quot;
   , &quot;uri&quot;: &quot;tcp://0.0.0.0:5555&quot;
   }
-}'</code></pre><pre class="prettyprint source lang-bash"><code>>>> 1 hello world !</code></pre><h3>Example PUB handler</h3><pre class="prettyprint source lang-javascript"><code>'use strict'
+}'
+</code></pre>
+<pre class="prettyprint source lang-bash"><code>>>> 1 hello world !
+</code></pre>
+<h3>Example PUB handler</h3>
+<pre class="prettyprint source lang-javascript"><code>'use strict'
 
 let count = 0
 const port = process.env.PORT || 5555
@@ -153,7 +167,9 @@ process.once('SIGTERM', onSignal)
 function onSignal() {
   socket.disconnect()
   socket.close()
-}</code></pre><pre class="prettyprint source lang-bash"><code>$ curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '{
+}
+</code></pre>
+<pre class="prettyprint source lang-bash"><code>$ curl -XPOST http://localhost:3000/timer -H 'Content-Type: application/json' -d '{
   &quot;timeout&quot;:3000
 , &quot;data&quot;:&quot;hello world!&quot;
 , &quot;callback&quot;: {
@@ -161,10 +177,13 @@ function onSignal() {
   , &quot;method&quot;:&quot;pub&quot;
   , &quot;uri&quot;: &quot;tcp://0.0.0.0:5555&quot;
   }
-}'</code></pre><pre class="prettyprint source lang-bash"><code># start as many pub handlers as you want
+}'
+</code></pre>
+<pre class="prettyprint source lang-bash"><code># start as many pub handlers as you want
 >>> 1 hello world !
 >>> 1 hello world !
->>> 1 hello world !</code></pre>
+>>> 1 hello world !
+</code></pre>
 </article>
 
 </section>
@@ -204,9 +223,9 @@ function onSignal() {
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:55-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

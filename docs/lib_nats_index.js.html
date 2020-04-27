@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: index.js</title>
+	<title>Skyring Source: lib/nats/index.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,82 +86,89 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: index.js</h1>
+		<h1 class="page-title">Source: lib/nats/index.js</h1>
     
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript ">'use strict';
+            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
+'use strict';
 /**
- * Distributed timers as a service
- * Exports a default server instance. If executed directly, the server will be started automoaticall and configured to auto  rebalance on `SIGINT` and `SIGTERM`
- * @module skyring
+ * Small wrapper around nats for quickly connecting / disconnecting
+ * @module skyring/lib/nats
  * @author Eric Satterwhite
  * @since 1.0.0
- * @requires http
- * @requires debug
+ * @requires url
+ * @requires nats
  * @requires keef
- * @requires skyring/lib/server
+ * @requires debug
+ * @example
+const nats= require('skyring/lib/nats')
+const client = nats.createClient()
+client.publish('foobar', JSON.stringify({'foo':'bar'}), () => {
+  nats.quit()
+})
+ */
+
+const nats        = require('nats')
+    , parseHosts  = require('./parse-hosts')
+    , config      = require('../../conf')
+    , debug       = require('debug')('skyring:nats')
+    , nats_hosts  = config.get('nats:hosts')
+
+/**
+ * Creates a new nats client
+ * @method module:skyring/lib/nats#createClient
+ * @param {Object} [options] nats client configuration
+ * @param {String} [options.hosts=localhost:4222] a comma separated list of addresses of nats hosts to connect to
+ * @return {NatsClient} A nats client instance
+ * @example
+nats.createClient({
+  hosts:'nats-1.domain.com:4222,nats-2.domain.com:4223,localhost:4222'
+})
  **/
+exports.createClient = createClient;
 
-const conf       = require('./conf')
-    , Server     = require('./lib/server')
-    , Transports = require('./lib/transports')
-    , Transport  = require('./lib/transports/transport')
-    , debug      = require('debug')('skyring:main')
-    ;
+function createClient(options) {
+  const hosts = (options &amp;&amp; options.hosts) || nats_hosts;
+  const servers = parseHosts(hosts);
+  const opts = Object.assign({json: true}, options, {servers});
+  debug('creating nats client', opts);
+  const client = nats.connect(opts);
 
-module.exports = Server;
-module.exports.Transport = Transport;
-module.exports.Transports = Transports
-
-if(require.main === module){
-  process.title = 'skyring';
-  process.chdir(__dirname);
-
-  const server = new Server();
-
-  server.listen(conf.get('port'), (err) => {
-    /* istanbul ignore if */
-    if(err) {
-      process.exitCode = 1;
-      console.error(err);
-      throw err;
-    }
-    debug('server listening', conf.get('port'));
+  /* istanbul ignore next*/
+  client.on('error', (err) => {
+    console.error('nats error', err);
   });
 
-  function onSignal() {
-    server.close(()=>{
-      debug('shutting down');
-    });
-  }
-  process.once('SIGINT', onSignal);
-  process.once('SIGTERM', onSignal);
+  client.on('connect', () => {
+    debug('nats connection successful');
+  });
+
+  /* istanbul ignore next*/
+  client.on('close', () => {
+    debug('nats connection closed');
+    client.removeAllListeners();
+  });
+
+  /* istanbul ignore next*/
+  client.on('disconnect', () => {
+    debug('nats connection disconnected');
+  });
+
+  /* istanbul ignore next*/
+  client.on('reconnecting', () => {
+    debug('nats client reconnecting');
+  });
+
+  client.quit = (cb) => {
+    debug('closing nats', client.info.server_id);
+    client.close();
+    client.once('disconnect', cb);
+  };
+
+  return client;
 }
-
-
-
-
-/**
- * Configuration options for skyring. See {@link module:keef} on ways to pass configuration
- * @module skyring/conf
- * @author Eric Satterwhite
- * @since 1.0.0
- * @property {String|String[]} [seeds=127.0.0.1:3455,127.0.0.1:3456] A list of seed nodes to use for bootstrapping a ring cluster
- * @property {Object} channel
- * @property {String} [channel.host=127.0.0.1] hostname or ip addres for tchannel to listen on
- * @property {Number} [channel.port=3455] Port number for tchannel to bind to
- * @property {Number} [PORT=3000] The port number for the http API server to bind to
- * @property {Object} nats Nats queue specific configuration
- * @property {String|String[]} [nats.hosts=127.0.0.1:4222] host:port of instances of a nats cluster. One is usually enough.
- * @property {Object} [options.storage] Storage config options for level db
- * @property {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend
- * `leveldown` and `memdown` are installed by default
- * @property {String} options.storage.path A directory path to a leveldb instance. One will be created if it doesn't already exist.
- * @param {String[]|Function[]} [optsion.transport] an array of custom transport functions, or requireable paths that resolve to functions. All transport function must be named functions
- * If the backend is memdown, this is optional and randomly generated per timer instance
- **/
 </pre>
     </article>
 </section>

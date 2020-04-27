@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Skyring Source: index.js</title>
+	<title>Skyring Module: skyring/lib/nats/parse-hosts</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -81,91 +81,113 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: index.js</h1>
-    
+	<h1 class="page-title">Module: skyring/lib/nats/parse-hosts</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">'use strict';
-/**
- * Distributed timers as a service
- * Exports a default server instance. If executed directly, the server will be started automoaticall and configured to auto  rebalance on `SIGINT` and `SIGTERM`
- * @module skyring
- * @author Eric Satterwhite
- * @since 1.0.0
- * @requires http
- * @requires debug
- * @requires keef
- * @requires skyring/lib/server
- **/
 
-const conf       = require('./conf')
-    , Server     = require('./lib/server')
-    , Transports = require('./lib/transports')
-    , Transport  = require('./lib/transports/transport')
-    , debug      = require('debug')('skyring:main')
-    ;
-
-module.exports = Server;
-module.exports.Transport = Transport;
-module.exports.Transports = Transports
-
-if(require.main === module){
-  process.title = 'skyring';
-  process.chdir(__dirname);
-
-  const server = new Server();
-
-  server.listen(conf.get('port'), (err) => {
-    /* istanbul ignore if */
-    if(err) {
-      process.exitCode = 1;
-      console.error(err);
-      throw err;
-    }
-    debug('server listening', conf.get('port'));
-  });
-
-  function onSignal() {
-    server.close(()=>{
-      debug('shutting down');
-    });
-  }
-  process.once('SIGINT', onSignal);
-  process.once('SIGTERM', onSignal);
-}
+<header>
+    
+</header>
 
 
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Function to parse and normalize nats host addresses</p></div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>10.0.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
+	<dd class="tag-author">
+		<ul>
+			<li>Eric Satterwhite</li>
+			</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
 
 
-/**
- * Configuration options for skyring. See {@link module:keef} on ways to pass configuration
- * @module skyring/conf
- * @author Eric Satterwhite
- * @since 1.0.0
- * @property {String|String[]} [seeds=127.0.0.1:3455,127.0.0.1:3456] A list of seed nodes to use for bootstrapping a ring cluster
- * @property {Object} channel
- * @property {String} [channel.host=127.0.0.1] hostname or ip addres for tchannel to listen on
- * @property {Number} [channel.port=3455] Port number for tchannel to bind to
- * @property {Number} [PORT=3000] The port number for the http API server to bind to
- * @property {Object} nats Nats queue specific configuration
- * @property {String|String[]} [nats.hosts=127.0.0.1:4222] host:port of instances of a nats cluster. One is usually enough.
- * @property {Object} [options.storage] Storage config options for level db
- * @property {String[]} [options.storage.backend=memdown] a requireable module name, or absolute path to a leveldb compatible backend
- * `leveldown` and `memdown` are installed by default
- * @property {String} options.storage.path A directory path to a leveldb instance. One will be created if it doesn't already exist.
- * @param {String[]|Function[]} [optsion.transport] an array of custom transport functions, or requireable paths that resolve to functions. All transport function must be named functions
- * If the backend is memdown, this is optional and randomly generated per timer instance
- **/
-</pre>
-    </article>
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_nats_parse-hosts.js.html">lib/nats/parse-hosts.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -175,6 +197,10 @@ if(require.main === module){
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

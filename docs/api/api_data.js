@@ -33,7 +33,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "lib/server/api/get_ping.js",
+    "filename": "packages/skyring/lib/server/api/get_ping.js",
     "groupTitle": "ping"
   },
   {
@@ -148,7 +148,7 @@ define({ "api": [
         "type": "ruby"
       }
     ],
-    "filename": "lib/server/api/post_timer.js",
+    "filename": "packages/skyring/lib/server/api/post_timer.js",
     "groupTitle": "timer"
   },
   {
@@ -201,7 +201,7 @@ define({ "api": [
         "type": "ruby"
       }
     ],
-    "filename": "lib/server/api/delete_timer.js",
+    "filename": "packages/skyring/lib/server/api/delete_timer.js",
     "groupTitle": "timer"
   },
   {
@@ -302,7 +302,7 @@ define({ "api": [
         "type": "ruby"
       }
     ],
-    "filename": "lib/server/api/put_timer.js",
+    "filename": "packages/skyring/lib/server/api/put_timer.js",
     "groupTitle": "timer"
   }
 ] });

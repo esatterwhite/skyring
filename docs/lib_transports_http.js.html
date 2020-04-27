@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -91,8 +91,7 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
+            class="sunlight-highlight-javascript ">'use strict';
 
 /**
  * The Http transport backend
@@ -106,11 +105,14 @@
  */
 
 const STATUS_CODES = require('http').STATUS_CODES
-    , request = require('request')
-    , debug   = require('debug')('skyring:transport:http')
-    , Transport = require('./transport')
-    , method_exp = /^(post|put|patch|delete|get|options|head)$/i
-    ;
+const phin = require('phin').unpromisified
+const debug   = require('debug')('skyring:transport:http')
+const Transport = require('./transport')
+const {name, version} = require('../../package.json')
+const method_exp = /^(post|put|patch|delete|get|options|head)$/i
+const kType = Symbol.for('SkyringTransport')
+const TRANSPORT = 'httptransport'
+const USER_AGENT = `${name}/${version}`
 
 /**
  * Dispatches an http request
@@ -125,47 +127,61 @@ const STATUS_CODES = require('http').STATUS_CODES
 class Http extends Transport {
   constructor(options) {
     super(options)
+    this.name = 'http'
   }
 
-  exec( method, url, payload, id, cache ) {
-    const isJSON = typeof payload === 'object';
-    const _method = method.toLowerCase();
-    const options = {
-      json: isJSON
-    , body: payload || ''
+  static [Symbol.hasInstance](instance) {
+    return instance[kType] === TRANSPORT
+  }
+
+  exec(method, url, payload, id, cache) {
+    const body = payload || ''
+    if (!method_exp.test(method)) {
+      const pending = cache.get(id)
+      pending &amp;&amp; clearTimeout(pending.timer)
+      const err = new Error(`Invalid http verb ${method}`)
+      err.code = 'ESRHTTP'
+      cache.failure(id, err)
+      debug('unable to execute http transport', method, id)
+      return
     }
 
-    if( method_exp.test(method) &amp;&amp; typeof request[_method] !== 'function' ) {
-      const pending = cache.get(id);
-      pending &amp;&amp; clearTimeout(pending.timer);
-      cache.failure(id, err);
-      debug('unable to execute http transport', method, id);
-      return;
-    }
+    debug('executing http transport %s', id, method)
 
-    debug('executing http transport %s', id, method);
-    request[_method](url, options, (err, res, body) => {
-      if(err){
-        debug('timer err', err);
-        return cache.failure(id, err);
+    phin({
+      url: url
+    , data: body
+    , method: method
+    , headers: {
+        'User-Agent': USER_AGENT
       }
-      if(res.statusCode > 299 ){
-        debug('timer fail', res.statusCode, body);
-        const error = new Error(STATUS_CODES[res.statusCode]);
-        error.code = res.statusCode = res.statusCode;
-        console.error(error, body);
-        return cache.failure(id, error);
+    }, (err, res) => {
+      if (err) {
+        debug('timer err', err)
+        return cache.failure(id, err)
       }
 
-      debug('timer sucess');
-      return cache.success(id);
-    });
+      if (res.statusCode > 299) {
+        debug('timer fail', res.statusCode, body)
+        const error = new Error(STATUS_CODES[res.statusCode])
+        error.code = res.statusCode = res.statusCode
+        console.error(error, body)
+        return cache.failure(id, error)
+      }
+
+      debug('timer sucess')
+      return cache.success(id)
+    })
+  }
+
+  get [kType]() {
+    return TRANSPORT
   }
 
   get [Symbol.toStringTag]() {
-    return 'SkyringHttpTransport';
+    return 'SkyringHttpTransport'
   }
-};
+}
 
 module.exports = Http
 </pre>
@@ -211,9 +227,9 @@ module.exports = Http
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:54-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

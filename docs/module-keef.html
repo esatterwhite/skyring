@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -106,35 +106,49 @@
 <li>A configuration file(s)</li>
 <li>System specified defaults</li>
 </ol>
-<h3>Overrides</h3><p>Overrides can not be overriden or changed at any point in time. The are defined in <code>conf/lib/overrides.js</code> and should be reserved for static run time properties. Conf serves as a central place to get that information.</p>
+<h3>Overrides</h3>
+<p>Overrides can not be overriden or changed at any point in time. The are defined in <code>conf/lib/overrides.js</code> and should be reserved for static run time properties. Conf serves as a central place to get that information.</p>
 <p>For example, the full path to the packages directory is resolved at run time and loaded in to the conf loader. It won't / can't change during run time, but may change in the future. By getting the information from conf, application logic does not need to change between restarts or releases.</p>
 <p>If overrides need to be change or added the <code>overrides.js</code> file must be changed</p>
-<h3>Command Line Arguments</h3><p>Command line arguments are the highest level of maliable values. The can be used to set specific and nested values in the configuration JSON document but using a <code>:</code> spearator between keys. For example, using the flag: <code>--foo:bar=1</code>, would create an object like</p>
+<h3>Command Line Arguments</h3>
+<p>Command line arguments are the highest level of maliable values. The can be used to set specific and nested values in the configuration JSON document but using a <code>:</code> spearator between keys. For example, using the flag: <code>--foo:bar=1</code>, would create an object like</p>
 <pre class="prettyprint source lang-js"><code>{
    &quot;foo&quot;:{
       &quot;bar&quot;: 1
    }
-}</code></pre><h3>Environment Variables</h3><p>Environment variables work much the same as command line arguments. However, most bash implenetations don't read <code>:</code>'s very well, so the double underscore ( <code>__</code> ) is used in its place <code>foo__bar=1</code> npm start</p>
+}
+</code></pre>
+<h3>Environment Variables</h3>
+<p>Environment variables work much the same as command line arguments. However, most bash implenetations don't read <code>:</code>'s very well, so the double underscore ( <code>__</code> ) is used in its place <code>foo__bar=1</code> npm start</p>
 <pre class="prettyprint source lang-js"><code>{
    &quot;foo&quot;:{
       &quot;bar&quot;: 1
    }
-}</code></pre><h3>Conf Options</h3><p>The <code>conf</code> option can be set to read specific configuration from a file(s). The value should be a full path. If the path points to a directory, the conf loader will read all json files, sort them and load their values in an overriding order. Sorting is done in a descending, lexigraphical order.</p>
+}
+</code></pre>
+<h3>Conf Options</h3>
+<p>The <code>conf</code> option can be set to read specific configuration from a file(s). The value should be a full path. If the path points to a directory, the conf loader will read all json files, sort them and load their values in an overriding order. Sorting is done in a descending, lexigraphical order.</p>
 <pre class="prettyprint source lang-sh"><code>└── conf
     ├── 20-keef.json
     ├── 10-keef.json
-    └── 30-keef.json</code></pre><p>Given the above directory of conf files, the server can be configured by pointing the <code>conf</code> arguments at the directory</p>
-<pre class="prettyprint source lang-sh"><code>node server --conf=$HOME/conf</code></pre><p>The configruation would be read in the following priority
+    └── 30-keef.json
+</code></pre>
+<p>Given the above directory of conf files, the server can be configured by pointing the <code>conf</code> arguments at the directory</p>
+<pre class="prettyprint source lang-sh"><code>node server --conf=$HOME/conf
+</code></pre>
+<p>The configruation would be read in the following priority
 <code>10-keef.json &lt; 20-keef.json &lt; 30-keef.json</code></p>
 <p>where 20 overrides 10, and 30 overrides 20.</p>
-<h3>Static File Defaults</h3><p>To Simplify configuration for deployments, <code>keef</code> will look for configuration files in fixed locations eliminating the need for run time configuration. File Locations are as follows:</p>
+<h3>Static File Defaults</h3>
+<p>To Simplify configuration for deployments, <code>keef</code> will look for configuration files in fixed locations eliminating the need for run time configuration. File Locations are as follows:</p>
 <ol>
 <li>a file in the rooot of your project with the name <code>&lt;package.name&gt;</code>.<code>NODE_ENV</code>.<code>json</code> For example, if the <code>name</code> attribute in your package.json is <code>foobar</code>, and the environment var <code>NODE_ENV</code> is set as <code>production</code>, the file look up is <code>foobar.production.json</code>. If <code>NODE_ENV</code> is not set, it would be <code>foobar.development.json</code></li>
 <li>A json file named after your project name in the root of your project - <code>foobar.json</code></li>
 <li>A json file named after your project in a <code>.config</code> directory in the current users home directory - <code>.config/foobar.json</code></li>
 <li>A json file named after your project in the <code>/etc</code> directory - `/etc/foobar.json</li>
 </ol>
-<h3>ETCD2 Clusters</h3><p>For distributed deployments, An etcd2 cluster may be used for configuration purposes. To enable <code>etcd2</code> configuration loading, 2 environment variables should be set:</p>
+<h3>ETCD2 Clusters</h3>
+<p>For distributed deployments, An etcd2 cluster may be used for configuration purposes. To enable <code>etcd2</code> configuration loading, 2 environment variables should be set:</p>
 <ol>
 <li><code>etcd__hosts</code> - A comma separated list of <code>host</code>:<code>port</code> addresses - <code>etcd1.domain.com:4001,etcd2.domain.com:4001</code>.</li>
 <li><code>etcd__namespace</code> - a keyspace to keep data separate from everything else.</li>
@@ -152,8 +166,12 @@
 }
 
 // etc data
-/a/b/c 1</code></pre><h3>System defaults</h3><p>defaults are what they sound like. Sane defaults for values that are needed to get the application running. They are located in the Defaults module and are used only as fallback values.</p>
-<h3>Option Shorthands</h3><p>Top level options can be aliased. Short hand aliases can be found and defined in the Shorthands module of <code>keef</code></p>
+/a/b/c 1
+</code></pre>
+<h3>System defaults</h3>
+<p>defaults are what they sound like. Sane defaults for values that are needed to get the application running. They are located in the Defaults module and are used only as fallback values.</p>
+<h3>Option Shorthands</h3>
+<p>Top level options can be aliased. Short hand aliases can be found and defined in the Shorthands module of <code>keef</code></p>
 <table>
 <thead>
 <tr>
@@ -176,7 +194,12 @@
 </tbody>
 </table>
 <p>the following invocations are treated the same</p>
-<pre class="prettyprint source lang-sh"><code>node server --PORT=3001 --logger=stdout --logger=file</code></pre><pre class="prettyprint source lang-sh"><code>PORT=3001 logger=stdout nodeserver -l file</code></pre><pre class="prettyprint source lang-sh"><code>node server -p 3001 -l stdout -l file</code></pre></div>
+<pre class="prettyprint source lang-sh"><code>node server --PORT=3001 --logger=stdout --logger=file
+</code></pre>
+<pre class="prettyprint source lang-sh"><code>PORT=3001 logger=stdout nodeserver -l file
+</code></pre>
+<pre class="prettyprint source lang-sh"><code>node server -p 3001 -l stdout -l file
+</code></pre></div>
         
 
         
@@ -329,9 +352,9 @@
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:55-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

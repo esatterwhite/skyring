@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -174,7 +174,8 @@
 
             
 
-            <td class="description last"><p>Custome transports to registe</p></td>
+            <td class="description last"><p>Custom transports to register
+This can be a Transport class or a</p></td>
         </tr>
 
     
@@ -249,41 +250,66 @@
         
     <pre class="sunlight-highlight-javascript">const path = require(&#x27;path&#x27;)
 const Skyring = require(&#x27;skyring&#x27;)
+const kType = Symbol.for(&#x27;SkyringTransport&#x27;)
 
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
+class Fizzbuzz extends Skyring.Transport {
+  constructor(opts) {
+    super(opts)
+    this.name = &#x27;fizzbuzz&#x27;
+  }
+  exec (method, uri, payload, id, timer_store) {
+   // send payload to uri...
+   timer_store.success(id)
+  }
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+    cb()
+  }
+
+  static [Symbol.hasInstance](instance) {
+    return instance[kType] === &#x27;fizzbuzztransport&#x27;
+  }
+  get [Symbol.toStringTag]() {
+    return &#x27;FizzbuzzTransport&#x27;
+  }
+
+  get [kType]() {
+    return &#x27;fizzbuzztransport&#x27;
+  }
 }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
-}
 
 const server = new Skyring({
   transports: [
     &#x27;my-transport-module&#x27;
-  , fizzbuz
+  , Fizzbuzz
   , path.resolve(__dirname, &#x27;../transports/fake-transport&#x27;)
   ]
 })</pre>
 
-    <pre class="sunlight-highlight-javascript">const Transports = require(&#x27;skyring/lib/transports&#x27;)
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
-}
+    <pre class="sunlight-highlight-javascript">const {Transports, Transport} = require(&#x27;skyring&#x27;)
+class Fizzbuzz extends Transport {
+  constructor(opts) {
+    super(opts)
+    this.name = &#x27;fizzbuzz&#x27;
+  }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
+  exec (method, uri, payload, id, timer_store) {
+   // send payload to uri...
+   timer_store.remove(id)
+  }
+
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+    cb()
+  }
 }
 
 const t = new Transports([
   &#x27;my-transport-module&#x27;
-, fizzbuz
+, Fizzbuz
 , path.resolve(__dirname, &#x27;../transports/fake-transport&#x27;)
 ])</pre>
 
@@ -601,9 +627,9 @@ const t = new Transports([
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:55-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

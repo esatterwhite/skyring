@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -92,28 +92,29 @@
     <article>
         <pre
             class="sunlight-highlight-javascript ">/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
-'use strict';
+'use strict'
 /**
  * Primary server instance for a skyring app.
  * @module skyring/lib/server
  * @requires http
  * @requires debug
- * @requires skyring/lib/server/mock
+ * @requires @esaterwhite/micromock
  * @requires skyring/lib/server/node
  * @requires skyring/lib/server/router
  * @requires skyring/lib/timer
  */
 
-const http   = require('http')
-    , mock   = require('@esatterwhite/micromock')
-    , util   = require('util')
-    , Debug  = require('debug')
-    , routes = require('./api')
-    , Node   = require('./node')
-    , Router = require('./router')
-    , Timer  = require('../timer')
-    , debug  = Debug('skyring:server')
-    ;
+const {isFunction} = require('util')
+const http         = require('http')
+const mock         = require('@esatterwhite/micromock')
+const util         = require('util')
+const Debug        = require('debug')
+const routes       = require('./api')
+const Node         = require('./node')
+const Router       = require('./router')
+const Timer        = require('../timer')
+const conf         = require('../../conf')
+const debug        = Debug('skyring:server')
 
 /**
  * @constructor
@@ -155,16 +156,19 @@ server.listen(5000)
 class Server extends http.Server {
   constructor(opts = {}){
     super((req, res) => {
-      this._router.handle(req, res);
-    });
-    this.closed = false;
+      this._router.handle(req, res)
+    })
+    this.closed = false
     this.options = Object.assign({}, {
       seeds: null
     , nats: null
     , storage: null
     , transports: []
-    }, opts);
-    if( opts.node ){
+    , autobalance: conf.get('autobalance')
+    }, opts)
+
+    /* istanbul ignore else */
+    if(opts.node) {
       this._node = opts.node instanceof Node
         ? opts.node
         : new Node(
@@ -172,14 +176,20 @@ class Server extends http.Server {
             opts.node.port,
             opts.node.name,
             opts.node.app
-          );
+          )
     } else {
-      this._node = new Node();
+      this._node = new Node()
     }
-    this._group = this._node.name;
+    this._group = this._node.name
     this._node.on('bootstrap', (seeds) => {
-      this.emit('bootstrap', seeds);
-    });
+      this.emit('bootstrap', seeds)
+    })
+  }
+
+  route(opts) {
+    const route = this._router.route(opts.path, opts.method, opts.handler)
+    opts.middleware &amp;&amp; route.before( opts.middleware )
+    debug('loaded: %s %s', opts.method, opts.path)
   }
 
   /**
@@ -193,60 +203,71 @@ class Server extends http.Server {
    **/
   listen(port, ...args) {
     const callback = args[args.length - 1]
-    debug('seed nodes', this.options.seeds);
+    if (this.listening) return isFunction(callback) ? callback() : null
+
+    debug('seed nodes', this.options.seeds)
 
     this._timers = new Timer({
       nats: this.options.nats
     , storage: this.options.storage
     , transports: this.options.transports
     }, (err) => {
-      if (err) return typeof callback === 'function' ? callback(err) : null;
-      this._router = new Router(this._node, this._timers);
+      if (err) return isFunction(callback) ? callback(err) : null
+      this._router = new Router(this._node, this._timers)
       for (const key of Object.keys(routes)) {
         const item = routes[key]
         const route = this._router.route(
           item.path
         , item.method
         , item.handler
-        );
+        )
         debug('loaded: %s %s', item.method, item.path)
 
-        item.middleware &amp;&amp; route.before( item.middleware );
+        item.middleware &amp;&amp; route.before( item.middleware )
       }
 
       // When nodes are added / removed exec a rebalanace of local timers
       // If this node is not the owner, sent it back in the ring
-      this._node.on('ringchange', (evt) => {
-        this._timers.rebalance(evt, this._node, (data) => {
-          this.proxy(data);
-        });
-      });
+
+      if (this.options.autobalance) {
+        this._node.on('ringchange', this._rebalance.bind(this))
+      }
+
+      process.on('SIGUSR2', this._rebalance.bind(this))
 
       // Join the ring
       this._node.join(this.options.seeds, (err) => {
+        /* istanbul ignore if */
         if (err) {
-          return typeof callback === 'function' ? callback(err) : null;
+          return isFunction(callback) ? callback(err) : null
         }
 
         // delegate mock requests from the ring to the
         // API router
         this._node.handle(( req, res ) => {
-          this._router.handle( req, res );
-        });
+          this._router.handle( req, res )
+        })
 
-        // listen timers being purged over nats when a remote
+        // listen for timers being purged over nats when a remote
         // node is evicted or shutdown
         this._timers.watch(`skyring:${this._group}`, (err, data) => {
-          this.proxy(data);
-        });
-        super.listen(port, ...args);
-      });
-    });
-    return this;
+          this.proxy(data)
+        })
+        debug('binding to port', port)
+        super.listen(port, ...args)
+      })
+    })
+    return this
+  }
+
+  _rebalance(evt = {}) {
+    this._timers.rebalance(evt, this._node, (data) => {
+      this.proxy(data)
+    })
   }
 
   proxy(data) {
-    debug('fabricating request', data.id);
+    debug('fabricating request', data.id)
     const opts = {
       url: '/timer'
     , method: 'POST'
@@ -254,11 +275,11 @@ class Server extends http.Server {
         "x-timer-id": data.id
       }
     , payload: JSON.stringify(data)
-    };
-    const res = new mock.Response();
-    const req = new mock.Request( opts );
+    }
+    const res = new mock.Response()
+    const req = new mock.Request(opts)
     debug('routing fabricated request', data.id)
-    this._router.handle( req, res );
+    this._router.handle(req, res)
     this.emit('proxy', data)
   }
   /**
@@ -268,34 +289,34 @@ class Server extends http.Server {
    * @param {Function} callback A callback to be called when the server is completely shut down
    **/
   close( cb ){
-    if(this.closed) return cb &amp;&amp; setImmediate(cb);
+    if(this.closed) return isFunction(cb) ? setImmediate(cb) : null
     super.close(() => {
       this._node.close(() => {
         const active = this._node._ring.membership.members.filter((m) => {
           return m.status === 'alive'
         })
 
-        if(active.length) {
+        if (active.length) {
           return this._timers.shutdown(() => {
-            debug('closing server');
-            this.closed = true;
-            cb &amp;&amp; cb();
-          });
+            debug('closing server')
+            this.closed = true
+            cb &amp;&amp; cb()
+          })
         }
 
         debug('Last node in cluster - skipping rebalanace')
         this._timers.disconnect(() => {
-          debug('closing server');
-          this.closed = true;
-          cb &amp;&amp; cb();
+          debug('closing server')
+          this.closed = true
+          cb &amp;&amp; cb()
         })
-      });
-    });
+      })
+    })
   }
 }
 
-module.exports = Server;
-module.exports.Router = Router;
+module.exports = Server
+module.exports.Router = Router
 </pre>
     </article>
 </section>
@@ -339,9 +360,9 @@ module.exports.Router = Router;
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:54-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

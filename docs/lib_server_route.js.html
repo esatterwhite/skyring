@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -91,7 +91,7 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript ">'use strict';
+            class="sunlight-highlight-javascript ">'use strict'
 /**
  * represents the middleware stack for a url / method combination
  * @module skyring/lib/server/route
@@ -100,7 +100,7 @@
  * @requires path-to-regexp
  */
 
-const pathToRegExp = require('path-to-regexp');
+const pathToRegExp = require('path-to-regexp')
 
 /**
  * @constructor
@@ -118,17 +118,17 @@ rte.use((req, res, node, next) => {
 })
  **/
 function Route(path, method) {
-  this.path = path;
-  this.method = method;
-  this._keys = [];
-  this.stack = [];
-  this.regexp = pathToRegExp(path, this._keys);
-  this.keys = new Array(this._keys.length);
-  this.params = Object.create(null);
+  this.path = path
+  this.method = method
+  this._keys = []
+  this.stack = []
+  this.regexp = pathToRegExp(path, this._keys)
+  this.keys = new Array(this._keys.length)
+  this.params = Object.create(null)
 
   for( var idx = 0; idx &lt; this._keys.length; idx++ ) {
-    this.keys[ idx ] = this._keys[ idx ].name;
-    this.params[ this._keys[ idx ].name ] = undefined;
+    this.keys[ idx ] = this._keys[ idx ].name
+    this.params[ this._keys[ idx ].name ] = undefined
   }
 }
 
@@ -137,65 +137,65 @@ function Route(path, method) {
  * @method module:skyring/lib/server/route#use
  * @param {module:skyring/lib/server/route~Middleware} fn a the middelware function to add
  **/
-Route.prototype.use = function use( fn ) {
-  if( Array.isArray( fn ) ) {
+Route.prototype.use = function use(fn) {
+  if (Array.isArray(fn)) {
     for(var idx = 0; idx &lt; fn.length; idx++) {
-      this.stack.push( fn[idx] );
+      this.stack.push(fn[idx])
     }
   } else {
-    this.stack.push( fn );
+    this.stack.push(fn)
   }
 
-  return this;
-};
+  return this
+}
 
 /**
  * Adds a middleware function to the beginning of the internal route stack
  * @method module:skyring/lib/server/route#before
  * @param {module:skyring/lib/server/route~Middleware} fn a the middelware function to add
  **/
-Route.prototype.before = function before( fn ) {
-  if( Array.isArray( fn ) ) {
-    this.stack.unshift( ...fn );
+Route.prototype.before = function before(fn) {
+  if (Array.isArray(fn)) {
+    this.stack.unshift(...fn)
   } else {
-    this.stack.unshift( fn );
+    this.stack.unshift(fn)
   }
 
-  return this;
-};
+  return this
+}
 
-Route.prototype.match = function match( path ) {
-  const matches = this.regexp.exec( path );
-  if ( !matches ) return null;
+Route.prototype.match = function match(path) {
+  const matches = this.regexp.exec(path)
+  if (!matches) return null
 
-  const keys = this.keys;
-  const params = Object.assign({}, this.params);
+  const keys = this.keys
+  const params = Object.assign({}, this.params)
 
-  for( var idx = 1; idx &lt; matches.length; idx++ ) {
-    params[ keys[ idx - 1 ] ] = matches[ idx ];
+  for (var idx = 1; idx &lt; matches.length; idx++) {
+    params[keys[idx - 1]] = matches[idx]
   }
 
-  return params;
-};
+  return params
+}
 
-Route.prototype.process = function process( req, res, node, next ) {
-  const stack = this.stack;
+Route.prototype.process = function process(req, res, node, next) {
+  const stack = this.stack
   ;(function run( idx ) {
-    const fn = stack[ idx];
+    const fn = stack[idx]
     try {
-      fn(req, res, node, (err) => {
-         if ( err ) return next( err );
-         if( idx === stack.length -1 ) return next();
-         run(++idx);
-      });
+      fn(req, res, node, (err, body) => {
+         if ( err ) return next( err )
+         if( idx === stack.length -1 ) return next()
+         run(++idx)
+      })
     } catch ( err ){
-      err.statusCode = err.statusCode || 500;
-      return next( err );
+      err.statusCode = err.statusCode || 500
+      return next( err )
     }
-  })(0);
-};
+  })(0)
+}
 
-module.exports = Route;
+module.exports = Route
 
 /**
  * A route middleware function
@@ -248,9 +248,9 @@ module.exports = Route;
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:54-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

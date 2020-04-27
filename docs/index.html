@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
+					<li><a href="module-keef.html">keef</a></li><li><a href="module-skyring.html">skyring</a></li><li><a href="module-skyring_conf.html">skyring/conf</a></li><li><a href="module-skyring_lib_json.html">skyring/lib/json</a></li><li><a href="module-skyring_lib_nats.html">skyring/lib/nats</a></li><li><a href="module-skyring_lib_nats_parse-hosts.html">skyring/lib/nats/parse-hosts</a></li><li><a href="module-skyring_lib_server.html">skyring/lib/server</a></li><li><a href="module-skyring_lib_server_node.html">skyring/lib/server/node</a></li><li><a href="module-skyring_lib_server_request.html">skyring/lib/server/request</a></li><li><a href="module-skyring_lib_server_response.html">skyring/lib/server/response</a></li><li><a href="module-skyring_lib_server_route.html">skyring/lib/server/route</a></li><li><a href="module-skyring_lib_server_router.html">skyring/lib/server/router</a></li><li><a href="module-skyring_lib_timer.html">skyring/lib/timer</a></li><li><a href="module-skyring_lib_transports.html">skyring/lib/transports</a></li><li><a href="module-skyring_lib_transports_http.html">skyring/lib/transports/http</a></li><li><a href="module-skyring_lib_transports_timer.html">skyring/lib/transports/timer</a></li>
 				</ul>
 			</li>
 			
@@ -118,17 +118,32 @@
 <li><a href="https://esatterwhite.github.io/skyring/">Module Docs</a></li>
 <li><a href="https://esatterwhite.github.io/skyring/api">API Docs</a></li>
 </ul>
-<h1>Skyring</h1><p>A distributed reliable timer service providing <code>setTimeout</code> functionality in a distributed fashion.
+<h1>Skyring</h1>
+<p>A distributed reliable timer service providing <code>setTimeout</code> functionality in a distributed fashion.
 <code>Skyring</code> servers are clustered into a <em>hashring</em> using consistent hashing to partition timers to specific nodes in the ring.  Skyring exposes a simple HTTP API that allows to you create and cancel timers. Timer execution comes in to the form of an HTTP webhook ( more transports to come )</p>
-<h1>Architecture Overview</h1><p><img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch.png" width="100%" max-width="800px"></p>
-<h1>Install</h1><pre class="prettyprint source"><code>npm install -s skyring</code></pre><h2>Run A Local Cluster</h2><h3>Start a nats instance</h3><p>Download the <a href="https://github.com/nats-io/gnatsd/releases">nats binary</a> and start it using the defaults</p>
-<pre class="prettyprint source lang-bash"><code>$ gnats -D -V</code></pre><p>To verify that it is working, you can <code>telnet</code> directly to the server and ping it.</p>
+<h1>Architecture Overview</h1>
+<img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch.png" width="100%" max-width="800px">
+<h1>Install</h1>
+<pre class="prettyprint source"><code>npm install -s skyring
+</code></pre>
+<h2>Run A Local Cluster</h2>
+<h3>Start a nats instance</h3>
+<p>Download the <a href="https://github.com/nats-io/gnatsd/releases">nats binary</a> and start it using the defaults</p>
+<pre class="prettyprint source lang-bash"><code>$ gnats -D -V
+</code></pre>
+<p>To verify that it is working, you can <code>telnet</code> directly to the server and ping it.</p>
 <pre class="prettyprint source lang-bash"><code>$ telnet localhost 4222
 > ping
-PONG</code></pre><h3>Skyring CLI</h3><p>If you intend to run skyring as is, it may be preferable to use the included binary over cloning the project.</p>
+PONG
+</code></pre>
+<h3>Skyring CLI</h3>
+<p>If you intend to run skyring as is, it may be preferable to use the included binary over cloning the project.</p>
 <pre class="prettyprint source"><code>npm install -g skyring
 
-DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455</code></pre><h3>Using in your project</h3><p>If you want to use the skyring directly, you can just require it and start it directly.
+DEBUG=skyring:* skyring run -p 3000 -s localhost:3456 -s localhost:3455
+</code></pre>
+<h3>Using in your project</h3>
+<p>If you want to use the skyring directly, you can just require it and start it directly.
 most of the available environment and cli arguments can be passed to the <a href="module-skyring_lib_server.html">skyring constructor</a>.
 If you don't pass anything to the construct the default values are <a href="module-keef.html">loaded</a> from the appropriate sources</p>
 <pre class="prettyprint source lang-javascript"><code>// index.js
@@ -147,23 +162,39 @@ server.listen(3000, (err) => {
 })
 
 process.once('SIGINT', onSignal);
-process.once('SIGTERM', onSignal);</code></pre><p>This can then be started as a single node cluster</p>
-<pre class="prettyprint source"><code>$ DEBUG=* node . --channel:port=3455 --seeds='localhost:3455'</code></pre><p>The default settings expect a minimum of 2 servers on port <code>3455</code> and <code>3456</code> respectively. Start each server in a different terminal session</p>
+process.once('SIGTERM', onSignal);
+</code></pre>
+<p>This can then be started as a single node cluster</p>
+<pre class="prettyprint source"><code>$ DEBUG=* node . --channel:port=3455 --seeds='localhost:3455'
+</code></pre>
+<p>The default settings expect a minimum of 2 servers on port <code>3455</code> and <code>3456</code> respectively. Start each server in a different terminal session</p>
 <pre class="prettyprint source lang-bash"><code># Seed node 1
-$ DEBUG=skyring:* node index.js --channel:port=3455 -p 3000</code></pre><pre class="prettyprint source lang-bash"><code># Seed node 2
-$ DEBUG=skyring:* node index.js --channel:port=3456 -p 3001</code></pre><p>If all goes well you should see a message like this</p>
-<pre class="prettyprint source"><code>skyring:ring ring bootstraped [ '127.0.0.1:3455', '127.0.0.1:3456' ] +1ms</code></pre><p>Thats it, you have 2 instances running w/ HTTP servers running on ports <code>3000</code> and <code>3001</code></p>
-<h4>Run via Docker Compose</h4><p>The Easiest way to run a small cluster is to use the included <a href="https://github.com/esatterwhite/skyring/blob/master/compose/dev.yml">compose files</a>. It is also a good way to see how to quickly configure a cluster</p>
+$ DEBUG=skyring:* node index.js --channel:port=3455 -p 3000
+</code></pre>
+<pre class="prettyprint source lang-bash"><code># Seed node 2
+$ DEBUG=skyring:* node index.js --channel:port=3456 -p 3001
+</code></pre>
+<p>If all goes well you should see a message like this</p>
+<pre class="prettyprint source"><code>skyring:ring ring bootstraped [ '127.0.0.1:3455', '127.0.0.1:3456' ] +1ms
+</code></pre>
+<p>Thats it, you have 2 instances running w/ HTTP servers running on ports <code>3000</code> and <code>3001</code></p>
+<h4>Run via Docker Compose</h4>
+<p>The Easiest way to run a small cluster is to use the included <a href="https://github.com/esatterwhite/skyring/blob/master/compose/dev.yml">compose files</a>. It is also a good way to see how to quickly configure a cluster</p>
 <ul>
 <li>Install <a href="https://docs.docker.com/compose/install/">Docker Compose</a></li>
 </ul>
-<pre class="prettyprint source lang-bash"><code>$ npm start</code></pre><p>That is it! You have a 5 node <strong>Skyring</strong> cluster with a 3 node <code>nats</code> cluster behind an <code>nginx</code> proxy listening on port <code>8080</code></p>
-<h1>Timer API</h1><p>A request can be issued to any active node in the cluster. If that node is not responsible for the timer in question,
+<pre class="prettyprint source lang-bash"><code>$ npm start
+</code></pre>
+<p>That is it! You have a 5 node <strong>Skyring</strong> cluster with a 3 node <code>nats</code> cluster behind an <code>nginx</code> proxy listening on port <code>8080</code></p>
+<h1>Timer API</h1>
+<p>A request can be issued to any active node in the cluster. If that node is not responsible for the timer in question,
 it will forward the request directly to the node that is keeping network latency to a minimum. This makes <code>Skyring</code> very
 suitable for high performance, stateless, and distributed environments.
 The minimum <em>recommended</em> cluster size is 3 nodes, 2 of which being seed or bootstrapping nodes. A cluster of this size can average
 between 2K - 5K requests per second.</p>
-<h2>Create a timer</h2><h5><strong>POST <code>/timer</code></strong></h5><p><strong>Request</strong></p>
+<h2>Create a timer</h2>
+<h5><strong>POST <code>/timer</code></strong></h5>
+<p><strong>Request</strong></p>
 <p>Since timers managed in <code>Skyring</code> are done so through the use of <code>setTimeout</code>, there is a maximum <code>timeout</code> value of <code>2^31 - 1</code> or
 <code>2147483647</code> milliseconds, which is approximately <code>24.8</code> days. Attempting to request a timeout great than this value will result in a
 <code>400 Bad Request</code> response. Additionally, the <code>timeout</code> must be greater than <code>0</code>.</p>
@@ -175,56 +206,86 @@ between 2K - 5K requests per second.</p>
     &quot;method&quot;: &quot;post&quot;,
     &quot;uri&quot;: &quot;http://api.someservice.com/hook/timeout&quot;
   }
-}'</code></pre><p><strong>Response Headers</strong></p>
+}'
+</code></pre>
+<p><strong>Response Headers</strong></p>
 <p>For performance considerations, a body is not included in responses. Rather, HTTP headers are used to relay information about timer status.
 In the case of a <code>Create</code> request, the uri to the timer instance is returned in the <code>Location</code> header.</p>
 <pre class="prettyprint source lang-http"><code>HTTP/1.1 201 CREATED
 location: /timer/4adb026b-6ef3-44a8-af16-4d6be0343ecf
 Date: Fri, 23 Dec 2016 00:19:13 GMT
 Connection: keep-alive
-Content-Length: 0</code></pre><h2>Cancel A Timer</h2><h5><strong>DELETE <code>/timer/:id</code></strong></h5><p><strong>Request</strong></p>
-<pre class="prettyprint source lang-bash"><code>curl -i -XDELETE http://localhost:8080/timer/4adb026b-6ef3-44a8-af16-4d6be0343ecf</code></pre><p><strong>Response Headers</strong></p>
+Content-Length: 0
+</code></pre>
+<h2>Cancel A Timer</h2>
+<h5><strong>DELETE <code>/timer/:id</code></strong></h5>
+<p><strong>Request</strong></p>
+<pre class="prettyprint source lang-bash"><code>curl -i -XDELETE http://localhost:8080/timer/4adb026b-6ef3-44a8-af16-4d6be0343ecf
+</code></pre>
+<p><strong>Response Headers</strong></p>
 <pre class="prettyprint source lang-http"><code>HTTP/1.1 202 Accepted
 Date: Fri, 23 Dec 2016 00:22:12 GMT
 Connection: keep-alive
-Content-Length: 0</code></pre><h1>Crash Recovery</h1><p>Each Skyring node uses an internal <a href="https://www.npmjs.com/package/levelup">levelup</a> instance to record timers that it owns.
+Content-Length: 0
+</code></pre>
+<h1>Crash Recovery</h1>
+<p>Each Skyring node uses an internal <a href="https://www.npmjs.com/package/levelup">levelup</a> instance to record timers that it owns.
 When a node starts, it will check the configured database for any existing timers, and will
 immediately load them back into memory. By default, the <a href="https://www.npmjs.com/package/memdown">memdown</a> backend is used, and wil not
-persists between starts. To enable full persistence and recovery, you must configure skyring to use a 
+persists between starts. To enable full persistence and recovery, you must configure skyring to use a
 persistent backend for <code>levelup</code>. <a href="https://www.npmjs.com/package/leveldown">Leveldown</a> is installed by default.</p>
-<pre class="prettyprint source lang-bash"><code>skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'</code></pre><h3>Custom Storage</h3><p>In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
+<pre class="prettyprint source lang-bash"><code>skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
+</code></pre>
+<h3>Custom Storage</h3>
+<p>In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
 If, for example you want to off load data storage to a <a href="https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage">mongo</a>
 or <a href="https://github.com/esatterwhite/skyring/tree/master/examples/scylla-storage">scylladb</a> cluster, you would just include the backend package
 as a dependency in your project and specify it by name as the storage package. Options for the backend can be passed via the <code>storage</code> attribute</p>
 <pre class="prettyprint source lang-bash"><code>npm install @skyring/scylladown
 skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-1 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043
-skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-2 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043</code></pre><h1>Custom Transports</h1><p>Skyring ships with a single HTTP transport, but support custom transports. A <code>transport</code> is a named function
-that can be executed when a timer triggers. To register a transport, you can pass an array of named functions, or
+skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-2 --storage:contactPoints=0.0.0.0:9042 --storage:contactPoints=0.0.0.0:9043
+</code></pre>
+<h1>Custom Transports</h1>
+<p>Skyring ships with a single HTTP transport, but support custom transports. A <code>transport</code> is a JS class that defines the behavior
+to invoke when timer triggers. To register a transport, you can pass an array of transport classes, or
 module file paths to the skyring server constructor via via the <a href="module-skyring_lib_transports.html">transports</a> option</p>
 <p>Optionally, for transports that need to perform some clean up work, a function property <code>shutdown</code> may be defined
 on the transport</p>
 <pre class="prettyprint source lang-javascript"><code>const path = require('path')
 const Skyring = require('skyring')
 
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
-}
+class FizzBuzz extends Skyring.Transport {
+  constructor(opts) {
+    super(opts)
+  }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
+  exec(method, uri, payload, id, timer_store) {
+    // send payload to uri...
+    console.log('fizzbuzz', method, id)
+    timer_store.remove(id)
+  }
+
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+
+    cb()
+  }
 }
 
 const server = new Skyring({
   transports: [
     'my-transport-module'
-  , fizzbuz
+  , FizzBuzz
   , path.resolve(__dirname, '../transports/fake-transport')
   ]
-})</code></pre><p>The same can be achieved through CLI arguments or ENV vars via the <code>transport</code> key</p>
-<pre class="prettyprint source lang-bash"><code>transport=foobar,fizzbuz node index.js</code></pre><pre class="prettyprint source lang-bash"><code>node index --transport=foobar --transport=fizzbuz --transport=$PWD/../path/to/my-transport</code></pre></article>
+})
+</code></pre>
+<p>The same can be achieved through CLI arguments or ENV vars via the <code>transport</code> key</p>
+<pre class="prettyprint source lang-bash"><code>transport=foobar,fizzbuz node index.js
+</code></pre>
+<pre class="prettyprint source lang-bash"><code>node index --transport=foobar --transport=fizzbuz --transport=$PWD/../path/to/my-transport
+</code></pre></article>
     </section>
 
 
@@ -272,9 +333,9 @@ const server = new Skyring({
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on 2019-05-11T22:48:55-05:00
+		on 2020-04-27T15:48:49-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

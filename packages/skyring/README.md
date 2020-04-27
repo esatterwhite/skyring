@@ -201,8 +201,8 @@ skyring run --storage:backend=@skyring/scylladown --storage:path=skyring-2 --sto
 
 # Custom Transports
 
-Skyring ships with a single HTTP transport, but support custom transports. A `transport` is a named function
-that can be executed when a timer triggers. To register a transport, you can pass an array of named functions, or
+Skyring ships with a single HTTP transport, but support custom transports. A `transport` is a JS class that defines the behavior
+to invoke when timer triggers. To register a transport, you can pass an array of transport classes, or
 module file paths to the skyring server constructor via via the {@link module:skyring/lib/transports|transports} option
 
 Optionally, for transports that need to perform some clean up work, a function property `shutdown` may be defined
@@ -212,21 +212,29 @@ on the transport
 const path = require('path')
 const Skyring = require('skyring')
 
-function fizzbuz(method, uri, payload, id, timer_store) {
- // send payload to uri...
- timer_store.remove(id)
-}
+class FizzBuzz extends Skyring.Transport {
+  constructor(opts) {
+    super(opts)
+  }
 
-fuzzbuz.shutdown(cb) {
-  // drain connections...
-  // free up event loop
-  cb()
+  exec(method, uri, payload, id, timer_store) {
+    // send payload to uri...
+    console.log('fizzbuzz', method, id)
+    timer_store.remove(id)
+  }
+
+  shutdown(cb) {
+    // drain connections...
+    // free up event loop
+
+    cb()
+  }
 }
 
 const server = new Skyring({
   transports: [
     'my-transport-module'
-  , fizzbuz
+  , FizzBuzz
   , path.resolve(__dirname, '../transports/fake-transport')
   ]
 })
