@@ -43,6 +43,7 @@
     "memdown": "^4.0.0",
     "nats": "^1.4.8",
     "path-to-regexp": "^3.0.0",
+    "phin": "^3.4.1",
     "request": "^2.88.0",
     "seeli": "^9.0.0",
     "tchannel": "^4.0.0",
