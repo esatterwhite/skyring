@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/esatterwhite/skyring/issues"
   },
-  "homepage": "https://github.com/esatterwhite/skyring/packages/scylladown#readme",
+  "homepage": "https://github.com/esatterwhite/skyring/tree/master/packages/scylladown#readme",
   "dependencies": {
     "abstract-leveldown": "^4.0.3",
     "cassandra-driver": "^3.4.1",
