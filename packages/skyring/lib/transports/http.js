@@ -12,12 +12,15 @@
  */
 
 const STATUS_CODES = require('http').STATUS_CODES
-const request = require('request')
+const phin = require('phin').unpromisified
 const debug   = require('debug')('skyring:transport:http')
 const Transport = require('./transport')
+const {name, version} = require('../../package.json')
 const method_exp = /^(post|put|patch|delete|get|options|head)$/i
 const kType = Symbol.for('SkyringTransport')
 const TRANSPORT = 'httptransport'
+const USER_AGENT = `${name}/${version}`
+
 /**
  * Dispatches an http request
  * @function
@@ -39,14 +42,8 @@ class Http extends Transport {
   }
 
   exec(method, url, payload, id, cache) {
-    const isJSON = typeof payload === 'object'
-    const _method = method.toLowerCase()
-    const options = {
-      json: isJSON
-    , body: payload || ''
-    }
-
-    if (!method_exp.test(method) || typeof request[_method] !== 'function') {
+    const body = payload || ''
+    if (!method_exp.test(method)) {
       const pending = cache.get(id)
       pending && clearTimeout(pending.timer)
       const err = new Error(`Invalid http verb ${method}`)
@@ -57,7 +54,15 @@ class Http extends Transport {
     }
 
     debug('executing http transport %s', id, method)
-    request[_method](url, options, (err, res, body) => {
+
+    phin({
+      url: url
+    , data: body
+    , method: method
+    , headers: {
+        'User-Agent': USER_AGENT
+      }
+    }, (err, res) => {
       if (err) {
         debug('timer err', err)
         return cache.failure(id, err)

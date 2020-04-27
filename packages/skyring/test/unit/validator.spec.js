@@ -46,10 +46,8 @@ test('timer payload validation', async (t) => {
       timeout: MAX + 1
     }, (err) => {
       tt.type(err, Error, 'error is of type Error')
-      tt.match(err, {
-        statusCode: 400
-      , message: new RegExp(`less than or equal to ${MAX}`, 'ig')
-      })
+      tt.match(err.statusCode, 400, 'error statusCode')
+      tt.match(err.message, new RegExp(`less than or equal to ${MAX}`, 'ig'), 'error message')
       tt.end()
     })
   })
@@ -63,10 +61,8 @@ test('timer payload validation', async (t) => {
     , data: false
     }, (err) => {
       tt.type(err, Error, 'error is of type Error')
-      tt.match(err, {
-        statusCode: 400
-      , message: /must be a string or object/ig
-      })
+      tt.match(err.statusCode, 400, 'error statusCode')
+      tt.match(err.message, /must be a string or object/ig, 'error message')
       tt.end()
     })
   })
