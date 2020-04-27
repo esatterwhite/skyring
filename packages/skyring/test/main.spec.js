@@ -19,7 +19,6 @@ test('server starts when executed directly', (t) => {
 
   let buf = ''
   const cases = { listen: false }
-
   child.once('error', t.threw)
   child.stderr.on('data', (chunk) => {
     buf += chunk.toString()
@@ -42,7 +41,6 @@ test('server starts when executed directly', (t) => {
   }
 
   child.on('close', (code, signal) => {
-    console.log('close', code)
     t.equal(code, 0)
     t.end()
   })

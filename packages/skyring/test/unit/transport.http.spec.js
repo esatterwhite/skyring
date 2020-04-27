@@ -47,9 +47,10 @@ test('http transport', async (t) => {
     const addr = `http://localhost:${state.server.address().port}/r1`
     const mock_store = {
       success: () => {
-        tt.pass('timer success')}
+        tt.pass('timer success')
+      }
     , failure: () => {
-        tt.fail('timer fail')
+        tt.fail('timer failure')
       }
     }
 
