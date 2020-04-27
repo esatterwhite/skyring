@@ -1,3 +1,12 @@
+v10.0.0
+-------
+* Convert project to mono-repo
+* Convert transports to be class based
+* Update TCP + ZMQ transports to be classes
+* Vendor Ringpop
+* Increases test coverage to 95% (min 90% required)
+* Removes all deprecated functions
+
 v9.0.1
 ------
 * update micromock@2.0.0 fixing a bug where transfering requests from ringpop to the router would fail

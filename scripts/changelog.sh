@@ -1,4 +1,4 @@
-#!/user/bin/env bash
+#!/usr/bin/env bash
 printf "# Changelog\n\n"
 previous_tag=0
 
