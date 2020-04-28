@@ -1,5 +1,5 @@
 # -- BASE
-FROM buildpack-deps:stretch-curl AS base
+FROM buildpack-deps:buster-curl AS base
 ENV storage__path /var/data/skyring
 ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y \
@@ -18,7 +18,7 @@ WORKDIR /opt/skyring
 RUN npm ci
 
 # -- RELEASE
-FROM debian:stretch-slim as skyring
+FROM debian:buster-slim as skyring
 RUN mkdir -p /var/data/skyring
 WORKDIR /opt/skyring
 VOLUME /etc
