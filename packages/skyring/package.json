@@ -45,6 +45,7 @@
     "path-to-regexp": "^3.0.0",
     "phin": "^3.4.1",
     "pino": "^6.2.1",
+    "pino-http": "^5.1.0",
     "pino-pretty": "^4.0.0",
     "seeli": "^9.0.0",
     "tchannel": "^4.0.0",
