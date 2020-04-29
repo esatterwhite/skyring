@@ -1,157 +1,1188 @@
-v10.0.0
--------
-* Convert project to mono-repo
-* Convert transports to be class based
-* Update TCP + ZMQ transports to be classes
-* Vendor Ringpop
-* Increases test coverage to 95% (min 90% required)
-* Removes all deprecated functions
+# Changelog
 
-v9.0.1
-------
-* update micromock@2.0.0 fixing a bug where transfering requests from ringpop to the router would fail
-* update path-to-regexp@3.0.0
-* update leveldown@5.0.1
-* update levelup@4.0.1
-* update memdown@4.0.1
-* update nats@1.2.10
-* update tchannel@3.9.13
-* update encoding-down@5.0.4
+## v10.1.0 (2020-04-29)
 
-v9.0.0
-------
-
-* minimum node support v8
-* replaces uber ringpop w/ fork @skyring/ringpop
-* replaces inline hammock w/ @esatterwhite/micromock
-
-v8.0.3
-------
-
-* timer: be sure to flush the nats connection before closing. Fixes issue where timers may be lost during a rebalance
-
-v8.0.2
-------
-
-* middleware: fix proxy middle ware to always set location header
-
-v8.0.1
-------
-
-* revert needle back to request. fixes issue where transport callback not being called
-
-v8.0.0
-------
-
-* [BREAKING] remove deprecated server#load function. Calling it will be an error
-* replace request with needle. Http transport now uses needle
-* replace level package w/ levelup + leveldown explicitly
-* remove quay specific build
-* bump docker image to use node 8.12
+* 10.1.0 [View](https://github.com/esatterwhite/skyring/commit/d37c5e47b01e84fedcccfbc162d55c3cf8b3f126)
+* skyring: replace debug with pino [View](https://github.com/esatterwhite/skyring/commit/4073103dd868ba364962d3ced9db89d38b51b809)
+* dep[skyring]: keef@5.0.0 [View](https://github.com/esatterwhite/skyring/commit/46ea05274f740c7f0db0bdc99ddfbe130f1456bc)
+* dep[skyring]: pino-http@5.1.0 [View](https://github.com/esatterwhite/skyring/commit/1702550fbc340ef8d4cf515328acce6225c7919c)
+* dep[skyring]: ping-pretty@4.0.0 [View](https://github.com/esatterwhite/skyring/commit/3494fc7e05f2526e9db680b283f3705ca67c1363)
+* dep[skyring]: pino@6.2.1 [View](https://github.com/esatterwhite/skyring/commit/162ec90fb7b1df0692557a58694e5f3544a1858d)
 
 
-v7.0.1
-------
+## v10.0.0 (2020-04-27)
 
-* timer: corrects bug that would reset a timer during a rebalance
-* pkg: fix a broken dependency in package-lock
-* ci: fixes the travis build so PR builds will pass github checks
+* docker: update base image for docker build [View](https://github.com/esatterwhite/skyring/commit/1bbd0e40b6f41d7d456e10e33593cd366018038c)
+* skyring: re-add npmignore file [View](https://github.com/esatterwhite/skyring/commit/9c7cfcee6e3612be7102b12fd186b75ca74383ce)
+* version[scylladown]: skyring@10.0.0 [View](https://github.com/esatterwhite/skyring/commit/127f14875e90deda9c5baa18ff0e032f6bc1226a)
+* dep[scylladown]: skyring@10.0.0 [View](https://github.com/esatterwhite/skyring/commit/2b03baf75254e8289cf4f18465e73416e54711eb)
+* version[zmq-transport]: v2.0.0 [View](https://github.com/esatterwhite/skyring/commit/9c6a148b2e6d80e5cad70f595b98dc38dc000858)
+* dep[zmq-transport] skyring@10.0.0 [View](https://github.com/esatterwhite/skyring/commit/752f1867377c60eefc6291bec53203806453cef6)
+* version[tcp-transport]: v2.0.0 [View](https://github.com/esatterwhite/skyring/commit/5a1a2d6bd7c1312b3a6171eb94c43878eabfe839)
+* dep[tcp-transport]: skyring@10.0.0 [View](https://github.com/esatterwhite/skyring/commit/da166ba1319de31a5d6ee4db601a833b667a0bfd)
+* v10.0.0 [View](https://github.com/esatterwhite/skyring/commit/fbdb17a7daad6c00a6b2dd195e15ab48d792c083)
+* pkg: update changelogs [View](https://github.com/esatterwhite/skyring/commit/3340c8dc42a27539906021ce3469cf39fbe7e479)
+* doc: update coverage badge [View](https://github.com/esatterwhite/skyring/commit/ba42a39e9a21b55d9ceafa306ebe0e6fda337174)
+* doc: update renered docs [View](https://github.com/esatterwhite/skyring/commit/f836335b610071638f63c56d2eb1c9a99e7b85c0)
+* pkg: fix repository links in package.json files [View](https://github.com/esatterwhite/skyring/commit/a0e05d27bebc53d02a806e14d21ea911c81ab538)
+* doc: remove the unmaintained line from ringpop docs [View](https://github.com/esatterwhite/skyring/commit/5048b30b55fcd70880d6b3675d56a4d44c9ef2a4)
+* doc: main project readme [View](https://github.com/esatterwhite/skyring/commit/0bfb19442d3dc6651d7b9d76703add521c20a05e)
+* transports: replaces request with phin [View](https://github.com/esatterwhite/skyring/commit/e92fbbdc3059302b4c8a883372cf2e692a391a01)
+* dep[skyring] phin@3.4.1 [View](https://github.com/esatterwhite/skyring/commit/fceab5685a1f771b93e04e0f110f4e45bc1f3c18)
+* dep[tcp-transport]: tap@14.10.7 [View](https://github.com/esatterwhite/skyring/commit/57286d344b521081893987cfe4c831330ad50dec)
+* deps[zmq-transport]: tap@14.10.7 [View](https://github.com/esatterwhite/skyring/commit/b62a40b54e91338b314ac132a65d1b29f33065a5)
+* dep[skyring]: seeli@9.0.0 [View](https://github.com/esatterwhite/skyring/commit/351c45dcdac1271de20e51eb4adb8c534411f301)
+* dep[skyring]: tap@14.10.7 [View](https://github.com/esatterwhite/skyring/commit/c6d458fa610c17b26dd0df8e117bd289aa0eb264)
+* ci: exclude ringpop from codeclimate analysis [View](https://github.com/esatterwhite/skyring/commit/913f616503180c6a82338e6406bdefdcc154f615)
+* pkg: update pacakage file links [View](https://github.com/esatterwhite/skyring/commit/3655fb29f7d3baeecd13180a3da2071ab58e72dc)
+* ci: updating travis script for mono-repo [View](https://github.com/esatterwhite/skyring/commit/477fc3354954867a6b3a29fb8f83b07b04dc8d16)
+* skyring: linting and test coverage [View](https://github.com/esatterwhite/skyring/commit/36eb519f3dad36e424b13b837dfae555edc04915)
+* ringpop: convert tests to use tap. [View](https://github.com/esatterwhite/skyring/commit/59877c3f1457c32dddb069846ff9dc12124d61cf)
+* skyring: re-introduce the command line tool [View](https://github.com/esatterwhite/skyring/commit/bbbe6f2655a77f23dce539deb8f0476865756724)
+* scripts: script to auto generate a change log file [View](https://github.com/esatterwhite/skyring/commit/af278a3a2fb39ef983b0d63115507d3a58de57c9)
+* skyring, server: sets default behavior to not auto rebalance [View](https://github.com/esatterwhite/skyring/commit/51f8490bcd454e6ecae5d6a4fdbf411df8d24ad3)
+* deps[dev]: nats@1.4.8 [View](https://github.com/esatterwhite/skyring/commit/3271ad7aac63e77271a5d7c22a3723625d8387a3)
+* deps: nats@1.4.8 [View](https://github.com/esatterwhite/skyring/commit/01bc11d2cf51beef6cd8be6e25aaca57cfe46697)
+* skyring: additional test to increase code coverage [View](https://github.com/esatterwhite/skyring/commit/33ffec6be4a4e07185426ad7dd8f2590c05ed59a)
+* deps[skyring]: get-port@5.1.1 [View](https://github.com/esatterwhite/skyring/commit/38b8809224104ce329b09d7db5abfa14a7b9dafa)
+* transports: convert zmq + tcp to use class interface [View](https://github.com/esatterwhite/skyring/commit/213072eb9505a1002317dd1ebabaf4e118e035af)
+* test: fix tests for tcp / zmq transports [View](https://github.com/esatterwhite/skyring/commit/698573bcb1277242745922b10b320010d5ec9640)
+* Add 'packages/tcp-transport/' from commit '6ff37d9716cd9468104d4eb779d59120f4bc61e1' [View](https://github.com/esatterwhite/skyring/commit/0c04fbfcf912b10e9ea1a56e45f62bfd8c2a0e76)
+* scylladown: fix outdated deps [View](https://github.com/esatterwhite/skyring/commit/8e696f179c1da41ad1eb19ae441535a475f37d80)
+* Add 'packages/scylladown/' from commit 'c51ea78a21db4da05314c2f5216e005a420feec8' [View](https://github.com/esatterwhite/skyring/commit/9c9df3cf0517863ce94c75c6038dd69ed2b6ae53)
+* transport-zmq: update zmq packagee to v5 [View](https://github.com/esatterwhite/skyring/commit/2d13225d609faf48938b303d0622acfa84944343)
+* Add 'packages/zmq-transport/' from commit '208dc1513234d25f2690192e475d217cb4c9b698' [View](https://github.com/esatterwhite/skyring/commit/d776baf1dc587409dad5b51fe777193969593318)
+* Add 'packages/ringpop/' from commit 'bafc43f3a420526187dc65e8a99055be2cf47bce' [View](https://github.com/esatterwhite/skyring/commit/718098185b1d810000f92fcd9b5c66e0031ee2a5)
+* skyring[deps] fixes build errors for node v12 [View](https://github.com/esatterwhite/skyring/commit/3c6fdfb1c8b0c8d2e9c220e7baa5ae00fc3f321f)
+* 11.1.0 [View](https://github.com/esatterwhite/skyring/commit/bafc43f3a420526187dc65e8a99055be2cf47bce)
+* update deps: farmhash, uuid, tchannel, tcurl [View](https://github.com/esatterwhite/skyring/commit/ca87a7891f37dc1d10b3076fc39e7dd205f3ba13)
+* pkg: re-shuffle files for initial lerna setup [View](https://github.com/esatterwhite/skyring/commit/9a4a2481aaab206d1d25453eab71b032b3d4d4d5)
+* pkg: expose base transport class from primary export [View](https://github.com/esatterwhite/skyring/commit/3bf5b55c04ee79b89d39ee8d3cec3e1b4b143899)
+* docs: update the transport docs to illustrate classes [View](https://github.com/esatterwhite/skyring/commit/a9c3afb61e55bfb80b7dd67d0829060e641e2ea1)
+* transports: convert transports to classes [View](https://github.com/esatterwhite/skyring/commit/a4891e8b919172fc1e32d9e18d5a92d74c97c0e1)
+* doc: update docs [View](https://github.com/esatterwhite/skyring/commit/760c9ff49963779731acc51f8556e87af42cd672)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/c51ea78a21db4da05314c2f5216e005a420feec8)
+* v11.0.0 [View](https://github.com/esatterwhite/skyring/commit/a1cddae186c9f7ed456670c33aae4616dadec099)
+* update package-lock [View](https://github.com/esatterwhite/skyring/commit/d654a3c0b25f7453b40b3929ce17bafbc435f353)
+* pkg: remove uber licence checks from package. [View](https://github.com/esatterwhite/skyring/commit/a716560f6718004bec7d9a712c6e4220f646c5fa)
+* deps: uuid@3.3.2 [View](https://github.com/esatterwhite/skyring/commit/eff5da986029a8548f0093558fe063bb63ac9b5f)
+* deps: @esatterwhite/micromock [View](https://github.com/esatterwhite/skyring/commit/a7d9a25d79e7de2abdecc388bd9fa2792abf55d8)
+* deps: farmhash@2.1.0 [View](https://github.com/esatterwhite/skyring/commit/2234f45ac82c1a0d63220303ec374930d1decd9f)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/aec09a8ed304f4db3e1d67a4e94c55fffe06206e)
+* 1.0.2 [View](https://github.com/esatterwhite/skyring/commit/14e2910a31fb64c223c0d3b2464d21a8c50521f9)
+* lib: allow contact points to be a csv [View](https://github.com/esatterwhite/skyring/commit/d869bca2a720de4d13b8893b1d80278646281b49)
+* 1.0.1 [View](https://github.com/esatterwhite/skyring/commit/96e8645fea53468ddda081c16742e7763d6d4ed1)
+* driver: include a close function to diconnect from scylla [View](https://github.com/esatterwhite/skyring/commit/18aee11556749a4d0c933f886266a127d615bb13)
+* 1.0.0 [View](https://github.com/esatterwhite/skyring/commit/7567d5dece27679dca00bbca6d1223189be02038)
+* Initial implementation (#1) [View](https://github.com/esatterwhite/skyring/commit/472ce389ee4d788ab9cb9f0be9aa976f7112888c)
+* Initial commit [View](https://github.com/esatterwhite/skyring/commit/581c20ec799a7324b04cb16fae82dde4f2810ae4)
+* 1.2.2 [View](https://github.com/esatterwhite/skyring/commit/6ff37d9716cd9468104d4eb779d59120f4bc61e1)
+* deps: set skyring peer at <=5.x [View](https://github.com/esatterwhite/skyring/commit/dcc1e332ad3a5b3c26f9ff511695fa391d4de35b)
+* 1.0.3 [View](https://github.com/esatterwhite/skyring/commit/208dc1513234d25f2690192e475d217cb4c9b698)
+* deps: this package version is compatible with skyring <= 5.x [View](https://github.com/esatterwhite/skyring/commit/5c3ad29ae654750cb109bc45798cca43b7746b5b)
+* 10.20.0 [View](https://github.com/esatterwhite/skyring/commit/2bf04d2ee4825834de32f15a4c9c6279af90e563)
+* 10.18.0 release notes [View](https://github.com/esatterwhite/skyring/commit/a3646052bfa3e8974e3c83124c9f58ee008fd0d3)
+* Add option to enforce identical app name in pings Always reject pings from wrong app name [View](https://github.com/esatterwhite/skyring/commit/8da302e01a01c3383c7c9a3a4041ef4f8ecc1e35)
+* 1.0.2 [View](https://github.com/esatterwhite/skyring/commit/ff66301529cdca16364f4a1ec5ef3ffa25583c67)
+* separate monitor logs from zmq logs [View](https://github.com/esatterwhite/skyring/commit/0bf8c3a24533f83175abdc7e972fd863c7d63afe)
+* 1.0.1 [View](https://github.com/esatterwhite/skyring/commit/f4108fa7c28d82b39338e001408ebeba0a03060b)
+* update Readme [View](https://github.com/esatterwhite/skyring/commit/a96753a74bb8ca8b0dcb723fc4d079efdcfe28e4)
+* 1.0.0 [View](https://github.com/esatterwhite/skyring/commit/37188f6fc865041f0edee4f6e4ee8d3e95cd34d2)
+* package: set skyring scope for package [View](https://github.com/esatterwhite/skyring/commit/e18a5a39d41462ee6074b1701ba8207077560619)
+* travis: adding a travis file [View](https://github.com/esatterwhite/skyring/commit/983402b2ddf2ac3458a7cf791b0c4cf46045eb66)
+* package: initial implementation [View](https://github.com/esatterwhite/skyring/commit/3fc93d666fdcdf5ccdcc4fa4b7c7abe7a7bb2602)
+* 1.2.0 [View](https://github.com/esatterwhite/skyring/commit/94c3126ab92b8604d4bec100c07b40513adf01cf)
+* remove timeout stuff. [View](https://github.com/esatterwhite/skyring/commit/6f9a1f2ea905176bbf21cdc9fcae9e3b1050f368)
+* 1.1.0 [View](https://github.com/esatterwhite/skyring/commit/49a10a3cbeb47df9c286a27e25f60bc3aa78d9f9)
+* fix package name [View](https://github.com/esatterwhite/skyring/commit/6f4f64f119ee4ace863b7e736821f0f81ccc079e)
+* set a connection time out on the internal socket connection [View](https://github.com/esatterwhite/skyring/commit/34746d20eb6d5ef7498bc73ec43324fedd81680d)
+* Initial commit [View](https://github.com/esatterwhite/skyring/commit/6ee8341d53df94beba7634b36bb3839ddfa956a8)
+* adding an npm ignore [View](https://github.com/esatterwhite/skyring/commit/4d4473a7e9d6302a1a24df8d31a122d9ddb1d31c)
+* 1.0.0 [View](https://github.com/esatterwhite/skyring/commit/1fdfb16bd5a19b45932c631a5e1f04774a152791)
+* update node requirement in package [View](https://github.com/esatterwhite/skyring/commit/d5212e8db12c4574e401c373f1ebcf02c289563d)
+* Update the readme [View](https://github.com/esatterwhite/skyring/commit/a5874bf872792ba5cdf326428eb3cd2c8c44dff6)
+* add skyring 4.2 as a peer requirement [View](https://github.com/esatterwhite/skyring/commit/6d03d581963e04f46c190a83b4f158dd47aaba27)
+* set TEST_HOST in test script [View](https://github.com/esatterwhite/skyring/commit/15fedde163e30879c5149aac0f0ebba8ae97df42)
+* update Readme [View](https://github.com/esatterwhite/skyring/commit/deb807d7869e8399117d3ac5c9527adc2e8f7654)
+* fixing up a test [View](https://github.com/esatterwhite/skyring/commit/885cc223d088b7225bdb44e6511718d87de63189)
+* echo server for testing [View](https://github.com/esatterwhite/skyring/commit/223114c9d191d23edb898fa5309d8c86ca1b1907)
+* better connection draining for shutdown handler [View](https://github.com/esatterwhite/skyring/commit/177488afacc712d285eb01a339f1d2d2574cf6aa)
+* starting some tests [View](https://github.com/esatterwhite/skyring/commit/b401edd828506d6799d5874b90e0d209ccac1e67)
+* Initial implimentation [View](https://github.com/esatterwhite/skyring/commit/512e7a0cb21d52b7268e14c73f47aba9fab7fb53)
+* Initial commit [View](https://github.com/esatterwhite/skyring/commit/7fe9fd14d6f7323354c6316e60aa5dc0f95497b1)
+* 10.19.0 [View](https://github.com/esatterwhite/skyring/commit/f85fd4b34998445eb065155af0fc751b1b19c8a9)
+* Update changelog for 10.19.0 release (#321) [View](https://github.com/esatterwhite/skyring/commit/f19e0011518bb942fd2a6518a5dafa63d7f107b8)
+* Allow to customize ringpop stats prefix (#320) [View](https://github.com/esatterwhite/skyring/commit/e5f092a9e453a8ab24fa65c67ab0df5c5807d855)
+* 10.18.0 [View](https://github.com/esatterwhite/skyring/commit/c08eb9b374c19718cf91f846e85ed635334e3961)
+* Fix licence header after uber-licence update (#319) [View](https://github.com/esatterwhite/skyring/commit/45060e93cf61e6e92b99f9b8bd374b10fdedc58d)
+* 10.18.0 release notes (#318) [View](https://github.com/esatterwhite/skyring/commit/c74ef28b36a0d20774b42b29f2bbf1ffe626afe2)
+* [Fix] Consistent hash ring lookups 3 / consistent lookups on hash collisions (#317) [View](https://github.com/esatterwhite/skyring/commit/bd5164615b7df9e2a66d8361ba67cf0c39d6b327)
+* [Fix] Consistent hash ring lookups 2 / Use replicaPoints as RBTree key (#316) [View](https://github.com/esatterwhite/skyring/commit/620c468168bfee2e08062e889dd830a7f6c2a051)
+* [Fix] Consistent hash ring lookups 1 / Use comparator function (#315) [View](https://github.com/esatterwhite/skyring/commit/1e79c1a2f46775fa77c4d97b724fd55975c5ec64)
+* Retry discover provider (#314) [View](https://github.com/esatterwhite/skyring/commit/5b21caa39e91bc0d6feaf80a32a34253620472ea)
+* Fix: Initial transition timers (#313) [View](https://github.com/esatterwhite/skyring/commit/dac096436650b11d12a4f97aa9d7a229012d036d)
+* 10.17.0 [View](https://github.com/esatterwhite/skyring/commit/18d3e8485d48e3ce724da52448be19b11cc067bc)
+* Update changelog in preparation of 10.17.0 release (#311) [View](https://github.com/esatterwhite/skyring/commit/6992ebd229099bbd79cbc640dea9e41666a11dec)
+* [Feature] Key consistent forwarding (#310) [View](https://github.com/esatterwhite/skyring/commit/4a13780259f6cb130efcb2cd101507eb888537ce)
+* Update CHANGES.md [View](https://github.com/esatterwhite/skyring/commit/fe50916b1c86fd5399705bec3e46c77d3e64697f)
+* 10.16.2 [View](https://github.com/esatterwhite/skyring/commit/59632c5843c9c38f8a0cd0b5870cec55c8074dcf)
+* Update changelog for hotfix release. [View](https://github.com/esatterwhite/skyring/commit/8548994954de659eb1f6a44c41db9eab8493aa8d)
+* Don’t stringify buffers in transports Due to changes in hammock, request-proxy is now serializing buffers as json. [View](https://github.com/esatterwhite/skyring/commit/e89ad46dbc10b03ce6afbd11751d6b841d5dd632)
+* Fix for self-eviction hooks (#307) [View](https://github.com/esatterwhite/skyring/commit/e00468bece02969787b955548c28e5ccc3514583)
+* [self-evict 3] self evict on shutdown in testpop and enable self-eviction integration tests (#301) [View](https://github.com/esatterwhite/skyring/commit/4f809f7fc2e87ba636fdc2362d244160c7b28726)
+* [self-evict 2] Gossip self eviction (#300) [View](https://github.com/esatterwhite/skyring/commit/829331b5ce94f78bada29d53f4bc862d0efac7dd)
+* [self-evict 1] Support self eviction as a way of graceful shutdown (#299) [View](https://github.com/esatterwhite/skyring/commit/6672fb3554b9f880206e653bc34c68837bd00f93)
+* Never heal self (#302) [View](https://github.com/esatterwhite/skyring/commit/b0bf56bcb8aab473f31dc149f12e930506ba065f)
+* 10.16.1 [View](https://github.com/esatterwhite/skyring/commit/c7a82bcb353f634faae0fe34ad6752abf0a7aa90)
+* Update changes.md in preparation for patch release. [View](https://github.com/esatterwhite/skyring/commit/5ddfbc69c65b4d441012efc1a9245f993f3ce682)
+* cherry-pick of e41c95788334ef504bb1fa9dfdc40dcaec05f3f3 to bump version in package.json to released version. [View](https://github.com/esatterwhite/skyring/commit/8ad214ccad87f1e748fd4586a8553559ffa73951)
+* convert bodies back to strings for back compat [View](https://github.com/esatterwhite/skyring/commit/604350879c41b823eb69eb04a1a7382d8ae961c3)
+* make the breaking change more explicit in the tests [View](https://github.com/esatterwhite/skyring/commit/1287b92fdd4108eb5042eed129b721ab0e3c4207)
+* use performant hammock [View](https://github.com/esatterwhite/skyring/commit/738f0c2eb2bc222a2bcdd62f2d0d1f3e728e914f)
+* upgrade hammock@latest [View](https://github.com/esatterwhite/skyring/commit/b5820c75d1e7d81ed55e462857329e1777ef573d)
+* add changes to changelog for release of 10.16.0 (#305) [View](https://github.com/esatterwhite/skyring/commit/6f0fd6e08dc8953da6f45ca856e4bb5c2b2eede2)
+* use master ringpop-common [View](https://github.com/esatterwhite/skyring/commit/4f97bc37449fd47da89f6151a4fb67b8dc77212e)
+* Have updated to use the legacy implementation of hash32, and have added config flag ‘useLatestHash32’ for those who want to use new version due to increased performance. Defaults to false. [View](https://github.com/esatterwhite/skyring/commit/91512f71b6d28b5bcd6cd1c05abaabdc6ec230ce)
+* Fixed the instances of require('toobusy') [View](https://github.com/esatterwhite/skyring/commit/fc48d549439486d20a091f0724942b38cf50c0a6)
+* Update dependencies [View](https://github.com/esatterwhite/skyring/commit/67b011b625f8bd117bdeda58d0fa79c6b489ad63)
+* Refactor membership to use a localMemer as the source of truth about local state. [View](https://github.com/esatterwhite/skyring/commit/429a176f81a399a0a66cbb5f312d03ee9f704a76)
+* Add node version requirements [View](https://github.com/esatterwhite/skyring/commit/ee723833aaa765f021b8ca0f1418f51a8f013bd9)
+* Remove dead code [View](https://github.com/esatterwhite/skyring/commit/8c0758a5f9a79f13d89cd57b4e5d2a16dbc526cb)
+* Fix double reincarnation (#284) [View](https://github.com/esatterwhite/skyring/commit/87f94d6de427e303a5a757589fc9b44a20565c1e)
+* When creating the change for reincarnation use your self as the source. (#282) [View](https://github.com/esatterwhite/skyring/commit/a716f762f92526cf1d5e3c9ef9352d2e3eb5d4e0)
+* Fix typo in stat emission code [View](https://github.com/esatterwhite/skyring/commit/6bf023966e5e1d498d0e5ba6d877ce6d53c395f0)
+* Fix casing in the stat [View](https://github.com/esatterwhite/skyring/commit/bac667dddf73378c76fa22f68b83cd2630040cf0)
+* Emit lookupN timing event [View](https://github.com/esatterwhite/skyring/commit/23e2c98d247bf2104b928c9394ef5efb57dbb990)
+* Emit stats from ringpop-test program (#271) [View](https://github.com/esatterwhite/skyring/commit/4d5f833bf03f5f27e23495c1ff9fd056d8992b02)
+* add suspect, faulty and tombstone period flags (#280) [View](https://github.com/esatterwhite/skyring/commit/976355d16f802379fcd1466617fd9e01c615fe5c)
+* Remove generate-hosts and tick-cluster scripts. They are moved to ringpop-common. [View](https://github.com/esatterwhite/skyring/commit/7f183a5d3455c3350ec0ee09408a137c5de6a5a2)
+* 10.15.0 [View](https://github.com/esatterwhite/skyring/commit/4d5d64b3eb907ef694a29ca005f92d95555efd10)
+* Add release notes for 10.14.0 and 10.15.0 (#276) [View](https://github.com/esatterwhite/skyring/commit/8e8f52c12bd0bada2b98d916036b2edd8a027942)
+* Read hosts-file async (#277) [View](https://github.com/esatterwhite/skyring/commit/19de1985f45910367e5042a80c118eea7627ea02)
+* Make stat name in sync with ringpop-go [View](https://github.com/esatterwhite/skyring/commit/7c8118007842332329e6297fd5e3624765c54765)
+* Partition healing (#272) [View](https://github.com/esatterwhite/skyring/commit/ff127c990d6821bc2bdaea915bb9fd8d92fe8ada)
+* Revert "Partition healing (#264) and "Periodical partition healing (#265)" (#270) [View](https://github.com/esatterwhite/skyring/commit/d74618bd3bb0c4b084ebc556048fcd4df211ea61)
+* Periodical partition healing (#265) [View](https://github.com/esatterwhite/skyring/commit/02be5362b835be17c70f9af5fe418f230cf07af1)
+* Partition healing (#264) [View](https://github.com/esatterwhite/skyring/commit/6c025bcc67bdeb1dd5b55269195a740f2e283fc5)
+* Simplify override logic during updates (#260) [View](https://github.com/esatterwhite/skyring/commit/656d620db3c91d571d24d9882962604dac681421)
+* Refactor MemberShip~isPingable(member) (#259) [View](https://github.com/esatterwhite/skyring/commit/af0574b76b8b33fbe2e9aba938c9003b115c05ca)
+* Rename Dissemination.fullSync to membershipAsChanges (#266) [View](https://github.com/esatterwhite/skyring/commit/5765f9411c058d6acf87a6472e63fc5d9ccb37b0)
+* Implement reaping faulty nodes (#257) [View](https://github.com/esatterwhite/skyring/commit/cd7a7c81e2f65951a9ad6a6d7f7a7cf544d1fc4d)
+* include tests in sub-directories of test/unit and test/integration (#263) [View](https://github.com/esatterwhite/skyring/commit/434c386c3c32d255fab68a00032eca2ff72c2243)
+* Refactor ping-sender to support sendPingWithChanges (#258) [View](https://github.com/esatterwhite/skyring/commit/fddb5abb35c616c504d3f4e08a69d118401ab5ae)
+* Fix some timers in gossip unittests [View](https://github.com/esatterwhite/skyring/commit/dac95bdf6c11676ade7a9ce0699e6d36704f5028)
+* Deprecate "admin/reload"-endpoint (#255) [View](https://github.com/esatterwhite/skyring/commit/80a858f7190fca0046c1541d2b24cd4d4d976cc3)
+* Use a DiscoverProvider-function to discover the bootstrap hosts (#253) [View](https://github.com/esatterwhite/skyring/commit/b983c0d4d2beeaf96c1d5378b6a0c360634388c1)
+* Add server/client middleware to patch tombstone state [View](https://github.com/esatterwhite/skyring/commit/54346052110e76700f1514d245728659da021d08)
+* Travis jshint (#254) [View](https://github.com/esatterwhite/skyring/commit/9d89e9109245eefa77dbb8384f2f0375a96133ba)
+* Bi-directional full syncs (#251) [View](https://github.com/esatterwhite/skyring/commit/28fe722488b4ca12d32ceff1ab9447f664a6630a)
+* Fix tools recursing into ringpop-common [View](https://github.com/esatterwhite/skyring/commit/35b9259412ffdfa93b4a0c2e3441ac85974a8e22)
+* Make modifying the target branch easier [View](https://github.com/esatterwhite/skyring/commit/dc57cbef6a8b377daa9d24f43b25fdc20be6a5c4)
+* Disallow shared integration test failures [View](https://github.com/esatterwhite/skyring/commit/7a0de6434207cd4dbc631f364bf7ee8540998caa)
+* Minor optimisation to clone/pull [View](https://github.com/esatterwhite/skyring/commit/e0e147a783c01d8358e30c58e25011c10637d607)
+* Run shared integration tests on Travis [View](https://github.com/esatterwhite/skyring/commit/78ce67a63a12e354e2be33ea529644d77bcea808)
+* Update licence headers [View](https://github.com/esatterwhite/skyring/commit/49d24fe67fc1d9d8afa252de26a6b3770f5b3d31)
+* Refactor the suspicion protocol to a generic timebased state transition [View](https://github.com/esatterwhite/skyring/commit/c8c7a3387c7241b052d6848136344554e2c51e54)
+* 10.14.0 [View](https://github.com/esatterwhite/skyring/commit/c69819b3cb16b6db244bcbe861c5da0f3b394015)
+* follow Nils's wise advice, add membership checksum [View](https://github.com/esatterwhite/skyring/commit/93ed41c22aec20f9057e30f93cbd612e0ed0822c)
+* fix ringpop.stat call [View](https://github.com/esatterwhite/skyring/commit/bcb9949b0c09864451dc227ef4a80864c36a3c5e)
+* call .start() and .stop() from Ringpop / .destroy [View](https://github.com/esatterwhite/skyring/commit/25e2380874a148b23a5fce08fec4869b9db4867e)
+* add ring.checksum stat, and periodic stats glue [View](https://github.com/esatterwhite/skyring/commit/d38461f99fc278aa44f5e30d54e61461b3fdc13e)
+* add travis badge to README.md [View](https://github.com/esatterwhite/skyring/commit/b002ba6d6b1fcf4615b29fc6c0ae8dbce73b77af)
+* Update tchan to 3.6.13 and fix two tests that broke because of it. One test added '001' to the hostport to make it unreachable, tchannel doesn't allow huge port no.s anymore. The other test failed because: 'AssertionError: TChannel must listen on top channel'. Listening to the rootChannel fixed the test. [View](https://github.com/esatterwhite/skyring/commit/4997cc839e18b5c0e90995fe06de0c8d441018f0)
+* Update README for newbies [View](https://github.com/esatterwhite/skyring/commit/8a20308425d0aed41f8d09ff9d44970e9ae10f7f)
+* Fixed a typo in last MIGRATION note [View](https://github.com/esatterwhite/skyring/commit/18d3e935383151f6ec6f997a6bdbc95ae75fcf4a)
+* A MIGRATION note about v10.13.5 [View](https://github.com/esatterwhite/skyring/commit/8feda9b3c4db507e5d826183ec350df66762475a)
+* 10.13.5 [View](https://github.com/esatterwhite/skyring/commit/f586877fddfdd07603edcddfcc3c2e9d5865f60b)
+* Destroy client in client_test.js; make tests not hang [View](https://github.com/esatterwhite/skyring/commit/0291e3624a758c9dbe2103f14c6cc5e5f510f2db)
+* unref() has a memory leak; don't use it [View](https://github.com/esatterwhite/skyring/commit/231bc51f9b98f1624913d39c79d2fcc8b5f9959a)
+* 10.13.4 [View](https://github.com/esatterwhite/skyring/commit/b72380df7ac6bf5173d4e059c6e596ed8eea0618)
+* Track potentially wedged requests and cancel them [View](https://github.com/esatterwhite/skyring/commit/ea5e3a70317c8c3cfdc990281ce26ff3a8cddb24)
+* 10.13.3 [View](https://github.com/esatterwhite/skyring/commit/67a04ba7f6356e49985093ade1a4065b887bb5c9)
+* address Nils' feedback, remove double quotes [View](https://github.com/esatterwhite/skyring/commit/e995d5cdd4275d0ff0fed6eead1d018963ba7652)
+* address Jeff's feedback [View](https://github.com/esatterwhite/skyring/commit/76a86727d0be750b7222b20a848ac10fded714e6)
+* Remove docs from ringpop-node and move them into ringpop-common [View](https://github.com/esatterwhite/skyring/commit/97a240736c30d1cb7e20db01b35fb23a637c6408)
+* aggresively raise piggyback counter when recipient of ping/ping-req [View](https://github.com/esatterwhite/skyring/commit/62584289d97389a7d6089b5957a1a7835be5b595)
+* Docs: add new stat to table (dissemination.bump-bypass) [View](https://github.com/esatterwhite/skyring/commit/c03b4eeb6921a21a443c00ebdc7f9b82bec11019)
+* 10.13.2 [View](https://github.com/esatterwhite/skyring/commit/72f3589aeff2416c008cdef6a8f80a32e7499826)
+* Update comment and stat name [View](https://github.com/esatterwhite/skyring/commit/72092d0eba2514c1709fe5373137b368b628574b)
+* Removed blank line from end of issueAsSender function [View](https://github.com/esatterwhite/skyring/commit/f7aea357dc2c83896b4cc2723e9b23375aa35319)
+* Remove extra whitespace from ping-req-sender [View](https://github.com/esatterwhite/skyring/commit/2bef19c70431163bfba252a5b96eb1acd5b32063)
+* DRY up recording a change [View](https://github.com/esatterwhite/skyring/commit/922a0f73d0f0d37b1675c96144f783f8f0973520)
+* only raise piggyback count if ping is succesfull [View](https://github.com/esatterwhite/skyring/commit/b95b02f6dbcd25af14f7ab57cea9b4ad1cf301c6)
+* Disable piggybacking for damp-reqs [View](https://github.com/esatterwhite/skyring/commit/1ba586b1f6f1cb82335cf93bf941f460ed2fbc85)
+* Bring log level back up to error [View](https://github.com/esatterwhite/skyring/commit/b1f52244b63e21076ab327ff40c9b109b23404d2)
+* Add stats to Monitoring section of Running Ringpop docs [View](https://github.com/esatterwhite/skyring/commit/2fa9e28f2ad03f677d4c49cc63e7c01d56414d60)
+* Validate source of joiner, entire cluster used to crash when sent an invalid host-port as the source field [View](https://github.com/esatterwhite/skyring/commit/fdcaa099a7b0ee8f96e88287a5828b730149d24d)
+* Validate source of joiner, entire cluster used to crash when sent an invalid host-port as the source field [View](https://github.com/esatterwhite/skyring/commit/70a3b7818de4a90f082d2e51f83479cafb8ab46f)
+* Refuse protocol communication until ready [View](https://github.com/esatterwhite/skyring/commit/6deec1262d272a0c25e10d1b77a5d0fdd4887c60)
+* 10.13.1 [View](https://github.com/esatterwhite/skyring/commit/ba1ce0f844bd195a505a639e158f116a543b1735)
+* 10.13.0 [View](https://github.com/esatterwhite/skyring/commit/cd159d375c7b1fd9dc9ce55ea368f5a8b1b9e400)
+* Extract assertRetryLimitOnSubChannel function from client_test.js [View](https://github.com/esatterwhite/skyring/commit/372452043373248158793b372a38e8b1e84b693c)
+* Use 0 retryLimit for protocol calls [View](https://github.com/esatterwhite/skyring/commit/bbc0bf67537f283e4da0e340fa26f1379e2ea663)
+* rename sendPingReq into sendPingReqs [View](https://github.com/esatterwhite/skyring/commit/372d6c767eb685f47ff92dda2214594f1efb1c26)
+* 10.13.0-alpha [View](https://github.com/esatterwhite/skyring/commit/76cd366ce8fe1ca3d82a4d2ee0895462ce9b03d8)
+* 10.12.5-0 [View](https://github.com/esatterwhite/skyring/commit/b0f967fcc75f2911a30142e46527a156718d3832)
+* Disable interactive mode if stdin is not available [View](https://github.com/esatterwhite/skyring/commit/059037eb2213d1071e74e7bf3f24dfdfc3e89ba3)
+* Log membership and ring checksum computed events: [View](https://github.com/esatterwhite/skyring/commit/9df9d2e64e6d93c116479bd4b140724cbcc0fccc)
+* Duplicate logger assignment [View](https://github.com/esatterwhite/skyring/commit/b91a2dbeba9b9cfe6610eba16bd57feac69b34ad)
+* Add options for interface/port in tick-cluster [View](https://github.com/esatterwhite/skyring/commit/a085532d860c4e0b38952199cc0691a7e90ea884)
+* For module loggers, use info method for debug level [View](https://github.com/esatterwhite/skyring/commit/1492cc294dd25960ca7d6e686e8b094d2a01317e)
+* A couple quick cleanups for LoggerFactory [View](https://github.com/esatterwhite/skyring/commit/61cd5103635f58d4209f65e43d6890cccc038df4)
+* Last minute fixes; slow down decay, add more descriptive logging, make sure to check damped limits before damping member [View](https://github.com/esatterwhite/skyring/commit/0198047dd83dc0568c705f39fc09c40a5ed50da1)
+* Address Nils' and Ben's PR feedback; better event names [View](https://github.com/esatterwhite/skyring/commit/67d4e4116385e5df3be6244fc9d4d44c5dc0d756)
+* Address Ben's PR feedback; get rid of extraneous flag to control damp and expiration timers [View](https://github.com/esatterwhite/skyring/commit/4ac9af51fd2bf9fc33ebbf9cccd6c552bb964c34)
+* Address Ben's PR feedback; renamed membership events with Damping prefix [View](https://github.com/esatterwhite/skyring/commit/4fdc72409f8137faac0f77add72144e3036c1d23)
+* Address Ben's PR feedback; fix typo in comment [View](https://github.com/esatterwhite/skyring/commit/3f6f7443474ce9b7a30b9bcb2a754b36def9c7cb)
+* Address Ben's PR feedback; simplify collectDampScores() [View](https://github.com/esatterwhite/skyring/commit/bd181a8df8bc522e371d31d161d773d5f0e57e38)
+* Address Ben's PR feedback; comment above ReusableEvent [View](https://github.com/esatterwhite/skyring/commit/8407cac3a935fd49ed60f662368b9eb11963847c)
+* Address Ben's PR feedback; give return its own line [View](https://github.com/esatterwhite/skyring/commit/a7a382c8d7e4b3d9298a4911ea32abc485cf63f7)
+* Address Ben's PR feedback; self.Date.now() [View](https://github.com/esatterwhite/skyring/commit/18f7d1bb0c386d50bcf34904155a58cff1e1c72e)
+* Address Ben's PR feedback; better name for fanout callback [View](https://github.com/esatterwhite/skyring/commit/eb77144c37ea7335ea9bb46bedee6f408776fef3)
+* Address Ben's PR feedback; at least error log level [View](https://github.com/esatterwhite/skyring/commit/ed088c39d6a5640f0fe3a95912293de1dbb837c8)
+* A few odds and ends; more logging, a timeout, and a bad merge [View](https://github.com/esatterwhite/skyring/commit/0efa2203479da7739a10c6111fe9f2d29fcef44e)
+* Address Nils' PR feedback; use flag to control start/stop of expiration timer [View](https://github.com/esatterwhite/skyring/commit/48084e7be299d5062876fbd911ec8ffab86b61c5)
+* Address Nils' feedback; do not stringify res for debug logging [View](https://github.com/esatterwhite/skyring/commit/12b56965bfcc43454bbaa6b012b5aaf2f84fe04d)
+* Address Nils' feedback; use key instead [View](https://github.com/esatterwhite/skyring/commit/f6cf6b9724b6fdb652b49059bdfe66157f1e8d34)
+* Damping subprotocol [View](https://github.com/esatterwhite/skyring/commit/b32718765633e16ff062cf77913ca7a7298f4a21)
+* Don't disseminate join list [View](https://github.com/esatterwhite/skyring/commit/286e5d9d36dcf7217560392644563c39fc6f5b1f)
+* If a node gets a join request, it no longer adds the joining node to the membership. A node is therefore expected to disseminate its own existence to the membership. [View](https://github.com/esatterwhite/skyring/commit/329ba376b7b11f809f088cdee34924eaab575c91)
+* 10.12.4 [View](https://github.com/esatterwhite/skyring/commit/59d49e986ba7337515efcbc896d9304d741cb24b)
+* Specify trace param to TChannel makeSubChannel [View](https://github.com/esatterwhite/skyring/commit/9c1fb1561cbe1b750983439ac18c371e4b5255c6)
+* Change "their" to "its" [View](https://github.com/esatterwhite/skyring/commit/3ba3ca79ba8183d25c72024e499e7ac5fd9cb243)
+* Check for subChannel and topChannel [View](https://github.com/esatterwhite/skyring/commit/ea866f6590a0a5f3c6a7724459871b3d5912f50e)
+* Check whether topChannel is destroyed too [View](https://github.com/esatterwhite/skyring/commit/9954fa5089a49cb8d4a597fc40e40535d0284c62)
+* Bug fix for flappy test having to do with talking to TChannel when destroyed [View](https://github.com/esatterwhite/skyring/commit/7a2bea942b3e222ff6ad8a74079e0229d22d5b11)
+* 10.12.3 [View](https://github.com/esatterwhite/skyring/commit/c140c017c280b2f9ed50979e945e9e3b9e62a50d)
+* 10.12.2 [View](https://github.com/esatterwhite/skyring/commit/edb125a72cf40dda873104370f35d464093663e9)
+* Stat for lookup timing [View](https://github.com/esatterwhite/skyring/commit/795f3c70d898b56d3ea88c9862b17f7814a721ee)
+* Stat to track refuted updates by local member [View](https://github.com/esatterwhite/skyring/commit/ba3b2dc26a87da29fc9d318d0b68ec62f02ad8e4)
+* No version bump; hey, howd that get there [View](https://github.com/esatterwhite/skyring/commit/2659ce04f18e09a51aeb33f9cb17fbd608b28b2d)
+* Send ring.changed stat [View](https://github.com/esatterwhite/skyring/commit/59ff7894104e85138805280568051f7c4e4e92c6)
+* 10.12.2 [View](https://github.com/esatterwhite/skyring/commit/61160da24577f53a99688143daec79298be57fb3)
+* Add a damping logger for flap damping logging [View](https://github.com/esatterwhite/skyring/commit/1e840a42d32574af03c3ee17c2d630d69dd0fbe7)
+* Address Nils' PR feedback; initialize isPinging [View](https://github.com/esatterwhite/skyring/commit/d054e39f06ff8b5786bcb9e43d4ea48f50ae966d)
+* Use the correct isPinging flags [View](https://github.com/esatterwhite/skyring/commit/c67389c54252d9343cef1b0f527efd5f3c52df91)
+* 10.12.1 [View](https://github.com/esatterwhite/skyring/commit/7e8db00255c0b78a4a2d9f595ea5ae7e3232d8ec)
+* Ingress/egress counters [View](https://github.com/esatterwhite/skyring/commit/082c645f598fb6eda00dbaf1777b6cba558de434)
+* Add an inflight 0 ingress tests for posterity [View](https://github.com/esatterwhite/skyring/commit/ad16f10f7485585d45f24f796ed430c3772eca40)
+* 10.12.0 [View](https://github.com/esatterwhite/skyring/commit/bb63bf2c6c3ad4e6958e6df31b0767951d8c7677)
+* Backpressure based on number of inflight requests and event loop lag [View](https://github.com/esatterwhite/skyring/commit/617f43b70dc6445e66a5f3d6e6b16b817cbf4b17)
+* 10.11.0 [View](https://github.com/esatterwhite/skyring/commit/34cc63eae52d0a7279751da2ef0048423683f020)
+* Update /admin/debug/clear with new logging semantics [View](https://github.com/esatterwhite/skyring/commit/209c9ea1c2244e83900f8a6a1f62261a85d432ae)
+* Address Ben's PR feedback; change name of logger too [View](https://github.com/esatterwhite/skyring/commit/256a8e2728ed1b49f49783bc1b8e0508fd551c28)
+* Address Ben's PR feedback; renamed joinerLogLevel to joinLogLevel [View](https://github.com/esatterwhite/skyring/commit/a59f2647b8ce45028d066836d2012208fb1f4258)
+* Configurable module loggers [View](https://github.com/esatterwhite/skyring/commit/49476ed424e291eb993b0a049f49f59579186978)
+* 10.10.3 [View](https://github.com/esatterwhite/skyring/commit/22d4e8b037807c5a43f3ae67f3f44e49180ea614)
+* tick-cluster setting debug flags was broken [View](https://github.com/esatterwhite/skyring/commit/f6a25beb52379cd2d8791741b42a7540f357f970)
+* Fix missing shebang in main.js [View](https://github.com/esatterwhite/skyring/commit/0144e0944e21f1782aa7c90993e0a3d3cf545d7b)
+* Stat number of retries performed during join process [View](https://github.com/esatterwhite/skyring/commit/ba75d5012d060dc9fea1b78a3e583b15613dede1)
+* 10.10.2 [View](https://github.com/esatterwhite/skyring/commit/c3a91544d6a293992fae977dc4e7fd29eef2d9eb)
+* Track number of inflight forwarded requests [View](https://github.com/esatterwhite/skyring/commit/2d74827fdb87f0603dd041233a47b449b13ed278)
+* 10.10.1 [View](https://github.com/esatterwhite/skyring/commit/e2ce3e4232b1f1acc9233b8f99d3ab567b532c2a)
+* Changed join log line to debug from info [View](https://github.com/esatterwhite/skyring/commit/d5c9cd80157fd2a0a8dc0678911254ec58c56399)
+* Fix npm run test-integration [View](https://github.com/esatterwhite/skyring/commit/708008bd543280beaef17387f09dddc225fd86da)
+* 10.10.0 [View](https://github.com/esatterwhite/skyring/commit/24c983f645d063da3f12f6ab7a5b776a4a31e509)
+* Bad merge [View](https://github.com/esatterwhite/skyring/commit/d6c44e372fe5eeef9afe8cfcc891700f9462f71a)
+* Ben's PR feedback; comment correction [View](https://github.com/esatterwhite/skyring/commit/ff98092201e5cdd4dd65c0619a938f26894f52a8)
+* Add a comment to delay computation [View](https://github.com/esatterwhite/skyring/commit/548d86fbf49f6185e8226573b8ab886c7dd2fec2)
+* Make error logging configurable [View](https://github.com/esatterwhite/skyring/commit/ba045db46433ef654b50e4eaa2d48179ed22401f)
+* Add fuzz to backoff; adapt tests to changes [View](https://github.com/esatterwhite/skyring/commit/3e5f8a9426ba914b09eb61c48a991e783a4410e1)
+* Join duration w/ backoff [View](https://github.com/esatterwhite/skyring/commit/568a68dba48c9596ea152267d9f4a642f111aa0e)
+* 10.9.10 [View](https://github.com/esatterwhite/skyring/commit/3ded16c2465dd7fc2c2c5257befbf98628dba8f1)
+* Get rid of accidentally committed file [View](https://github.com/esatterwhite/skyring/commit/a8b78a980f8a127afec58a49703dabb60d699f1c)
+* Get rid of debug flags [View](https://github.com/esatterwhite/skyring/commit/aadb520349d3b93ae6704d5c996e369bd695a2b6)
+* 10.9.9 [View](https://github.com/esatterwhite/skyring/commit/34cb9e70a3f35ce9b9268530abd2b57af90000c6)
+* Disable membership update rollup reporting by default [View](https://github.com/esatterwhite/skyring/commit/4b302ec30f8ad24cbabcc241fb2652d5a163d927)
+* Leader election and key value examples with README [View](https://github.com/esatterwhite/skyring/commit/de2648ffdcd9c21bd920e22984b545db5c35cf17)
+* 10.9.8 [View](https://github.com/esatterwhite/skyring/commit/433774e64537e9519d0a091982c5273e2bc7b828)
+* Migration notes for v10.9.7 [View](https://github.com/esatterwhite/skyring/commit/06fb9baa266a8fee3a729290f7e522ad9556b256)
+* 10.9.7 [View](https://github.com/esatterwhite/skyring/commit/16c8ddba2a787b99ab44bcfefbdf5359a7e12215)
+* Build payload dynamically [View](https://github.com/esatterwhite/skyring/commit/28a45e28508434d4ef764dea5c011857a59d8ea3)
+* Fix for when res2 is nothing [View](https://github.com/esatterwhite/skyring/commit/f029d0b4d8c712d51ff56f25d819292335c4c41e)
+* Fixed stuck HTTP requests by converting String to Buffer before passing back to TChannel. [View](https://github.com/esatterwhite/skyring/commit/5a0dcd7bad1a53dda428ceeb4c28e64d6619de50)
+* Emit event from actual Ring; forward elsewhere [View](https://github.com/esatterwhite/skyring/commit/e4c5ec95bb640a88e8a7e9221eb77a6c4cb45d4f)
+* Wrong path to ./ring/events [View](https://github.com/esatterwhite/skyring/commit/7e01974fb4eb30e70c3a90a669c572be6acebe8f)
+* Renamed back; fixed test [View](https://github.com/esatterwhite/skyring/commit/0e716b95992b4004df20b64d7dc877ccb9cf7f43)
+* Missed a place in the rename from added to adding [View](https://github.com/esatterwhite/skyring/commit/f8064a2a9fbe9b22970d2b5fe34a801759129227)
+* Add ring event types [View](https://github.com/esatterwhite/skyring/commit/6265f6ed464da8b85674ea141a78395077dedaca)
+* Share arrays of added and removed addresses on ringChanged [View](https://github.com/esatterwhite/skyring/commit/6d8ca77fa9c8c0f9b36b34f7fc25433e4a5407d6)
+* Return an error when `key` is not in body. [View](https://github.com/esatterwhite/skyring/commit/6bf0408260ed3090c87a4e780c4712d97ef56488)
+* Parse the key from the body of /admin/lookup. [View](https://github.com/esatterwhite/skyring/commit/0473b9bf97a230eaa7ee28a925070f9769b12a13)
+* Add option to ringpop for cross platform mode, [View](https://github.com/esatterwhite/skyring/commit/39908b7224129642b68b56071d824cad2c9b6ef6)
+* Use fingerprint32 over hash32. [View](https://github.com/esatterwhite/skyring/commit/ad3111bede0c3f1440f323751f842689401f36a5)
+* add tracing docs, and fix actual event struct [View](https://github.com/esatterwhite/skyring/commit/abc87497e5fe95b6927a5062f3f49ab5a00d381f)
+* Address Ben's feedback; set Member id upon instantiation; no getId [View](https://github.com/esatterwhite/skyring/commit/256ac15c1255d27bda7fd305dac23784c31fb262)
+* Squash logData [View](https://github.com/esatterwhite/skyring/commit/7ed67e9f639341a1f859c3da394981008dd69dd5)
+* Ben's feedback; no baseupdate [View](https://github.com/esatterwhite/skyring/commit/ddcb13ff7bbedb0358dce1a8e82213b82f41c4e2)
+* Address Ben's feedback; remove defensiveness [View](https://github.com/esatterwhite/skyring/commit/f679fc5e83d9c57253f2b88bd7c953b3c5a053c2)
+* 10.9.6 [View](https://github.com/esatterwhite/skyring/commit/0f1a459faf8731f588dda756dd4ff0111b7fb586)
+* And a test [View](https://github.com/esatterwhite/skyring/commit/f9a1557d7eda58ee86b1c1f9a50a359c8495a99f)
+* Add a comment clarifying removeListener [View](https://github.com/esatterwhite/skyring/commit/4910763edd69ad7311bd594af342780cd3877e14)
+* 10.9.5 [View](https://github.com/esatterwhite/skyring/commit/198fa846ea6a8d40337c0e4dacdffd0fffed1339)
+* Incorrectly spelled config for damp scoring [View](https://github.com/esatterwhite/skyring/commit/2e9becf7c669c5928496fcb32e87e3e5cacb5e3c)
+* 10.9.4 [View](https://github.com/esatterwhite/skyring/commit/3e69603cc93e411280d147a681f3f82aa0c31f2b)
+* Listen to Ben, he knows things. Stop being defensive [View](https://github.com/esatterwhite/skyring/commit/4b7a0cde0fc5d235ba92417aee8ed60fb21a3996)
+* Permit alternate ring implementation [View](https://github.com/esatterwhite/skyring/commit/98bd2ffc4f5d52bcf4684dc83efead3b1cb9337b)
+* Address Ben's feedback; codify leave [View](https://github.com/esatterwhite/skyring/commit/31ab59b4e3391d4af746c23e15990828088ef958)
+* Make central location for handling events from major modules like ring and membership [View](https://github.com/esatterwhite/skyring/commit/dc4426d10d9b4fba15735a39d9a2f0ce5e6052bd)
+* Move ring files into ring dir [View](https://github.com/esatterwhite/skyring/commit/c151ec324c924df7ee98d5ed91ac2b751a879d9a)
+* Rename swim dir to gossip [View](https://github.com/esatterwhite/skyring/commit/2d7975e8c46e9f520454ccd46d4f4923c4580113)
+* Make better sense out of the organization of the test suite [View](https://github.com/esatterwhite/skyring/commit/7a8d63126c808bb1bc7aa4c30f291a1364888afd)
+* Add membership update types [View](https://github.com/esatterwhite/skyring/commit/42a55151090d9ff18c28f89307961d75f44f2fb6)
+* Make _issueAt part of prototype [View](https://github.com/esatterwhite/skyring/commit/6d715459893cce5bb24899b7a8d3e929b618ac38)
+* Remove listener after evaluating update to prevent leaking listeners [View](https://github.com/esatterwhite/skyring/commit/bf1dbce1f213aefbb433309db5431ac3eb79d785)
+* 10.9.3 [View](https://github.com/esatterwhite/skyring/commit/de4a510fdc3d5ccbaceb4556658ab14ee680a92c)
+* Destroy client [View](https://github.com/esatterwhite/skyring/commit/0c5f95fd49035ddd2758c793805183745f7abe04)
+* Update gossip/suspicion after local member leave using event-based approach [View](https://github.com/esatterwhite/skyring/commit/5f3a681e727cf5874029ef1f49a62bdabf9c818d)
+* Get rid of TODO in dissemination module; it's done [View](https://github.com/esatterwhite/skyring/commit/6bb23adf4e756d221c6c04e92b983133cb6fb324)
+* Consolidate member related admin endpoints [View](https://github.com/esatterwhite/skyring/commit/0df9a27965a2c51d2ddd6c2c54c69f7d015f7119)
+* 10.9.2 [View](https://github.com/esatterwhite/skyring/commit/139146022a0c143174089387bccef21f90e49ce3)
+* Update w/ a better intro and example [View](https://github.com/esatterwhite/skyring/commit/ac7ea012f475d8c5ad7cd125cd795aea5c80c2ce)
+* 10.9.1 [View](https://github.com/esatterwhite/skyring/commit/308af3658facc1bfadf248d87b6958df6550f1d3)
+* An introduction to the Running Ringpop section [View](https://github.com/esatterwhite/skyring/commit/83f48abe319263ffded6f8583c16d79de1a8f08d)
+* Wrapped up Getting Started section of documentation [View](https://github.com/esatterwhite/skyring/commit/426c98adf5650b2e308972a94d2b01752146df1b)
+* Updated What is Ringpop section of Getting Started page [View](https://github.com/esatterwhite/skyring/commit/8b44cae12811f9613cb8456f14ae0fef8c0363b4)
+* Updated introduction to documentation index [View](https://github.com/esatterwhite/skyring/commit/ef2c3387b4ca27001b1de4a3613d1b434ed4d264)
+* An /admin/gossip/status endpoint [View](https://github.com/esatterwhite/skyring/commit/77ebf044e3b97f51bb08084f2361a7d35f74b7b1)
+* Get rid of the dreadful pingMemberNow; make tick() part of gossip [View](https://github.com/esatterwhite/skyring/commit/50dccb1843d6bc4362d15a511187b53b45b73022)
+* Client can make use of subChannel passed into constructor [View](https://github.com/esatterwhite/skyring/commit/1e1b4a5185a2fa208cfea2e1df6330827f8efb7b)
+* Add a space [View](https://github.com/esatterwhite/skyring/commit/6bf6cce7593820e4f1f6019998ea58011c5df185)
+* Renamed legacy name RingPopTChannel to RingpopServer [View](https://github.com/esatterwhite/skyring/commit/47901afbfa7b0e8e652b2c172f192f9060ee2ec6)
+* Update main.js after TChannel breaking (?) changes [View](https://github.com/esatterwhite/skyring/commit/84ca2a54cc9c4372568907b4ad4785ca65704ac9)
+* Reduce prototype footprint; de-extract validateProps [View](https://github.com/esatterwhite/skyring/commit/f4a53c450c3c7d727d23c2fea427573e92557a1d)
+* Add Member::getId [View](https://github.com/esatterwhite/skyring/commit/13d9a9d6820d16a138519f563c46c11645a67eec)
+* 10.9.0 [View](https://github.com/esatterwhite/skyring/commit/79920f53b1006ae77eb868c29fc784f933f6fd6e)
+* A unit test [View](https://github.com/esatterwhite/skyring/commit/514747e24b9665052f0364581f6d67f8f8b3aac5)
+* Get rid of a function off Ringpop prototype [View](https://github.com/esatterwhite/skyring/commit/e8fd49470ed1e726296808a1d285b29463854054)
+* Integration test [View](https://github.com/esatterwhite/skyring/commit/d862bdb64afb811abf3a56e63f2a0a4850e07f12)
+* /admin/gossip/start, stop tick endpoints; tests still to come [View](https://github.com/esatterwhite/skyring/commit/e37c1cf6837a68052b7219d346634ec63c2ab42d)
+* 10.8.1 [View](https://github.com/esatterwhite/skyring/commit/01e8c47468dfeb9d88a96fd8d98ead094d12c76c)
+* review comment: set destroyed at the end of destroy function [View](https://github.com/esatterwhite/skyring/commit/6e607ceab13d7a3c03940b0f53b520ed8018585a)
+* emit destroying message right before ringpop is destroyed [View](https://github.com/esatterwhite/skyring/commit/b52051a4791636c82d7dc46a5899bdad51a84dad)
+* Fix typos in docs sample code [View](https://github.com/esatterwhite/skyring/commit/ce260bcd6e8eeb154f62a32445cd595f9dabbb22)
+* Qualify code blocks with js specified; install specific version [View](https://github.com/esatterwhite/skyring/commit/41a55ad95e4bb82bc151ab2ebe4d8a613a2cf8d4)
+* Better comments [View](https://github.com/esatterwhite/skyring/commit/53f4467e8f8ebf6950cf4d6d0aa7ecbacc7b987c)
+* Document how to use Ringpop in an application with walk-through and sample app [View](https://github.com/esatterwhite/skyring/commit/d05880334804faf25682a2c7dd4b3c53f40f1520)
+* 10.8.0 [View](https://github.com/esatterwhite/skyring/commit/f17ffb00d3640c1ccfa89589baaba12ca06898ce)
+* fix tchannel usage, call listen only on root [View](https://github.com/esatterwhite/skyring/commit/2fa94bb9255e834285954aeed38c0c3a268f36f0)
+* add event trace feature, via tchannel or log [View](https://github.com/esatterwhite/skyring/commit/038b022751a18dc8afa0beeac7018111f31aeb10)
+* 10.7.1 [View](https://github.com/esatterwhite/skyring/commit/467a7e67f8ec6e3de0de67d42e4cdc74abb14199)
+* allow 2-node clusters to split and rejoin [View](https://github.com/esatterwhite/skyring/commit/023c061d6abe78388ac72652396c68f45c9b939c)
+* 10.7.0 [View](https://github.com/esatterwhite/skyring/commit/bc0357f72628ea3491a3b806a0999f31f69f66ca)
+* Mark's PR feedback; unused _ [View](https://github.com/esatterwhite/skyring/commit/fc393b108dd8075485b4dfb8eee2bb39eda3d3ec)
+* Mark's PR feedback; use some [View](https://github.com/esatterwhite/skyring/commit/3dd2b4b9982e84c42c88d61e92eeb7872cd36ced)
+* 10.6.1 [View](https://github.com/esatterwhite/skyring/commit/80c43e76e93954cdfe65edfd73f618929f3823e7)
+* Allow body limit to be specified for large object payloads [View](https://github.com/esatterwhite/skyring/commit/498f91dfc28c2bbc23479254f14142ad9e6cf18f)
+* A note about v10.5 migration [View](https://github.com/esatterwhite/skyring/commit/68bb39275149430ce4a0eeae03cf922b3442271a)
+* No need to specify TChannel host/port, yet [View](https://github.com/esatterwhite/skyring/commit/5c20b4fcdbd65c73420d67df5559dd500eb1a316)
+* And an integration test [View](https://github.com/esatterwhite/skyring/commit/af9bc2f75d947fbb5825c9abfcfec3c8b93346d1)
+* Get dat test coverage [View](https://github.com/esatterwhite/skyring/commit/1b7a589d5d03843d8c52109084f89b81f64e585c)
+* /admin/config/set and /admin/config/get endpoints [View](https://github.com/esatterwhite/skyring/commit/8591ff71dc43684ef321db295ade5d89953df616)
+* Pre-PR feedback from Ben; joinBlacklist -> memberBlacklist [View](https://github.com/esatterwhite/skyring/commit/9909973da5e64bd19cecb7d35f6566a472c9720c)
+* And an integration test [View](https://github.com/esatterwhite/skyring/commit/0f89c0eb1f47f28301a18a1b2b8af393380289cd)
+* Join blacklist to prevent unintended hosts from joining cluster [View](https://github.com/esatterwhite/skyring/commit/46b0277e60b2948e54fef61779225adb6d6ed0db)
+* Add checksum to ring stats [View](https://github.com/esatterwhite/skyring/commit/44a8fcd905c3c594edeae671406ab1d041446803)
+* fix travis build link on README [View](https://github.com/esatterwhite/skyring/commit/6f616265967c678580d16d447d218199e843144c)
+* 10.6.0 [View](https://github.com/esatterwhite/skyring/commit/19fa0d0663967cc58078d2c62aedfcc97d7d9678)
+* Add make-* stats [View](https://github.com/esatterwhite/skyring/commit/e8780ae236ae7a529f51df7ce6ce4f2aad232cd8)
+* Updated link to Travis [View](https://github.com/esatterwhite/skyring/commit/3978f932102d7cdbd5bfdc7f624e2e2a472493d8)
+* Update README to say ringpop-node [View](https://github.com/esatterwhite/skyring/commit/b6162720ae64f699785a18f35333433147cb6233)
+* A few more details added to the MIGRATION guide [View](https://github.com/esatterwhite/skyring/commit/3aa0cc12ac15925d9de9fb68657cfa0edb4d394e)
+* A note on MIGRATION [View](https://github.com/esatterwhite/skyring/commit/92cdcbbb48d3f3fd2482b3adee7e32f645ba5cd0)
+* 10.5.0 [View](https://github.com/esatterwhite/skyring/commit/57144d1a44f62bf51fb0ccaebc3fea2cc01ddff5)
+* Upgrade tchannel devDependency to 2.7.1-alpha [View](https://github.com/esatterwhite/skyring/commit/851da62dc366700dcbcc1114525fb0f7b2c4ca45)
+* Ben's feedback; use numOrDefault [View](https://github.com/esatterwhite/skyring/commit/bd26d18ce10b4f264d77439be9574a164bc61c42)
+* Ben's feedback; config updated -> set [View](https://github.com/esatterwhite/skyring/commit/4d8c8999f1cc8df6fbba9f496d2ea183f8c46ae1)
+* 10.4.0 [View](https://github.com/esatterwhite/skyring/commit/fca3951781fd317df833856fc149736348b0e3d7)
+* Removed some blank lines [View](https://github.com/esatterwhite/skyring/commit/120ed0a0db224e32d40f584e04a999d236980818)
+* add a skipLookupOnRetry request opt [View](https://github.com/esatterwhite/skyring/commit/0693619415287da4b6188c1664bfa041d32a7df4)
+* Add dampScore back into member stats [View](https://github.com/esatterwhite/skyring/commit/1ba4fc98a0f99ec7fb86185460efb57e69ee29d3)
+* Flap damp scoring [View](https://github.com/esatterwhite/skyring/commit/d40f817a0e41af8abafd91de6bfa9f0a3bcdf776)
+* Bump the TChannel dev dep [View](https://github.com/esatterwhite/skyring/commit/11169fe4719ee1f75b598e01dfd2a188e2374be5)
+* RingpopHandler: update RelayRequest usage for TChannel 2.7.0 [View](https://github.com/esatterwhite/skyring/commit/e5ea01f9ad948cb71d5e6fc9f73e979f9ac5fddb)
+* Do the same with protocol and proxy/health handlers [View](https://github.com/esatterwhite/skyring/commit/274c0bad740c9fe0ebfe8591fe547e3043a88efb)
+* Address Ben's PR feedback; rename handler functions for easier debuggability [View](https://github.com/esatterwhite/skyring/commit/0ccffcc14e626f65fadcc6e9cf85591c4e35a3d8)
+* Move admin handler to their own dir [View](https://github.com/esatterwhite/skyring/commit/a20ae4f720b948df1734e1842fba01d0dbbb5d27)
+* Beef up the Member class [View](https://github.com/esatterwhite/skyring/commit/6d44507cad9901151ceb6dfb24782bcef4e96f31)
+* Move membership related files into membership dir [View](https://github.com/esatterwhite/skyring/commit/f689174a60b29ff8db5800bc596a140c9a1a8abd)
+* All sorts of leaky tests weren't properly cleaning up their Ringpop dependency [View](https://github.com/esatterwhite/skyring/commit/2962f8a827b303365d67ee0317dd45ab95df01cf)
+* Run integration tests [View](https://github.com/esatterwhite/skyring/commit/f9c5dfd91c1a5d0a0eaa5f062a76551fe128116f)
+* 10.3.2 [View](https://github.com/esatterwhite/skyring/commit/c6f188a92d0c9f852f2069155e3a62cdc9725818)
+* Remove MemberUpdate class [View](https://github.com/esatterwhite/skyring/commit/73d554d56d162e0a4deb34ddfe83469b9447192b)
+* Remove readable-stream dep [View](https://github.com/esatterwhite/skyring/commit/80dc2204d9c1ea4f14b7f3c5a271bc7ca804a232)
+* 10.3.1 [View](https://github.com/esatterwhite/skyring/commit/f57d1844916e4fcc81b608178d26626ac2895966)
+* Close all peer connections to trigger socket closed response [View](https://github.com/esatterwhite/skyring/commit/9702142dac0b304bc64aeea48a97709f1732fb71)
+* 10.3.0 [View](https://github.com/esatterwhite/skyring/commit/eb69511b85bddda1708a17f51b8b4be25167dfb7)
+* add a resolveHost method [View](https://github.com/esatterwhite/skyring/commit/1bb7a4bb9f7d9023c256665d64520efa50ac6947)
+* add more logging context [View](https://github.com/esatterwhite/skyring/commit/cf2c9d8150e3d3b7a7f43a7ad103f75e2780f032)
+* get 100% code coverage with tests [View](https://github.com/esatterwhite/skyring/commit/c93f2b66d17c7a4a2daac095da35f80e2746e4e6)
+* add an example for RingpopHandler [View](https://github.com/esatterwhite/skyring/commit/57ccec810e499f16600f4ff1aaf9673d8b1b2727)
+* ringpop-handler: Add tchannel proxying implementation [View](https://github.com/esatterwhite/skyring/commit/4a6f606035076c4ae2304fad97911b5ec26526a2)
+* test: listen on top channel only [View](https://github.com/esatterwhite/skyring/commit/141597be72d6b22397138e44a66c854045805b15)
+* test: use a non-ephemeral port for random ports [View](https://github.com/esatterwhite/skyring/commit/8451daeac14dfb18efe932e751774e8e86e3f6c8)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/766b68ae8de4b232df357f08548370ff6c8f70fa)
+* Copy/pasta bug in stat name [View](https://github.com/esatterwhite/skyring/commit/21eca11ad80efe201af46b4d50606b6431846cd3)
+* Upgrade tchannel devDependency [View](https://github.com/esatterwhite/skyring/commit/3450d95208f5fada8d65febf6d384e64fb3b65ce)
+* 10.2.0 [View](https://github.com/esatterwhite/skyring/commit/29da97a34bdc2c787a6faf63d77eee2b4ae89b70)
+* put enforceConsistency default value in RequestProxy [View](https://github.com/esatterwhite/skyring/commit/5173a204daa2278f0fa753f8985dd7265b97917c)
+* update doc to current way to run tickcluster to spawn generic programs [View](https://github.com/esatterwhite/skyring/commit/68a48d7a9080f9414908d32fb117919c0c32af8c)
+* not to expose membership functions [View](https://github.com/esatterwhite/skyring/commit/eb69f2cb30ea00a7047a61e1324b4d58841ec3fe)
+* benchmark convergence time [View](https://github.com/esatterwhite/skyring/commit/af5c306db5b839e08ad43481c0e23b93cf24325f)
+* add option to allow inconsistency in request proxy [View](https://github.com/esatterwhite/skyring/commit/2a1b33b5eea88484ccb63f53ac5e37e84d39c39a)
+* Cleanup: spaces in between if and ( [View](https://github.com/esatterwhite/skyring/commit/422bc9b13be2521c7787c441cd4fa6ebf930b65f)
+* Final cleanup of generic tick-cluster [View](https://github.com/esatterwhite/skyring/commit/ce5429f290c61f974b90aa6a5c312a90635cd176)
+* spawn generic ringpop processes (binaries or via interpreter) [View](https://github.com/esatterwhite/skyring/commit/82c2f5b04ac9bf9205a1806275fab78d43da57df)
+* Fixed typo in recent docs/index commit [View](https://github.com/esatterwhite/skyring/commit/a0c24008de21359a5adbf22e4e81aa77440957a5)
+* A reference to the Getting Started section in docs index [View](https://github.com/esatterwhite/skyring/commit/d36efd8521202901984cea0840934bb2b7cff2c0)
+* Refer to readthedocs for all documentation [View](https://github.com/esatterwhite/skyring/commit/a0fb94428f97f806767dfd535d20eff3da3d5a35)
+* "Learning" to "Learn." [View](https://github.com/esatterwhite/skyring/commit/d89654632419e17e952c71b06048179c912bad51)
+* Removed empty glossary entries [View](https://github.com/esatterwhite/skyring/commit/abcb50407716826fad30a2b2a2ef9d30cb5c4b0b)
+* Update running_ringpop.md [View](https://github.com/esatterwhite/skyring/commit/427c76320b79ad4caad3300a122245814d43516d)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/bc029176221b4346d0dedf813877a17fe7da364b)
+* Update running_ringpop.md [View](https://github.com/esatterwhite/skyring/commit/e59d0b74b7a64837df720abf55e254fa7d84de57)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/30e9c4d161636b01fb75c2de9cc6e36fe7a02677)
+* Cleaned up language. [View](https://github.com/esatterwhite/skyring/commit/de3c9cd158ea0bd32264e141f6ee5bbe3d5406fc)
+* Fixed farm hash formatting. [View](https://github.com/esatterwhite/skyring/commit/26a3c4e142d039f0dce6a242e995daf8f3d93b5e)
+* Copy edits and formatting changes. [View](https://github.com/esatterwhite/skyring/commit/7b185cae2140a971359f0f1d69d7ca51ae591188)
+* Update running_ringpop.md [View](https://github.com/esatterwhite/skyring/commit/1a69f4a6121114281b4788ff5b06acbd1e488af7)
+* Moar monospace [View](https://github.com/esatterwhite/skyring/commit/3947de12d2daf34c23ad4eb8174df87cd69c4491)
+* Monospaced tick-cluster [View](https://github.com/esatterwhite/skyring/commit/6463f8d8aee70494cbfa503534630f25b1c2fe81)
+* Corrected a spelling mistake. [View](https://github.com/esatterwhite/skyring/commit/c9fe971daa48dd393134c810df9af3fe68748c48)
+* Light copy edits. [View](https://github.com/esatterwhite/skyring/commit/2ab74bed2766e67b9dcc56e7fa61e487f3152e48)
+* Update getting_started.md [View](https://github.com/esatterwhite/skyring/commit/dde09748b69388c0cf6f3234821931ede3065465)
+* Added to paper section. [View](https://github.com/esatterwhite/skyring/commit/bfd4921c7ae8ae151ecb4375e8e64dee1bad12a6)
+* Removed a duplicate paragraph. [View](https://github.com/esatterwhite/skyring/commit/7d4da3de4f2252a6ebe3070675a36c9284c28b80)
+* Added License section [View](https://github.com/esatterwhite/skyring/commit/086e443c7e279c4a13b38f2f71497b729a9cac96)
+* Update references.md [View](https://github.com/esatterwhite/skyring/commit/b57824c1164b149e2360c89791bf49c82f4927b2)
+* Added intro text and added Papers section. [View](https://github.com/esatterwhite/skyring/commit/b41293d2e1bc07eb24dacadf66e8a1d7472ac8f6)
+* Added glossary. [View](https://github.com/esatterwhite/skyring/commit/7468cc5be053c324549b905af25c673e7db9e974)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/58a80192a70a2f4cf0d9bc56cdb41a4cc8e76572)
+* Added Extensions section. [View](https://github.com/esatterwhite/skyring/commit/dcf88d5d272d57b1f9a533bb41c56b0139b61c8a)
+* Added TChannel section. [View](https://github.com/esatterwhite/skyring/commit/229d3afa16dddb20801de06fec1ed3a55cc36580)
+* Added Joining a Cluster section [View](https://github.com/esatterwhite/skyring/commit/bea5aba42ed6aae5b325d7c949e177e95c82652f)
+* Added Flap Damping section. [View](https://github.com/esatterwhite/skyring/commit/6a74cdeffceb839bb7d51e31e26e2903411e8856)
+* Added Forwarding section. [View](https://github.com/esatterwhite/skyring/commit/5e1b31cb0761caaece205e482149be74e0c0570b)
+* Added Handle or Forward section. [View](https://github.com/esatterwhite/skyring/commit/53f19b270aace7e9e9496469473d5a2df5b2cf26)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/e3dc0082581460bdef587ccd078399aa80078ddd)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/e9013a4cc428d5bd5dd5a55b00f66e0bd1afa0e1)
+* Update running_ringpop.md [View](https://github.com/esatterwhite/skyring/commit/af5b7a1c1598be666590eb3462b93b9b1a0b918e)
+* Update architecture_design.md [View](https://github.com/esatterwhite/skyring/commit/37f36752f943f15034d670916ed37cdad70043f1)
+* Update getting_started.md [View](https://github.com/esatterwhite/skyring/commit/814b90f17ece0a460c4fa10fb4d6c5be23fe24a4)
+* 10.1.0 [View](https://github.com/esatterwhite/skyring/commit/b7f26ec603c1f595a6d6f522a10188ab85a36f11)
+* lookupN: a function that returns (up to) N unique successor nodes (aka the 'preference list') for a given key [View](https://github.com/esatterwhite/skyring/commit/bb0ce842019435474b638286d7bd16256c6d5042)
+* Better membership update tracking by adding ID to disseminated change [View](https://github.com/esatterwhite/skyring/commit/44cfee4ba79fd8d331ccd31047e221af289947fa)
+* This time badges in markdown [View](https://github.com/esatterwhite/skyring/commit/eeea857ae1e24a722630f0f8c833cb78aeb60403)
+* Build status and doc status in README [View](https://github.com/esatterwhite/skyring/commit/7e6781f75dcc1fb284dc54e45b799fcb753ae938)
+* Transcribed Ringpop documentation outline to readthedocs format [View](https://github.com/esatterwhite/skyring/commit/8f19c5ecfa7365aca1f8dfd1a36a4715615fe23f)
+* Modify table of contents tree in documentation index [View](https://github.com/esatterwhite/skyring/commit/a3adb323e690487e968b10ef072dd3165bbfefbb)
+* Build status in README [View](https://github.com/esatterwhite/skyring/commit/e9668298beff169494dfdcee1ca3b3235a7d169e)
+* conf.py for Sphinx documentation [View](https://github.com/esatterwhite/skyring/commit/e338c169c0d559d73f5b2053ff5f4b2d14ba7cb1)
+* Basic layout for readthedocs [View](https://github.com/esatterwhite/skyring/commit/b481fbe2c8e024e0d946fcd561264cf59fbaaa1d)
+* Upgrade tchannel dev dependency to 2.1.0 [View](https://github.com/esatterwhite/skyring/commit/3d530cfcdb3aa602abe5c981ec284a25925bd4f3)
+* 10.0.0-beta8 [View](https://github.com/esatterwhite/skyring/commit/bd517545bffbbfd9406f07eb34d3db98f1d2bb2c)
+* Add Alex Hauser to contributors [View](https://github.com/esatterwhite/skyring/commit/335ef15691f755e4dddc0d824296ba8ae54b9411)
+* Added TChannel version, Ringpop version, timestamp, and uptime stats to the /admin/stats endpoint [View](https://github.com/esatterwhite/skyring/commit/b7408dfcb06e207a5019f4c0c6b5b8403b2e4279)
+* 10.0.0-beta7 [View](https://github.com/esatterwhite/skyring/commit/9a0a0fa891bc06dc55eb9d316e570c32a23f23af)
+* Introduce membership set time and join time into ringpop bootstrap logging statement [View](https://github.com/esatterwhite/skyring/commit/71448958a10e4f2bf516c6548cfc5fc18a6c4b2d)
+* Set membership as a single changeset after join process completes [View](https://github.com/esatterwhite/skyring/commit/6cee1fb67726428ed3fc7861116e8128909f4bab)
+* Add a server folder and store its handlers there [View](https://github.com/esatterwhite/skyring/commit/fee88f6bfbe4c65562e87ccc08969251547a9022)
+* Update description of package [View](https://github.com/esatterwhite/skyring/commit/aaced2f17d14aece4b58403f6167daf3243b071c)
+* Add wiki link to README [View](https://github.com/esatterwhite/skyring/commit/a4ed585e5f771c80becb200f4f7006846474d50a)
+* Added tests for response merging process [View](https://github.com/esatterwhite/skyring/commit/26fcc032a6589d0d9ad907f884aafe211f8af47a)
+* Exchange checksums in join response for higher performance join response merging [View](https://github.com/esatterwhite/skyring/commit/d4f2a21d401a1e46dab0ee5f176a0e67616575eb)
+* Benchmark for join response merging [View](https://github.com/esatterwhite/skyring/commit/00e653303420a0ada472cdc448662c7c2fe06bba)
+* Aggregate join responses and update membership once after join completes [View](https://github.com/esatterwhite/skyring/commit/a8523838319ccc3861c37fb3a6d8448a68b1e8d5)
+* An even more concise description of ringpop [View](https://github.com/esatterwhite/skyring/commit/ebe24b840904877c64135dd0c055a4e3a167bf1c)
+* Updated README w/ a more concise way of explaining its features [View](https://github.com/esatterwhite/skyring/commit/bf58c00b9a6df7acb78e7a3e1012a412951cad99)
+* 10.0.0-beta6 [View](https://github.com/esatterwhite/skyring/commit/7fdbf7438b1583ff0511da1d79932c6ad9d4c1dc)
+* 10.0.0-beta5 [View](https://github.com/esatterwhite/skyring/commit/504ab954b7096fa47dcff71ebf9ad308eeaded3c)
+* Fix bug introduced in v9.8.14 that mutated order of members after computing checksum [View](https://github.com/esatterwhite/skyring/commit/1a8e8fe30fa1fa5be2d39aa8b53c9e7dd58f0869)
+* 10.0.0-beta4 [View](https://github.com/esatterwhite/skyring/commit/5c4bc20c826264fd8c5ef7469bb19116289d9083)
+* Upgrade tchannel @ 2.0.0 [View](https://github.com/esatterwhite/skyring/commit/03ae5bc72b062399306cf8a103c9cbc347d548a4)
+* 9.8.15 [View](https://github.com/esatterwhite/skyring/commit/f4ff0742102024f0dd151eb53fca719674fa70e6)
+* downgrade normal path message to debug [View](https://github.com/esatterwhite/skyring/commit/7c552f53456be78c0c1ce3c357938429489cff56)
+* Benchmark for adding/removing servers to/from hash ring in bulk [View](https://github.com/esatterwhite/skyring/commit/6a98ea15fded0fda624f407e34c633f798c7c19f)
+* Add/remove servers from ring in batch [View](https://github.com/esatterwhite/skyring/commit/fe8187ed24f531be7b02ae0a6518ce706f6b94d2)
+* 9.8.14 [View](https://github.com/esatterwhite/skyring/commit/e7e6e22c693079c190aca687f440a715a84ed72a)
+* 9.8.13 [View](https://github.com/esatterwhite/skyring/commit/5bc8ff5b0af09fa9304ab13c17bca4a470aaec3e)
+* Quick help menu for tick-cluster [View](https://github.com/esatterwhite/skyring/commit/ce34a062e94a1ef6b97a1d7c636840669b931613)
+* Favor string concatenation over join() [View](https://github.com/esatterwhite/skyring/commit/ea0c2713b37336437686eca5f4c718b03f58e876)
+* Membership compute checksum benchmark [View](https://github.com/esatterwhite/skyring/commit/a7ad86fc54e632f1838aa8d2566358c33313682e)
+* Avoid disseminating redundant changes by filtering out change that originated from source [View](https://github.com/esatterwhite/skyring/commit/05722fdba670c062ee52090a80e4c4ee5bb4542a)
+* 9.8.12 [View](https://github.com/esatterwhite/skyring/commit/4a9373be07904321fa45f035f1c718ec1c7e05b0)
+* Index members by address [View](https://github.com/esatterwhite/skyring/commit/f9b5bc00758a697734461815ba864085d4c1b687)
+* Benchmark for finding member by address [View](https://github.com/esatterwhite/skyring/commit/afdb57fe59fc7355ded667ff5ec46455c760d0f6)
+* 9.8.11 [View](https://github.com/esatterwhite/skyring/commit/1fe440f2078610a49758f45358065c3b8d31dd7d)
+* Have dissemination component subscribe to ringChanged to reduce times piggyback count adjustment is evaluated [View](https://github.com/esatterwhite/skyring/commit/24cea1011d8fef8d9d0ab032cf879ba41942daa3)
+* Benchmark for large membership updates and benchmark runner [View](https://github.com/esatterwhite/skyring/commit/81c375b91beb80f9abda40b3d52fc345e4f95b0d)
+* Emit join timings [View](https://github.com/esatterwhite/skyring/commit/0c16243d5742075322e114806802ee505a3bcd50)
+* 9.8.10 [View](https://github.com/esatterwhite/skyring/commit/91c5dad651f0fec95a620f1c6c1b8c9c30f173cf)
+* Prevent zalgo bomb on bad socket while forwarding request [View](https://github.com/esatterwhite/skyring/commit/7162258f9d15bb904273838ee523395cee908c79)
+* Fix link to SWIM paper [View](https://github.com/esatterwhite/skyring/commit/1de299fb1ee67ce5b22ec8bf512f394dfe6cf486)
+* 9.8.9 [View](https://github.com/esatterwhite/skyring/commit/6a72d818884b66b7724122447ff7972bc6ce238e)
+* Move location of request proxy stats so we get them with or without retries [View](https://github.com/esatterwhite/skyring/commit/6fff7de6bb3c1066d7e938045bf5051b4d98cb6e)
+* Allow parallelism factor for join to be passed through bootstrap() [View](https://github.com/esatterwhite/skyring/commit/d4e2a613a55f02939ea67997abcbe7c99e64369c)
+* 9.8.8 [View](https://github.com/esatterwhite/skyring/commit/9b39be826639f8357709296987c9538156d5658a)
+* Success/failure stats for forwarded requests [View](https://github.com/esatterwhite/skyring/commit/93de3b22dd75b573918d448290c8ea085883e254)
+* Send stat emitted for request proxying [View](https://github.com/esatterwhite/skyring/commit/31c5944b8663de36b1973bff9716e367bb488f19)
+* 9.8.7 [View](https://github.com/esatterwhite/skyring/commit/e88d3a80e2a26167dbba7a18258896ba3fd9681b)
+* remove dynamic log messages [View](https://github.com/esatterwhite/skyring/commit/ae62e5cbbbf0c55ae2c3ce12ec99742dda990411)
+* Dedupe multiple destinations on key lookups after failed proxy [View](https://github.com/esatterwhite/skyring/commit/441a439028ae4361525bb958a33f96d954cf3154)
+* Lookup an arbitrary key over an admin endpoint [View](https://github.com/esatterwhite/skyring/commit/1ce40987dc5c9e5635e6d4d8c21b49fa76c7a331)
+* swim/join: fail the join if max attempts exceeded [View](https://github.com/esatterwhite/skyring/commit/e8823f0b3c4a6432b43ee850b6afd55e4dd19ef9)
+* swim/join: add fixed backoff to retries on join [View](https://github.com/esatterwhite/skyring/commit/b8720f068dd863f7b8070f41862c0a3600a4f67e)
+* 9.8.6 [View](https://github.com/esatterwhite/skyring/commit/9d9bb20e3471c1f263a284ce99a30f2cc2a960c3)
+* Reduce logging levels during join [View](https://github.com/esatterwhite/skyring/commit/e1a596f6ebdc54666e12394371828dcaf5034d62)
+* Removing unused argumnet provided to getJoinPosition function [View](https://github.com/esatterwhite/skyring/commit/a454bd85378b8cca714a44cd5ad32754ed0e67c9)
+* 9.8.5 [View](https://github.com/esatterwhite/skyring/commit/e5fe6272d185b2216666a326e409b50c3a9956c2)
+* 9.8.4 [View](https://github.com/esatterwhite/skyring/commit/b3c32ed9d335486a0990c7a8ef28f86324d6f7b9)
+* Measure lookup() times [View](https://github.com/esatterwhite/skyring/commit/16c7961edf9f0a2022b30aa54f0ae8c538d989f6)
+* Reduce footprint of Ringpop's index.js by extracting endpoint handlers [View](https://github.com/esatterwhite/skyring/commit/2e5030ad08b07a8757f93e1249d872b5e2a3895f)
+* 9.8.3 [View](https://github.com/esatterwhite/skyring/commit/9a9176d06a93ade316349980969cd9d76cfe1a2f)
+* Stop trying to access local member in cases where it may not have been added to membership [View](https://github.com/esatterwhite/skyring/commit/962454b967d7e1a45ce82b737c938a945a7cef74)
+* package.json: sort deps [View](https://github.com/esatterwhite/skyring/commit/1acd2e6a9448948cab400a2d246b23cfb5e5e54e)
+* Test for full-sync bug [View](https://github.com/esatterwhite/skyring/commit/eeb173850e44e6cc146bbab54a060aceaf9f81a9)
+* 9.8.2 [View](https://github.com/esatterwhite/skyring/commit/6df70cb187fa3108b88594f087fc2bf8dbb58323)
+* Bug fix in recent fullSync refactor [View](https://github.com/esatterwhite/skyring/commit/7f747e671f65750d9ec0c317a4d4bf1446949c40)
+* Rename join_cluster to fit sender/recvr pattern that is unfolding [View](https://github.com/esatterwhite/skyring/commit/4935d8691d028ed10335e738b187e963fdad0b34)
+* Move errors too [View](https://github.com/esatterwhite/skyring/commit/b95da3b6ba1850de3ae40eb9878f7c7d27c7b14c)
+* Factor out protocol join from Ringpop ahead of damping [View](https://github.com/esatterwhite/skyring/commit/2e8153c296e267537d2db131b6ae1023e4b99d97)
+* Minor refactor to sending pings ahead of damping [View](https://github.com/esatterwhite/skyring/commit/5810660247987461c137b4b5d0359544baa3afd4)
+* 9.8.1 [View](https://github.com/esatterwhite/skyring/commit/353965034dd4076643c61949f6b19cda212d4b50)
+* Fix bug in admin leave so that it does cause neverending membership updates [View](https://github.com/esatterwhite/skyring/commit/4c3bfa09c4b0cb1cc3624d9c760e1ddd2e384504)
+* Significant refactor of membership change paths in prep for smaller damping pull request [View](https://github.com/esatterwhite/skyring/commit/02d33112060eb3205f846bb6bba171f37dcd066f)
+* Update README with latest ringChanged and membershipChanged event details [View](https://github.com/esatterwhite/skyring/commit/0c5672f01a2ea2830f2f0e296e67f0c368d8e5fc)
+* Update README with latest bootstrap() details [View](https://github.com/esatterwhite/skyring/commit/797b12685b0b3a6b7276ac9d327474ea0d929b21)
+* 9.8.0 [View](https://github.com/esatterwhite/skyring/commit/8e9c539a106ddbba29e09bcf45bedd20b8d9ab0b)
+* Ping-req to use only verified results from selected ping-req members to start suspect subprotocol [View](https://github.com/esatterwhite/skyring/commit/da73bc9b4b49cb61918d6430a77f8bdf7766f48b)
+* 9.7.7 [View](https://github.com/esatterwhite/skyring/commit/af48df6f161f466c6991a6ade550204055ef5479)
+* Relax constraints on local overrides. Lower bound causes abundance of full-syncs [View](https://github.com/esatterwhite/skyring/commit/6931eb990459f1261e1b8dccf4acbd6aae81bc04)
+* 9.7.6 [View](https://github.com/esatterwhite/skyring/commit/ba16a38c33dfb81895ed109963d514c0600b6676)
+* Combine integration test struct into themes [View](https://github.com/esatterwhite/skyring/commit/925e8a6efb5f958f9eef43cc2511a03aaad1336d)
+* 9.7.5 [View](https://github.com/esatterwhite/skyring/commit/fb8796bbc656a9cc75ff05b2a0e330194f4aada4)
+* Compute a different checksum for the ring and use it for request proxying [View](https://github.com/esatterwhite/skyring/commit/c129d6e777ac5d35b492fa075bacf7078e76b613)
+* 9.7.4 [View](https://github.com/esatterwhite/skyring/commit/422235f52aa0e168d166ef86dfabf94645807629)
+* Use maxRetries everywhere [View](https://github.com/esatterwhite/skyring/commit/252368fc3a5341b315fd0c78da1c06726585e84b)
+* 9.7.3 [View](https://github.com/esatterwhite/skyring/commit/2b0bd94bc6f0aae971649478cc7d78a44766e0d7)
+* Use retrySchedule everwhere [View](https://github.com/esatterwhite/skyring/commit/4cbaaa2e8d68efda35c54be893a50d2064ad77a0)
+* 9.7.2 [View](https://github.com/esatterwhite/skyring/commit/11cf1e7a114e877287cf00737a755d80102bd496)
+* Remove dead code: lib/request-proxy.js [View](https://github.com/esatterwhite/skyring/commit/7e702e6d7ca72bc6e24780359fccb6a3a09f9290)
+* Add Rui to contributors list [View](https://github.com/esatterwhite/skyring/commit/944c767770f5fee8c7081f0fe990a856560a4c3a)
+* 9.7.1 [View](https://github.com/esatterwhite/skyring/commit/128796c56d88f4976fea39e8006912437b93b40f)
+* extract components with options and default values [View](https://github.com/esatterwhite/skyring/commit/2c2668a374064099bb9eb47f4a651de625f6da5b)
+* 9.7.0 [View](https://github.com/esatterwhite/skyring/commit/de8bcfcc405e3504944d63e375d3458639bfac5d)
+* Lookup latest destination when retrying a proxied request [View](https://github.com/esatterwhite/skyring/commit/a9da58ae56454ca2cfbc43fe4313e0a37a77ba3f)
+* 9.6.5 [View](https://github.com/esatterwhite/skyring/commit/f22d3040e9208bfd03b9ad65c8728423732dca53)
+* Split serializeHead into strHead and rawHead [View](https://github.com/esatterwhite/skyring/commit/b056c44b32c4f573d273aaff58278df0b53ffa92)
+* Always pass head object when emitting 'request' event [View](https://github.com/esatterwhite/skyring/commit/8b7be30628f77f3538da48a7008f90a44eed3288)
+* 9.6.4 [View](https://github.com/esatterwhite/skyring/commit/b916cce6dea589e2cd71cc668cab926db6e23859)
+* Send over checksum with /protocol/ping-req because it's required [View](https://github.com/esatterwhite/skyring/commit/4b768356700469e79ee25d845e518cd11191717f)
+* 9.6.3 [View](https://github.com/esatterwhite/skyring/commit/25e13d0f19ae45a5171290affd04c5c741e055f9)
+* Update contributors list with Jake and Bob [View](https://github.com/esatterwhite/skyring/commit/f0c3b6b9ceea06239cad60cf33040704dc4e8d4f)
+* JSHint the lib/ directory [View](https://github.com/esatterwhite/skyring/commit/297ff778b42355eeaeb13a2560a3271d90b3afc3)
+* 9.6.2 [View](https://github.com/esatterwhite/skyring/commit/07ea0f7641c4403311546b01babe6dc2402c2071)
+* support tchannel v2 [View](https://github.com/esatterwhite/skyring/commit/0e02e8d6f717bdc9e5426a7f838f346b25dc9266)
+* 9.6.1 [View](https://github.com/esatterwhite/skyring/commit/d41a51081e55a961f25706ff1145decceff44db1)
+* Do not assume update type for first time member [View](https://github.com/esatterwhite/skyring/commit/d7c1d4d1e5df63d1372eca9537d57dd2cf6bdfb0)
+* 9.6.0 [View](https://github.com/esatterwhite/skyring/commit/9a0ae8745fabae7d76ce07a87388c1461b2c89bb)
+* Rewrite of join cluster, with parallelism and better node selection. [View](https://github.com/esatterwhite/skyring/commit/53782f40a9c0cf7a2613cbd45636e009034f5f37)
+* 9.5.4 [View](https://github.com/esatterwhite/skyring/commit/25296243c036b2236d11c9c28550913a0e683d83)
+* Added SWIM presentation slides to References section and fixed typo in README [View](https://github.com/esatterwhite/skyring/commit/095a012d7ea1add728fbe995873456531663cd06)
+* Updated README with 2 newish proxy-related properties and updated function docs to include handleOrProxy [View](https://github.com/esatterwhite/skyring/commit/f16cd941be43b3829651f17ff6e0a74962b38d1b)
+* Added link to sevnup in Community section of README [View](https://github.com/esatterwhite/skyring/commit/3c77e9194ce5a10b92ddaa1f3b829ec5a31d2efc)
+* Added References section to README [View](https://github.com/esatterwhite/skyring/commit/f7d4b0d4d94a6e92990858f423845fd13c725a1a)
+* Add Table of Contents section for Developer's Guide section of README [View](https://github.com/esatterwhite/skyring/commit/88ee6e091e2304b1dfa99e4afe11b7a70b4d723a)
+* 9.5.3 [View](https://github.com/esatterwhite/skyring/commit/b0bf1eaaf7d266df85f2a586a5ba487ddae99429)
+* 9.5.2 [View](https://github.com/esatterwhite/skyring/commit/143d19b604dc389b87cecf5a89eb8f7f3abe47ac)
+* Add timestamps to membership update rollups [View](https://github.com/esatterwhite/skyring/commit/52fe2a6cff5d90cf9efd4b5be8a6ef2d52b15313)
+* Slightly revamped README with better structure/organization [View](https://github.com/esatterwhite/skyring/commit/affaee77b747bda894471b844aa575f5b17c83ce)
+* Removed Dependencies section in README [View](https://github.com/esatterwhite/skyring/commit/f2021c0004ba17e05a52f506e771113a0d8e3679)
+* Fixed typo in Events section of README [View](https://github.com/esatterwhite/skyring/commit/2ac209d9d8dba35b7b6ceefd146bffe31d75e75c)
+* Include local instance address for proxy request logging [View](https://github.com/esatterwhite/skyring/commit/a6c85145baae4bb903705e5caee30169ab06f2bd)
+* Introduce lower bound on incarnation number for local member asserting its aliveness [View](https://github.com/esatterwhite/skyring/commit/badb9e0ce2e673b3d9dc3762964d21560767f58c)
+* 9.5.1 [View](https://github.com/esatterwhite/skyring/commit/96f9d8fd3bb2f11a80a5b142c38ed81a409982f8)
+* fix: don't ignore --hosts command line argument value [View](https://github.com/esatterwhite/skyring/commit/931f2f92e407bce7a91fdb49a61b24b18b068d2e)
+* 9.5.0 [View](https://github.com/esatterwhite/skyring/commit/eaa49b0d70acac82adda07057654ee50ba6935ce)
+* always send strings [View](https://github.com/esatterwhite/skyring/commit/db738d44c42b97ec2de3f84c9d7d66ab5e1b7bc8)
+* Add repository field to package.json [View](https://github.com/esatterwhite/skyring/commit/081bc41ed971d834785a902d7052b7efbaa360e4)
+* 9.4.0 [View](https://github.com/esatterwhite/skyring/commit/24a35d669bcca592ed78d77746ba8ae3ba1bf19b)
+* Request proxying endpoint override [View](https://github.com/esatterwhite/skyring/commit/244159284ea77526fea784969cb56ba8a0584a6b)
+* 9.3.0 [View](https://github.com/esatterwhite/skyring/commit/85c67c61b931c146e7519b250f4b62d6cb778473)
+* Retry on proxy errors according to retry schedule [View](https://github.com/esatterwhite/skyring/commit/9a007f82b8a6c258d7eab56efcf4ded406703dfc)
+* 9.2.0 [View](https://github.com/esatterwhite/skyring/commit/57d756525aa084c4a5d02e40f9b13e8a0b38c67a)
+* Split out change events into membershipChanged and ringChanged [View](https://github.com/esatterwhite/skyring/commit/bffe29abb9894797f460f834047c2904a862cc88)
+* 9.1.1 [View](https://github.com/esatterwhite/skyring/commit/84716435992a852528f2e1c1f2cb45d8ac021062)
+* Change default flush interval [View](https://github.com/esatterwhite/skyring/commit/15138a9d0a7b92c5d54f268cdb35edbf462efd7c)
+* 9.1.0 [View](https://github.com/esatterwhite/skyring/commit/9c61f77498f592a4b56531aa5f55ae68a35ab7c8)
+* Reduce membership update log spam. Rollup membership updates over specificable window. [View](https://github.com/esatterwhite/skyring/commit/4dda5d47e4483d2d607a9b46f5bb0b450ec84d46)
+* 9.0.2 [View](https://github.com/esatterwhite/skyring/commit/aaf726bd8cee77fe27902779d5709f7a7404ddea)
+* Fix stat key bug since moving to IP-based hostPort vals [View](https://github.com/esatterwhite/skyring/commit/73152fa433aa4f0d03024fb3c4bc457e535bffc7)
+* Remove localHandler in favor of emitting an event [View](https://github.com/esatterwhite/skyring/commit/12805323433278ad64b9ba9e2c843b3f02135cdc)
+* 9.0.1 [View](https://github.com/esatterwhite/skyring/commit/b1bb32a2ea2dff46f70c6052a8d14bceb952a8fe)
+* Fix protocol period timing bug by updating the protocol timing metric after every ping [View](https://github.com/esatterwhite/skyring/commit/b1355a313b4f2a3203418a0fd889effda77ec4ee)
+* 9.0.0 [View](https://github.com/esatterwhite/skyring/commit/4251ebd86c5d003dd038bb3e1211ab04bdb09d8a)
+* Call callback even if keys is empty [View](https://github.com/esatterwhite/skyring/commit/30fab730cf5a0266051f607216701c8067528115)
+* Return responses as an array instead of an object [View](https://github.com/esatterwhite/skyring/commit/a27670eaa346539e68ee27c29fe5ed7c20c2de89)
+* No longer need process.nextTick [View](https://github.com/esatterwhite/skyring/commit/fac750f58b70c27c58882adec596c7c848ac5429)
+* Don't mutate response data [View](https://github.com/esatterwhite/skyring/commit/7279519a4e079b161beb3b9e1f5823a6b63c23f4)
+* Simplifies handleOrProxyAll interface by making it async instead of sync [View](https://github.com/esatterwhite/skyring/commit/fcd0ff81b162636ca71ca487e7fe355bbf316001)
+* 8.1.0 [View](https://github.com/esatterwhite/skyring/commit/a642d81b2573f96ef6f26bcb5f9f546cf9bafb58)
+* Allow stats hooks to be registered for ringpop extensions [View](https://github.com/esatterwhite/skyring/commit/0a39afe6c2753d4c6eb5fe92a0badf5b598c20be)
+* 8.0.0 [View](https://github.com/esatterwhite/skyring/commit/d2dea7726c03a75b869d90f70e79e13c0ba2dd24)
+* Upgrades to body@5.0.0 [View](https://github.com/esatterwhite/skyring/commit/b69b4b0d59701851165bc01ea7c96372b511668f)
+* Address comments [View](https://github.com/esatterwhite/skyring/commit/25dc21f028a28fc2a23fd857c08e410d06ec8219)
+* Add test for handleOrProxyAll [View](https://github.com/esatterwhite/skyring/commit/acd8ccc6e5723cffb0e7fa0287e4dfb805a9d0d9)
+* 7.0.0 [View](https://github.com/esatterwhite/skyring/commit/4164310d71bf473ba1d376e93610fed487d2d794)
+* Implement handleOrProxyAll [View](https://github.com/esatterwhite/skyring/commit/176fe6c7d27fc9d696c9e2f229b763579af2a33e)
+* Make ringpopKeys an array [View](https://github.com/esatterwhite/skyring/commit/6ef6de46d3a4a127136ab90aaf48345273e12657)
+* 6.1.3 [View](https://github.com/esatterwhite/skyring/commit/036751e029dc6f28feea4ce1c2eaf8d826b5a98e)
+* Use body caching [View](https://github.com/esatterwhite/skyring/commit/5235996948075a415ef3d0fe5d88b72641278af0)
+* 6.1.2 [View](https://github.com/esatterwhite/skyring/commit/66377f5e2bb4927665710afbd5cc6be47db4ab55)
+* handleOrProxy opts arg is not required [View](https://github.com/esatterwhite/skyring/commit/7ffad5e95e9e74683c933c3ce6f62998d75b0a9c)
+* 6.1.1 [View](https://github.com/esatterwhite/skyring/commit/21926859978f456cb1b62d2ac6cf961d9e010a6c)
+* Faulty overrides alive member with same incarnation number [View](https://github.com/esatterwhite/skyring/commit/c9eb1b23f6a6d5f17cb232f38941631116c5413f)
+* 6.1.0 [View](https://github.com/esatterwhite/skyring/commit/7cb7004c0563b03b5aa2200ea7674de7dbdcec66)
+* add more logging [View](https://github.com/esatterwhite/skyring/commit/742bd8bb43e2b5edd93dc67fc5ac68704b8a595f)
+* move debug flag feature into seperate method [View](https://github.com/esatterwhite/skyring/commit/d0aa5b074d3d7ffd0d2efde171127e9ec85a4584)
+* 6.0.0 [View](https://github.com/esatterwhite/skyring/commit/a11c5c63db77d3bc75d6196a347597002b19ef93)
+* Add key to head and emit head with request event [View](https://github.com/esatterwhite/skyring/commit/351be9616b34f51f5c421a08d257b3dc282c52b0)
+* 5.0.1 [View](https://github.com/esatterwhite/skyring/commit/c4d0ce1ef076a493e7241e0f83c02518f4674c20)
+* Travis CI integration [View](https://github.com/esatterwhite/skyring/commit/de37890e99fe7571239fd8dfade6211fc61e987a)
+* 5.0.0 [View](https://github.com/esatterwhite/skyring/commit/d4170c166c7b07d673c8d1ecf1d81e52a690b1cf)
+* Cleanup jshint error with clearTimeout [View](https://github.com/esatterwhite/skyring/commit/6a956ab314cbc6ce1e740e049f70513b8a5df660)
+* Implemented admin leave [View](https://github.com/esatterwhite/skyring/commit/f33c52a58bbfeaf829902f865379e38dc85d08a5)
+* 4.1.1 [View](https://github.com/esatterwhite/skyring/commit/468ad82e373954890c8365282482bb804df1526b)
+* use npm uber-licence [View](https://github.com/esatterwhite/skyring/commit/64755aaa4c724b895c111b8704370dc8ede0433a)
+* 4.1.0 [View](https://github.com/esatterwhite/skyring/commit/ba6b57c7b283c64a6dba8d20b68a28788c7b7c12)
+* add licence [View](https://github.com/esatterwhite/skyring/commit/8c74a1bd44504c66c949095ab04eb2bad17d0ba5)
+* 4.0.0 [View](https://github.com/esatterwhite/skyring/commit/8320f02f242e8f04d397e356d654ba5afd828de5)
+* allow host and ip [View](https://github.com/esatterwhite/skyring/commit/0a874dc07ea585e4bcddb1b3f34dcc6b277da5f9)
+* review: use test() instead [View](https://github.com/esatterwhite/skyring/commit/b2fc20bdc99fed5a5df7624d2556a0ef6b0ed69f)
+* review: spelling cleanup [View](https://github.com/esatterwhite/skyring/commit/cdda00b366286bcecc80bd6dab512ccb297f6f6e)
+* alphabetize [View](https://github.com/esatterwhite/skyring/commit/b83dbf86f99587e02245cfa6ac48b730077f7faa)
+* review feedback: better asserts [View](https://github.com/esatterwhite/skyring/commit/8feb3d5a274f7a9c70f656ef502282b51d030670)
+* review: inline failedMsg [View](https://github.com/esatterwhite/skyring/commit/4fa5ea9b58aebfe5daea7b6b5cb218409fdfb20f)
+* add check-licence [View](https://github.com/esatterwhite/skyring/commit/2c515fd80a757a072b8dd0bf86f21208cc00509a)
+* nitpick: use strict [View](https://github.com/esatterwhite/skyring/commit/6ba3b985608bcfe3a3a341c05f5f1332461c94e1)
+* call the callback with an error if admin join fails [View](https://github.com/esatterwhite/skyring/commit/4c08fddfe9fd73bbc42942caef1b771c92b5c018)
+* gaurd against invalid app [View](https://github.com/esatterwhite/skyring/commit/1670f8317dc40557d70c7e672776329a604e5973)
+* 3.0.5 [View](https://github.com/esatterwhite/skyring/commit/fcef1d1caf64019afe342cb1b7ac0c2a643742b1)
+* add hammock to dependencies [View](https://github.com/esatterwhite/skyring/commit/68199a1129a4dc12bc0f817e6fb9689297e9f60c)
+* 3.0.4 [View](https://github.com/esatterwhite/skyring/commit/c36aede5c3d0d9673a1dadba805f8ee93390b0b1)
+* Die async [View](https://github.com/esatterwhite/skyring/commit/042cd51e807081b82fafda35996ed750f0831db6)
+* Move some packages into dev deps [View](https://github.com/esatterwhite/skyring/commit/77346514367454167583a473d487d99a2cbba375)
+* 3.0.3 [View](https://github.com/esatterwhite/skyring/commit/4d417282b8ab496ab416ce0c330a6b0bcb304c89)
+* Use default private value in package.json [View](https://github.com/esatterwhite/skyring/commit/0acd44ca74b8b91f1ccd78cdbb3d59c89e18499b)
+* 3.0.2 [View](https://github.com/esatterwhite/skyring/commit/6ea85b858f87199946465fda815726bdda7c9bd6)
+* Upgrade to npm tchannel version [View](https://github.com/esatterwhite/skyring/commit/fd141276509889cddfc8f0b0ee4f570ae8383663)
+* 3.0.1 [View](https://github.com/esatterwhite/skyring/commit/439359c97a5184cb2dacdc66cd1816bdea051ab2)
+* A node that declares itself to be part of one app cluster cannot join a node in a different app cluster. [View](https://github.com/esatterwhite/skyring/commit/891cbd0954875118eb3715df3d28fa0f5494e21d)
+* Initial commit [View](https://github.com/esatterwhite/skyring/commit/bf23f1185fa3f3b61ff34aa197661eb84c2ba74e)
 
-v7.0.0
-------
 
-* timer api will return a 400 if the timeout exeeds 2147483647
+## v9.0.1 (2019-05-05)
 
-v6.1.0
-------
+* 9.0.1 [View](https://github.com/esatterwhite/skyring/commit/01113b294a7ab376187e769e774dca4e62c50522)
+* changelog: update change log for 9.0.1 [View](https://github.com/esatterwhite/skyring/commit/68695a6fbab4f1f091e083c5f3d778ef361c789a)
+* bin: clean up the cli arg passing [View](https://github.com/esatterwhite/skyring/commit/bf99bfee457e97139089096915f1935a53d330b8)
+* toosl: include an npm script to load local env vars [View](https://github.com/esatterwhite/skyring/commit/104c53a87ffab02fb2b3ce9bb184dcb188d432b8)
+* deps: micromock@2.0.0 [View](https://github.com/esatterwhite/skyring/commit/77225206925abf4aeafb97f4aecf6d65e5f782a4)
+* deps: debug@4.1.1 [View](https://github.com/esatterwhite/skyring/commit/ab4d907f4a06fc03556e0802a3a841cf4ae3ab8c)
+* deps[dev]: tap@12.16.1 [View](https://github.com/esatterwhite/skyring/commit/c9a7d8f0a9c7fdf6a3f774966fd0727ab2f4b145)
+* deps: path-to-regexp@3.0.0 [View](https://github.com/esatterwhite/skyring/commit/df1738615c58ece90ae1231a03b50c0aba16c305)
+* deps: encoding-down@5.0.4 [View](https://github.com/esatterwhite/skyring/commit/fbe329eeb10b539d9b934ebb26071dc9d43df748)
+* deps: tchannel@3.9.13 [View](https://github.com/esatterwhite/skyring/commit/71e698cb5288e6d18f722192c9bdb2691c5eac25)
+* deps: nats@1.2.10 [View](https://github.com/esatterwhite/skyring/commit/84c104ba65b12a3fd62ed31f5b11064d9fcf5730)
+* deps: memdown@4.0.1 [View](https://github.com/esatterwhite/skyring/commit/b34a8a658e2b308a338beda499ecfd9dbcd5ce3b)
+* deps: levelup@4.0.1 [View](https://github.com/esatterwhite/skyring/commit/928882f5f1a54c0610a557f22c17267c93ad2f3b)
+* deps: leveldown@5.0.1 [View](https://github.com/esatterwhite/skyring/commit/368ef668881c05fcaf0406e8abc45a479b97108d)
+* timers being lost on shutdown due to a race condition in nats (#25) [View](https://github.com/esatterwhite/skyring/commit/1b0280671c25c427e9921ac3d4f3e5b4e40276b6)
+* timer: small documentation fixes [View](https://github.com/esatterwhite/skyring/commit/e7c61eb9eea88dfcd84097281b6bd8b3015af7c4)
+* doc: fix documentation typos [View](https://github.com/esatterwhite/skyring/commit/925694dbe55c3a76ed6f14bbd64c735d2b988d69)
+* doc: adding more api examples [View](https://github.com/esatterwhite/skyring/commit/63dc2dfee7e2086e26c131d1f6318248b2a3947a)
 
-* updates local deps to address security exploits
 
-v6.0.0
-------
-* timer validator enforces an upper timeout limit of 2147483647 - 400 response will be returned if exceeded.
+## v9.0.0 (2018-12-09)
 
-v5.0.3
-------
-* Fixes a rash bug from invalid error reference in http transport
+* 9.0.0 [View](https://github.com/esatterwhite/skyring/commit/a93e413f5b7167fa858b01e2b013c4d251f1c2fb)
+* update changelog [View](https://github.com/esatterwhite/skyring/commit/d3e2ca72a7a5e2cb53a50a5821be68c8a7cd8f0f)
+* ci: update travis buils for node 8-10 [View](https://github.com/esatterwhite/skyring/commit/3e98a12bf934f6c6a6a3f8640a8fbb44bf27a044)
+* deps: keef@4.1.0 [View](https://github.com/esatterwhite/skyring/commit/d4bbea597c5be2ef253ce7e69a65e76d0d779c59)
+* deps: @esatterwhite/micromock [View](https://github.com/esatterwhite/skyring/commit/b5878da14e5e83d26b55a43faad27af1eeaaab61)
+* deps: @skyring/ringpop [View](https://github.com/esatterwhite/skyring/commit/811cb4820c1fca4e6092881e39be42b7ed66b97c)
 
-v5.0.2
-------
-* replaces level w/ direct use of levelup so the swappable backend works
-* added dep - encoding-down for auto value encoding
 
-v5.0.1
-------
-* Update level@2.0.0
-* Update debug@3.1.0
-* Update seeli@5.0.0
-* Update Docker image to use node 8.7
+## v8.0.3 (2018-12-01)
 
-v5.0.0
-------
-* Adds cluster wide events over nats
-* DEPRECATE: deprecates the remove function on timers class
-* Adds success / failure methods on timer class for acknowledging timer execution
-* shutdown will skip rebalance if node is last in cluster
+* 8.0.3 [View](https://github.com/esatterwhite/skyring/commit/51584ead89d342f298c40206dc7bd46424bbd7d0)
+* doc: update change log [View](https://github.com/esatterwhite/skyring/commit/7b5a13a53ad8921c360ec0e4fb3a0a364ad35e1f)
+* timer: be sure to flush the nats connection before closing [View](https://github.com/esatterwhite/skyring/commit/c2995305840d2aee2a3c01d0c18d573831c5065a)
 
-v4.4.1
-------
-* Fix docker auto build on quay
 
-v4.4.0
-------
-* Doc updates
-* include package-lock
-* minor dependancy updates
+## v8.0.2 (2018-11-30)
 
-v4.3.0
--------
-* test: moves test harness out of the docker setup - c25f5c5bc7
-* timers: setup storage before nats to allow errors to bubble - dc88b48eed
-* tansports: fixes named function checks
+* 8.0.2 [View](https://github.com/esatterwhite/skyring/commit/ab6e64bc674e182b650a0bb02a7c9f3740fab735)
+* middleware: update proxy middleware to always set location header [View](https://github.com/esatterwhite/skyring/commit/9b86d64f884fb7aae2d6232c15ae009a8643ac80)
 
-v4.2.0
-------
-* Transports can define a shutdown handler
 
-v4.1.0
-------
-* Allows for custom transports
+## v8.0.1 (2018-11-30)
 
-v4.0.0
-------
-* Support crash recovery of timers
-* dependency on level w/ plugable backends. leveldown for disk, memdown for memory
-* new configuration options for leveldb storage
-* replaces mocha with tap
+* 8.0.1 [View](https://github.com/esatterwhite/skyring/commit/2b757767cc038cfbb21e781284e5a232cad5d9bf)
+* deps: replace needle with request [View](https://github.com/esatterwhite/skyring/commit/68327971d2a6a00303b9f2f299aec86c11f545f4)
+* examples: update examples with skyring 8 [View](https://github.com/esatterwhite/skyring/commit/dd8797437834ea682aea56916de878e52167c9f2)
 
-v3.3.2
-------
-* fixes a bug in nats lib where callback was never called - preventing a shutdown
 
-v3.3.0
-------
-* fixes a bug where http transports would fail if not cased
-* Updated documentation
+## v8.0.0 (2018-11-30)
 
-v3.1.0
-------
-* Modifies the project to allow global install
-* bin script w/ commands
-* main process changes CWD so imports work
+* 8.0.0 [View](https://github.com/esatterwhite/skyring/commit/423bb6a1da9fbb80e667ec1131c9d304d9bba5a9)
+* docker: bump node version, remove quay version [View](https://github.com/esatterwhite/skyring/commit/3edff1ab3aea48665a5e394d7af5a0fcf8b011cb)
+* api: simple ping route to probe if the server is up [View](https://github.com/esatterwhite/skyring/commit/1033b9e254f791299d040bf09bf34f57a740bba9)
+* deps: replace level with levelup and leveldown [View](https://github.com/esatterwhite/skyring/commit/211bb5d92f96ed1acaaf3bc82ce6390deb144d21)
+* deps: needle@2.2.4 [View](https://github.com/esatterwhite/skyring/commit/8b5e8a331a4556c34b77175356f2fe5e39af60d3)
+* server: remove server#load function [View](https://github.com/esatterwhite/skyring/commit/e365793442f236f884f7fe3bc99c25fbba30561b)
 
-v3.0.0
-------
-* Migrates the timer module into a class - can run multiple servers in isolated clusters
-* Validators for modification request - validates payload before handler is called
-* Code climate integration
 
-v2.0.0
-------
-* Replaces Redis for nats
-* tests run against a nats cluster
+## v7.0.1 (2018-11-30)
 
-v1.0.0
-------
-* initial implementation
-* Initial timer API - POST, PUT, DELETE
+* 7.0.1 [View](https://github.com/esatterwhite/skyring/commit/602b30c1b39380ce553b7370004ec5bfd6359c5f)
+* doc: update changelog [View](https://github.com/esatterwhite/skyring/commit/739000d4e902d94c911667c0782ce6ba68075bdd)
+* ci: run code coverage reporter only if env var is set [View](https://github.com/esatterwhite/skyring/commit/857b030920dd9501df34ea608abd519d57cf132b)
+* pkg: update lock to fix broken depenancy [View](https://github.com/esatterwhite/skyring/commit/a76a01a4cc865d870b7159e0a780a4bc95b771e9)
+* timer: Update data to use created time rather than now as this will throw off future timers [View](https://github.com/esatterwhite/skyring/commit/f8cb0cf4fa0c76c2553a258d776a1cd5f4c50382)
+
+
+## v7.0.0 (2018-11-06)
+
+* 7.0.0 [View](https://github.com/esatterwhite/skyring/commit/029fc06a7bcff7182b7f5e674bcd45cc701224c6)
+* doc: update changelog [View](https://github.com/esatterwhite/skyring/commit/4b552931f7fe46555d6bed7ff1dad5f4fcbdb359)
+* dep: nats@1.0.1 [View](https://github.com/esatterwhite/skyring/commit/84bbedb78fabfc80d300724df7536e4522641ac8)
+* dep: npm audit [View](https://github.com/esatterwhite/skyring/commit/bd06e9f023bf0058307477d146ca453044462a9d)
+* deps: request@.2.88.0 [View](https://github.com/esatterwhite/skyring/commit/1c1c045e803e47c8d14e712a768094ceca065490)
+* deps[dev]: codeclimate-test-reporter@0.5.1 [View](https://github.com/esatterwhite/skyring/commit/03b21a52780ad41a400a140eb79b23b88bd49774)
+* doc: update module and pi docs [View](https://github.com/esatterwhite/skyring/commit/8f5acc3cff4b8e3dd9e1ba3d0535544b1a3366a8)
+* timer: update docs to reflect valid timeout range [View](https://github.com/esatterwhite/skyring/commit/f95a18dd4e2cafd0eb32c90286cf790cb7e076c2)
+* validator: avoid string concatenation/templating for error message (#18) [View](https://github.com/esatterwhite/skyring/commit/8013d5f46dd4cb3f260e8579a0394da2a1747641)
+* validator: use literal constant over calculated value (#18) [View](https://github.com/esatterwhite/skyring/commit/2b1497d94c3e5b290faf3191fd10c62c1da5fd57)
+* doc: reflect Create Timer API upper bound check on timeout (#18) [View](https://github.com/esatterwhite/skyring/commit/d4b5fc6087148d833b7c08efde053094cd5c43b1)
+* validator: add upper bound check on timeout (#18) [View](https://github.com/esatterwhite/skyring/commit/825d0f49b2456484b0b7f1c422851488e8a7ca2c)
+
+
+## v6.1.0 (2018-05-28)
+
+* 6.1.0 [View](https://github.com/esatterwhite/skyring/commit/80f793283930d903facaf3ef6818259e3e04eeab)
+* doc: fix some readme links [View](https://github.com/esatterwhite/skyring/commit/9e54d420a40e8255fa6fc0bf2e2ca21c45370877)
+* deps: keef@4.0.1 [View](https://github.com/esatterwhite/skyring/commit/713d73094dc8172652e628f25c8251be8c3fa70c)
+* deps: encoding-down@5.0.2 [View](https://github.com/esatterwhite/skyring/commit/a00396374139eac527878396766688698a1a5976)
+* deps: level@4.0.0 [View](https://github.com/esatterwhite/skyring/commit/63748893813b0120c9132579f0098dfbaf8b6dc8)
+* deps: memdown@3.0.0 [View](https://github.com/esatterwhite/skyring/commit/01276c2905c6f4179e634cc360ea8475d4e8bac6)
+* deps: path-to-regexp@2.2.1 [View](https://github.com/esatterwhite/skyring/commit/4f938194dbe0db3f3fdfcee0d77f983cc8bd5f89)
+* deps (dev): tap supertest async [View](https://github.com/esatterwhite/skyring/commit/b6eeb1e74564fa1cd18aa56a5ec23fe982dd5f43)
+* deps: request@2.87.0 [View](https://github.com/esatterwhite/skyring/commit/197c82b7b3764d4e7b30bc1c353093ef1c17db21)
+* desp: nats@0.8.10 [View](https://github.com/esatterwhite/skyring/commit/b9cd9abadde5945de6e1ea1b5827ebbefcb2ec9d)
+* deps: remove chalk [View](https://github.com/esatterwhite/skyring/commit/3f9aaa3807749efea7c294d43763014302dc95f3)
+* deps: tchannel@3.9.12 [View](https://github.com/esatterwhite/skyring/commit/45353559f359e507de88783de40cde115d1f5908)
+* deps: uuid@3.2.1 [View](https://github.com/esatterwhite/skyring/commit/2592bf6a57dd74b85efb46248d5a692947a034b0)
+* gh-pages: update ghpages [View](https://github.com/esatterwhite/skyring/commit/d49e93870a895914bc21aa7fc10b816be7273ca5)
+
+
+## v6.0.0 (2018-03-11)
+
+* 6.0.0 [View](https://github.com/esatterwhite/skyring/commit/1b91ee6b75797d61a44b8ffbd7115453bca93136)
+* doc: fix example link [View](https://github.com/esatterwhite/skyring/commit/445427f3fd8e09e5648c55570965bcae2a3b928f)
+* doc: update the docs for custom storage [View](https://github.com/esatterwhite/skyring/commit/7b2de9574de4a0e31423289be2201ddafed878ba)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/3de550ccb09f3f7f1732e75cf6ffc557b967d081)
+* examples: working example with scylla db [View](https://github.com/esatterwhite/skyring/commit/554a5bb76949b9c4842c548a29bb40361899b833)
+
+
+## v6.0.0-alpha.2 (2018-02-24)
+
+* 6.0.0-alpha.2 [View](https://github.com/esatterwhite/skyring/commit/0de29cb68d953739c5ef02858d0b38d59a3fde76)
+* server: push server start up loging into the listen function [View](https://github.com/esatterwhite/skyring/commit/57647d63dd28cab3167f7f97a35cf8050d074e14)
+* timer: use the level up callback instead of read event [View](https://github.com/esatterwhite/skyring/commit/d88f936d08c3c581f92cad14167ec044cdd0b200)
+* fix doc images [View](https://github.com/esatterwhite/skyring/commit/41be5090189014d3a853597135e462345874c090)
+* doc: update generated docs [View](https://github.com/esatterwhite/skyring/commit/8743bf3869a64b6153b4b7978cce683b82c09b1c)
+* example: example app using a single node cluster manual setup [View](https://github.com/esatterwhite/skyring/commit/a213c9d72a9b5299be8a6273a4b472dce32c31ee)
+* deps: apidoc@0.17.0 [View](https://github.com/esatterwhite/skyring/commit/ebfaae6b78af2dec6089c6b08d29e62646ff7763)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/26e24429ee9d904235206bd6dfe7f6f1e3231a9d)
+* Update mongodown-example.json [View](https://github.com/esatterwhite/skyring/commit/53b4526ac7eeb62a5277cb75e6b707e8cea6aeae)
+* Update mongodown-example.json [View](https://github.com/esatterwhite/skyring/commit/f9387ee30c32fb12725da6ca6fe282b45a3d7993)
+* deps: ink-docstrap:1.3.2 [View](https://github.com/esatterwhite/skyring/commit/77ff9ebe74b3deda9ab26b3d337a7c2e280494f9)
+* deps: jsdoc@3.5.5 [View](https://github.com/esatterwhite/skyring/commit/574c586d38ffc1d11500f1ae62730e1cb6e28f9c)
+* example: example app using mongodb as a storage backend [View](https://github.com/esatterwhite/skyring/commit/19d367b8f2edb70d6e95f31042645ec6b58709bc)
+
+
+## v6.0.0-alpha.1 (2018-02-18)
+
+* 6.0.0-alpha.1 [View](https://github.com/esatterwhite/skyring/commit/b35b9f691b4837882d301ad1c7b10f40f2faafa8)
+* timer: pass all storage options to levelup [View](https://github.com/esatterwhite/skyring/commit/2c10a0a69ee277426a7397b55193447938ec397b)
+* docker: update base  image from jessie to stretch [View](https://github.com/esatterwhite/skyring/commit/6de077c18ed8ad00d7ee50c55a7fe43efd53071b)
+
+
+## v5.1.0 (2018-02-18)
+
+* 5.1.0 [View](https://github.com/esatterwhite/skyring/commit/26a8f10776e636a4fd1d5f90f854113d8d8cec9d)
+* bin: update skyring cli for new seeli [View](https://github.com/esatterwhite/skyring/commit/6a322600db7326288071d8ac72cd01c698d977bb)
+* deps: seeli@8.1.3 [View](https://github.com/esatterwhite/skyring/commit/6081232a0f285dbae679e8f91c07e41ef3a2367e)
+* encoding-down@4.0.0 [View](https://github.com/esatterwhite/skyring/commit/3ec432fd7d90dd2f2ea2922467cd62d8f88f8a5b)
+* deps: memdow@2.0.0 [View](https://github.com/esatterwhite/skyring/commit/880fde2f78fa6384f9a2904c21b62b6a9af05135)
+* deps: level@3.0.0 [View](https://github.com/esatterwhite/skyring/commit/c03e8aa7d732e51f57583baae3768add64cc64bf)
+
+
+## v5.0.3 (2018-02-06)
+
+* 5.0.3 [View](https://github.com/esatterwhite/skyring/commit/224167fc8e9215c4b3df7231a8618f309177251f)
+* transport, http: fix error typo [View](https://github.com/esatterwhite/skyring/commit/54534e306deb643fc8610ac01f4d59113392f528)
+* Fix example curl command timeout parameter typos [View](https://github.com/esatterwhite/skyring/commit/a35a45c166ec30d88a8ea0b4a82db17b25f812c1)
+
+
+## v5.0.2 (2018-02-05)
+
+* 5.0.2 [View](https://github.com/esatterwhite/skyring/commit/aa6c10f13b216c7b7ea27b85e458ba94f5aa73a9)
+* timer: manually construct a levelup instance w/ encoding [View](https://github.com/esatterwhite/skyring/commit/f118ba179f4e0ae0b3e97725df30150bed6fbb53)
+* deps: encodig-down@3.0.1 [View](https://github.com/esatterwhite/skyring/commit/2960924dbb8ed30adce85252c159e9adb68b62c7)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/ac5362d19f07fbebe8741aed4a93869c984e0969)
+* 5.0.1 [View](https://github.com/esatterwhite/skyring/commit/42f5a8650afb363895847d7d5e8cc3a70d1b6a3d)
+* docker: update docker file node version to 8.7 [View](https://github.com/esatterwhite/skyring/commit/0675aec94f6103ac1fe73a476b2e6cdc9046e8cf)
+* 5.0.1 [View](https://github.com/esatterwhite/skyring/commit/4f1438ec32bab47b614e3b3613f6e40e5b20ee22)
+
+
+## v5.0.1 (2017-10-28)
+
+* 5.0.1 [View](https://github.com/esatterwhite/skyring/commit/4f1438ec32bab47b614e3b3613f6e40e5b20ee22)
+* deps: seeli@l5.0.0 [View](https://github.com/esatterwhite/skyring/commit/10b1bcae7857ae86c760664edd09656c02b12051)
+* deps: debug@3.1.0 [View](https://github.com/esatterwhite/skyring/commit/c91068bf1a36fdffd1b542a71e0f897ab6d8fb3c)
+* deps: level@2.0.0 [View](https://github.com/esatterwhite/skyring/commit/66be97367a002556b96ba5dde124c0c2e0d7602e)
+* test: bump server test back to 50 requests [View](https://github.com/esatterwhite/skyring/commit/04046bc34d5ea58f509d1eadd1705a8245cac13f)
+* test: fix flaky unit test ( server ) [View](https://github.com/esatterwhite/skyring/commit/887b86c7cb9b0534c642cddad096e4eac1097c5f)
+* Create CODE_OF_CONDUCT.md [View](https://github.com/esatterwhite/skyring/commit/f2d4abc1201d4f3abf1353231f83b65a3595d466)
+
+
+## v5.0.0 (2017-09-05)
+
+* 5.0.0 [View](https://github.com/esatterwhite/skyring/commit/b273e06bfb94f3e271bcb846a37b1ca6f2a754b1)
+* changelog: updating the change log [View](https://github.com/esatterwhite/skyring/commit/97ec568315678d0f2edcbbe22272b75e31c03256)
+* cleanup npmignore file [View](https://github.com/esatterwhite/skyring/commit/86a23dc3b34e5918a4d57e816e228308c0e1bd15)
+* doc: update generated docs [View](https://github.com/esatterwhite/skyring/commit/4cbfee248801a85093d5467c9a1a1888f122ac5c)
+* docker: change release image build to debian, roll quay back to v6 [View](https://github.com/esatterwhite/skyring/commit/684c49d110ced6ac39ca4acca9a6833554246d55)
+* transports, api: use new timer methods [View](https://github.com/esatterwhite/skyring/commit/55c0adbbd2533e6efdf2d73cc0aac1b61053cbf4)
+* logging test for cluster event testing [View](https://github.com/esatterwhite/skyring/commit/76cbf1e7165b339c2f875a7bb612105633e6b4fd)
+* server: don't rebalance if last node in cluster [View](https://github.com/esatterwhite/skyring/commit/6f746408d32e1f7c955cf17122fa423395e98ce5)
+* timers: deprecate the remove function and expose event points [View](https://github.com/esatterwhite/skyring/commit/d6295d3bdcaeb01a8d0a0cf43e204fd8a537357e)
+* server: pass server args through to underlying http server [View](https://github.com/esatterwhite/skyring/commit/18e7e48fea682013dd1f8865173d6910dca6cec7)
+
+
+## v4.4.1 (2017-08-26)
+
+* 4.4.1 [View](https://github.com/esatterwhite/skyring/commit/a808d65681b1f8dc36df673c6e2f93c280525705)
+* docker: Dockerfile for quay build triggers [View](https://github.com/esatterwhite/skyring/commit/668f32548415280931c1d5ed6581237c60571354)
+
+
+## v4.4.0 (2017-08-26)
+
+* 4.4.0 [View](https://github.com/esatterwhite/skyring/commit/bdd3942c5aa27efdfc1f7a9b31827ffb24526866)
+* bumping some deps [View](https://github.com/esatterwhite/skyring/commit/db2521bd74f48fc4daa483bab521077c2c32a75d)
+* manually start nats w/ docker [View](https://github.com/esatterwhite/skyring/commit/e7db12a0dc345fc8dc87412f62485745280d8233)
+* tell travis script to wait for nats to come up [View](https://github.com/esatterwhite/skyring/commit/8e20a627803982e42399de1d35af72d6c7014a45)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/63c2a731a903ff1e9b14ee9aa731deec24838f99)
+* docs fixes [View](https://github.com/esatterwhite/skyring/commit/226d170bb9cafe95df5235ae4db13e25e28d1536)
+* docs fixed [View](https://github.com/esatterwhite/skyring/commit/b2e86530dcb1cc8ae9500a55015042c647a6b1ea)
+* .dockerignore [View](https://github.com/esatterwhite/skyring/commit/3173c34c569f4e39260b50284b5f416d14a6bcad)
+* pkg: include lock file.... [View](https://github.com/esatterwhite/skyring/commit/e58c75b536063def88085901aa6764629232897f)
+* docker: update main docker file to use multistage build [View](https://github.com/esatterwhite/skyring/commit/0f2e70632a9450a7456d5c2bb0f54089b668877c)
+* fix bootstrap tut [View](https://github.com/esatterwhite/skyring/commit/d3e98a83b93cbe61faaa25cf7f90b0e38b254c32)
+* update doc images [View](https://github.com/esatterwhite/skyring/commit/b7501e02c192196ed52cfcf73a2c6d2b7520f0d0)
+* adding some tutorials [View](https://github.com/esatterwhite/skyring/commit/85bc491d7ae902119c3e156b1b4d098d6b7ea558)
+* removing old test file [View](https://github.com/esatterwhite/skyring/commit/cdd69f018133171992d3d1e759ec5d83b66a7a80)
+* updated rendered docs [View](https://github.com/esatterwhite/skyring/commit/57a367e1edffb8b1e8b6c0049a26a030207aecee)
+* updating module docs to be inline with current release [View](https://github.com/esatterwhite/skyring/commit/234be911d985c8bc8c92e7c60088ed220f8339d4)
+
+
+## v4.3.0 (2017-06-03)
+
+* 4.3.0 [View](https://github.com/esatterwhite/skyring/commit/3f270e0ac74708011edbbbc8bc3da9c1c351dcb9)
+* update docs for 4.3 [View](https://github.com/esatterwhite/skyring/commit/e7ad1591c964a3470465ea34cb9c8e000dfd7473)
+* test: update timer tests [View](https://github.com/esatterwhite/skyring/commit/59ade793322a135bc09aeea4caeaa4446086f5c5)
+* timer: move nats connection below storage checks [View](https://github.com/esatterwhite/skyring/commit/dc88b48eedf6ae019bbd1bed98288b739490af57)
+* run tests on a single instance. hard to control across many hosts [View](https://github.com/esatterwhite/skyring/commit/c25f5c5bc7a16c0054d213c2b2a6d35f05fc6dbf)
+
+
+## v4.2.1 (2017-06-01)
+
+* 4.2.1 [View](https://github.com/esatterwhite/skyring/commit/48c859653d289876769cf6e9671b4ce6c7894685)
+* timer: add error handler for case when a transport isn't defined [View](https://github.com/esatterwhite/skyring/commit/ab162423c16f51ee4d8951ab535eaff090ed50d0)
+
+
+## v4.2.0 (2017-05-27)
+
+* 4.2.0 [View](https://github.com/esatterwhite/skyring/commit/014bd162c1b9ee789724c8d2522a645baa21025d)
+* cleaning up a test [View](https://github.com/esatterwhite/skyring/commit/95640034c5a3a0946fefc6cbbcfc4739ec1b0769)
+* fix bad merge [View](https://github.com/esatterwhite/skyring/commit/42f47be49d337efb5a172a1feb78e0757b7fc287)
+* add better transport example in readme [View](https://github.com/esatterwhite/skyring/commit/a1e00f5b9bc90f0d1db2abfa3722bf81b65891e4)
+* update docs [View](https://github.com/esatterwhite/skyring/commit/ce183811b4fac9c8e4a42d83477318aa026d3bac)
+* fixing up a transport test [View](https://github.com/esatterwhite/skyring/commit/7770d579a6491ce02c1f693a72759f49b6b9a7bc)
+* tranports: include a shutdown handler for transports [View](https://github.com/esatterwhite/skyring/commit/4754c0afef9dd20339a98467f50f3d53d5294270)
+
+
+## v4.1.0 (2017-05-23)
+
+* 4.1.0 [View](https://github.com/esatterwhite/skyring/commit/e9c802c0714fe09fc088600f71688f8e7220e039)
+* doc: updating docs [View](https://github.com/esatterwhite/skyring/commit/cf6b9b2787945b22bffca559ab54338dc4c9bea3)
+* update docs for tutorials [View](https://github.com/esatterwhite/skyring/commit/46b4fd1b62c51d799e3fe7679d4ab58e756932ce)
+* adding tests [View](https://github.com/esatterwhite/skyring/commit/79e4dbb63bd716d7cff3c72ce4d74f356936b392)
+* Make transports a class. [View](https://github.com/esatterwhite/skyring/commit/9ce47fbe0bcd227290e8968bc6acf62c3f61083e)
+* allow transports to be configured and registred for use [View](https://github.com/esatterwhite/skyring/commit/e43917ee61f50f78d9505e24268de6a4da515b42)
+* deps: ringpop@10.19.0 [View](https://github.com/esatterwhite/skyring/commit/67ec426c2e412ea3ad9ac4b4be683c7d14f0ce41)
+* linting [View](https://github.com/esatterwhite/skyring/commit/b683110702ac02da65fe77a70a044b31458a29d0)
+* add compose test var [View](https://github.com/esatterwhite/skyring/commit/b6aaaa6ee7459d9763b02582386e3c5624e16434)
+
+
+## v4.0.4 (2017-05-02)
+
+* 4.0.4 [View](https://github.com/esatterwhite/skyring/commit/3a5eed05a9b6a294ff1851671892bdc534779924)
+* Leave NODE_ENV as development for CI builds [View](https://github.com/esatterwhite/skyring/commit/34d00aaa38f2f0dd59ae409f3c7c890324a9de8e)
+* fix error log in http transport [View](https://github.com/esatterwhite/skyring/commit/a073b8e78cc0e001e7309453ad4b6bd4109cb9bd)
+* don't default the callback transport [View](https://github.com/esatterwhite/skyring/commit/e5cd3b6eae8b7b940d823fa42190cba6b99e985f)
+* update Docker builds to include NODE_ENV [View](https://github.com/esatterwhite/skyring/commit/f9b7d7cc585028444cdde9b998cedea3812a7633)
+* validator: make sure the requested transport is enabled [View](https://github.com/esatterwhite/skyring/commit/effa81d4ee0e920139e76f563bc6dc17d322ea68)
+
+
+## v4.0.3 (2017-05-01)
+
+* 4.0.3 [View](https://github.com/esatterwhite/skyring/commit/b206164c524c32fda273b3fdde085882afe4af71)
+* skyring: fix up the exitcode / lint [View](https://github.com/esatterwhite/skyring/commit/fa62e7fedb9d8828a9d11964ee064293dd729981)
+* use internal instance of keef for config [View](https://github.com/esatterwhite/skyring/commit/9cb86170bfa12ad98312bbbc09b3d1a36b35f164)
+* auto load deafults from conf package [View](https://github.com/esatterwhite/skyring/commit/b523a3a1814ee97d6032478e6aa5875468868904)
+* docs: update docs [View](https://github.com/esatterwhite/skyring/commit/c7be03f217c229c6a2e82dae759e177986e0b623)
+* skyring: allow skyring to be used as a module [View](https://github.com/esatterwhite/skyring/commit/7f616e639053ada4a09443fb43839b9753d1f605)
+* flip config file to json so it can be loaded into keef when loaded [View](https://github.com/esatterwhite/skyring/commit/6df0f17dec8bbd49349f3e21aec7855d7ca6553e)
+* expose the default storage path [View](https://github.com/esatterwhite/skyring/commit/05b8b22b097f2d31ac23e231941b15dde77484b4)
+
+
+## v4.0.2 (2017-04-30)
+
+* 4.0.2 [View](https://github.com/esatterwhite/skyring/commit/9318e9926dfdb72b5223107aa32af7e21ab9d056)
+* timer: Make sure to clear storage during a rebalance [View](https://github.com/esatterwhite/skyring/commit/f34448fbf9e6d26ad6b9330c7a465f7e5a53cca3)
+* Update CHANGELOG.md [View](https://github.com/esatterwhite/skyring/commit/bbb61c3c1fe50f9b8b669b4eaab2290d3bb821e1)
+
+
+## v4.0.1 (2017-04-30)
+
+* docs: link fixes [View](https://github.com/esatterwhite/skyring/commit/d8dd8d13333c7d7d211e65e4e1983314248de692)
+* 4.0.1 [View](https://github.com/esatterwhite/skyring/commit/570ab66f72ea90db4de86cd1f8b7f653ac33c242)
+* middleware: if there is an in parsing the body, we need to return [View](https://github.com/esatterwhite/skyring/commit/af65a04c5577d5bcd9d738acb0a7ee213fdc973d)
+* middleware: if there is an in parsing the body, we need to return [View](https://github.com/esatterwhite/skyring/commit/70e5018ba37ff1e750969e8e07314092fd950d89)
+
+
+## v4.0.0 (2017-04-29)
+
+* 4.0.0 [View](https://github.com/esatterwhite/skyring/commit/474828c4cf179f95385175a11aaa8043d80bd379)
+* doc: update docs for v4 [View](https://github.com/esatterwhite/skyring/commit/8ebc4791e9154c993de0d9770003057782941ae8)
+* timer, nats: allow for disk storage so nodes can recover from a crash [View](https://github.com/esatterwhite/skyring/commit/a8faf19af7cc20b9f7ee9d23396156ce90891f0e)
+* conf: storage opts - adding storage options for recorvery [View](https://github.com/esatterwhite/skyring/commit/5648fe05ef123ff9533c99a8d91b1a87c03aad19)
+* linting [View](https://github.com/esatterwhite/skyring/commit/512f3248e655713114904a3f930322e5e54d7b9f)
+* dpes: level db [View](https://github.com/esatterwhite/skyring/commit/73b34012229d77f5e7b22762568aa2b0b9d6d092)
+* doc: updated docs [View](https://github.com/esatterwhite/skyring/commit/35f66e4593fd3a8913576675d394fb9198d5d7ad)
+* conf: adding config docs [View](https://github.com/esatterwhite/skyring/commit/9a4f327250bd1e73db9c2312aaf074045acca830)
+
+
+## v3.3.2 (2017-01-29)
+
+* 3.3.2 [View](https://github.com/esatterwhite/skyring/commit/280244854c6d606f78a7c7eff5bc1f97273e6e17)
+* Revert "command to list ring members and status" [View](https://github.com/esatterwhite/skyring/commit/c1b929b9c6f6856bbdd928a82d182215c5c95d54)
+* command to list ring members and status [View](https://github.com/esatterwhite/skyring/commit/a0108c13c0350db7568fb9a6657275f948e7b4e1)
+* lib: make sure nats shutts down when no timers pending [View](https://github.com/esatterwhite/skyring/commit/8b26f0c0596937de58a97bbd33b1fde090a128db)
+* fix docs in post timer [View](https://github.com/esatterwhite/skyring/commit/c87c190195c502d83b7df4f92f8bee3cc4d3c847)
+* update docs [View](https://github.com/esatterwhite/skyring/commit/b43b05b0addabe441860444687de78072cff061e)
+* fix up some docs in http transport [View](https://github.com/esatterwhite/skyring/commit/9bc6c7e5ed101e296f8093985ec833e006b1cdb4)
+* fix the rebalance message during shutdown [View](https://github.com/esatterwhite/skyring/commit/713eef77237764f6d8fd0d9fa8cece801e97c4cb)
+* Update index.html [View](https://github.com/esatterwhite/skyring/commit/04fa0f8464b87cfeb94c459f098c4a1583d5d400)
+
+
+## v3.3.1 (2017-01-14)
+
+* 3.3.1 [View](https://github.com/esatterwhite/skyring/commit/c8e5c59aff086395a000bc5bd7fbd3c085519996)
+* update docs [View](https://github.com/esatterwhite/skyring/commit/e790f2e1dc8b0a8a91682daa5135c5a0418f83ef)
+* check http method before executing [View](https://github.com/esatterwhite/skyring/commit/cfd2456b9c2302ba99d096a60383f1bb07f0ae0f)
+* update docs [View](https://github.com/esatterwhite/skyring/commit/c0c2f193c24c07a4e4accabc69b78e0273b902a2)
+* add all docker files to npmignore [View](https://github.com/esatterwhite/skyring/commit/d64acd22b30457c798a2fb49bd25f21f5d1673d3)
+
+
+## v3.3.0 (2017-01-11)
+
+* 3.3.0 [View](https://github.com/esatterwhite/skyring/commit/bf143903d0171b4712a5f34157500f6b63d27710)
+* update the change log [View](https://github.com/esatterwhite/skyring/commit/2a4c8773bba7fc9e719ef09e926a422e444ac1f2)
+* that didn't help anything [View](https://github.com/esatterwhite/skyring/commit/3076c060c7e2b87b87179d514391565b8324f38b)
+* run both the tests w/ with out coverage [View](https://github.com/esatterwhite/skyring/commit/fe941269770c6f887e445021d3cfaaeddaa1a70c)
+* update generated docs [View](https://github.com/esatterwhite/skyring/commit/d17c1195ebd6753cce6dbbc8ac33e8a7bfc70787)
+* updating api docs [View](https://github.com/esatterwhite/skyring/commit/12600fe391f49eee9b0ab6f3c366f619c88d902f)
+* lower case the http method [View](https://github.com/esatterwhite/skyring/commit/7244862cbb5f315c74e788b9fb79a7651c595cc2)
+* fix doc images [View](https://github.com/esatterwhite/skyring/commit/e17ef91a293e59a0629f300bc409d84c03667a61)
+* regen docs [View](https://github.com/esatterwhite/skyring/commit/c3edf1a2098afed8753a6a2813a2fbe100bbe7a6)
+* fix up the rebalance stuff [View](https://github.com/esatterwhite/skyring/commit/32a68dedacd7456a848a9f3b733f307292b0875d)
+* re gen docs [View](https://github.com/esatterwhite/skyring/commit/27506ce7993bf9e4b7f45a89681aa103cf38dc76)
+* adding a pythong example [View](https://github.com/esatterwhite/skyring/commit/01c3d840c2c0bef5300a5978b170c6d886bcde9a)
+* update generated docs [View](https://github.com/esatterwhite/skyring/commit/5b8e4021e192d5f75beb3044ad90e5ba956f4349)
+* updating some timer docs [View](https://github.com/esatterwhite/skyring/commit/509235bc5defb12fbf20d8e06d8c64824bc8bfab)
+* ignore save files [View](https://github.com/esatterwhite/skyring/commit/4711e1cd616cc5a0e814d66e7ab1f4217f7f8394)
+* add npm script to regen docs [View](https://github.com/esatterwhite/skyring/commit/9d65d1846e8d52c7383a135e0fa78d2f60a9c8a4)
+* inverted architecture image [View](https://github.com/esatterwhite/skyring/commit/54e5849b3c13add96fa9f8f4143dd0a6ca59c39c)
+* updating some docs [View](https://github.com/esatterwhite/skyring/commit/69269d3824fbd3ce04e4b042de57f9b925eff404)
+
+
+## v3.2.0 (2017-01-03)
+
+* 3.2.0 [View](https://github.com/esatterwhite/skyring/commit/b8e8c1e4ca89fa2803e04b22f4ac0c3cedfaff38)
+* updated docs [View](https://github.com/esatterwhite/skyring/commit/22523f893c484b9ab0ccf724b9b674ec20f68102)
+* module doc headers for server classes [View](https://github.com/esatterwhite/skyring/commit/791ef1bbf241b650a7f750bb92fc1cf7b0bc0b8f)
+* updating docs and some examples [View](https://github.com/esatterwhite/skyring/commit/fa12e75e3bead6eb31b3099affaabe851651c4c0)
+* pick up hosts for nats config in create client [View](https://github.com/esatterwhite/skyring/commit/a72bec7b5d1f4ab69310384e11b8edde5684c1d7)
+* update nats docs [View](https://github.com/esatterwhite/skyring/commit/a7b0856cfc3310e200d7003e6caf225285d252d7)
+* nats docs [View](https://github.com/esatterwhite/skyring/commit/e709defdbf9a90f98d292b550ea5074fef7a4338)
+* bump keef 2.0.1 [View](https://github.com/esatterwhite/skyring/commit/8685854f69fc14142d32d93025c1ed9fdf9ce9a5)
+* Update index.html [View](https://github.com/esatterwhite/skyring/commit/d1a9bf528176ca102e7a80172c6ee414b2d64615)
+* regen docs [View](https://github.com/esatterwhite/skyring/commit/486455ba47fd30a11b759acfab732b6f7c07fb9c)
+* bump keef [View](https://github.com/esatterwhite/skyring/commit/6b6086b576f1e6e7d9c7f47467d3a4d59c2963d2)
+* include missing deps in docs [View](https://github.com/esatterwhite/skyring/commit/5ce043e3381abc3d46ec16c1f1052782df7556f5)
+* fix logo in generated docs [View](https://github.com/esatterwhite/skyring/commit/fca13f6b9530368810e0085923b76f4e3688973c)
+* fix link to compose file in README [View](https://github.com/esatterwhite/skyring/commit/8ed0ec9730e4e77480240c51a5a21f25da8bb013)
+* re up readme docs [View](https://github.com/esatterwhite/skyring/commit/dbd626da23519c3ab43352fa47722550b77f8077)
+* re-up module docs [View](https://github.com/esatterwhite/skyring/commit/2793320d207c6867af99943ab46f30c7de28a4fd)
+* regenerating docs [View](https://github.com/esatterwhite/skyring/commit/28a25cef86f9ed2c850dbdbe9f1bd67c20c58bf5)
+* Update index.html [View](https://github.com/esatterwhite/skyring/commit/6590f829f0c408ffce2817f7d6d4f8831ae256a3)
+* Include generated Module docs w/ jsdoc [View](https://github.com/esatterwhite/skyring/commit/8c42278f383a8758a08e420354f3457a634d9811)
+
+
+## v3.1.0 (2017-01-01)
+
+* 3.1.0 [View](https://github.com/esatterwhite/skyring/commit/ad9a40502b84f1e5458f770469bed63b75c37a40)
+* bin: fix project files to work when installed globally [View](https://github.com/esatterwhite/skyring/commit/f54f1edf47b920fd9534d6ce43b61e478f19a381)
+
+
+## v3.0.1 (2016-12-30)
+
+* 3.0.1 [View](https://github.com/esatterwhite/skyring/commit/9e51bcb4c7a443419f39a68f6b6d503dbf27bb01)
+* ignore .tgz in npm packages [View](https://github.com/esatterwhite/skyring/commit/028edcc5e8b8feb39166310584d6af5f916ae9ca)
+
+
+## v3.0.0 (2016-12-30)
+
+* 3.0.0 [View](https://github.com/esatterwhite/skyring/commit/92ed7c62b64c6ec690a7520d2ba05018aa32ef40)
+* Updating change log file [View](https://github.com/esatterwhite/skyring/commit/18b73a6f3e91aa87a83487eeeedf803096b5173a)
+* Adding code cliemt badge from sheilds [View](https://github.com/esatterwhite/skyring/commit/a53041e1bb3ad9e52d21e8cc79090d3176bc3d53)
+* fixing some white space [View](https://github.com/esatterwhite/skyring/commit/903fdc3afd4ad16736ed1c53d5ef0498dd0e6632)
+* include missing module in tests [View](https://github.com/esatterwhite/skyring/commit/8aec522d89a8aee953b1b876e56f0da1f87317b2)
+* linting [View](https://github.com/esatterwhite/skyring/commit/ce9885faffa1cf2908dbc0ab2c921e250619a180)
+* Include code climate token in compose file [View](https://github.com/esatterwhite/skyring/commit/3c0d0402ba70e517a8138de2ede019dd62f2785e)
+* Code climate needs git installed ... [View](https://github.com/esatterwhite/skyring/commit/b0f6af0a6cfa66c4d2cd66a1bebf605c9802f912)
+* tests for the put route [View](https://github.com/esatterwhite/skyring/commit/a51669093f09dbfee3625e8973c4482359219fc6)
+* linting server code [View](https://github.com/esatterwhite/skyring/commit/d27c3f61b86f2ebb0e0cb952c7e2ecf95d5fd8f0)
+* run coverage for CI tests [View](https://github.com/esatterwhite/skyring/commit/59b8c0ace19a434519e4645f231dc0d83d145dd9)
+* adding test for delete route [View](https://github.com/esatterwhite/skyring/commit/5f5e927ebc17ffdf9b6a6c4212b6a354cc43edee)
+* remove the file qualifer from the test set up [View](https://github.com/esatterwhite/skyring/commit/caad8e937887f47e31900bb1ee3522159e9f2b7e)
+* adding middleware for payload validation [View](https://github.com/esatterwhite/skyring/commit/759f816f2a6df69e5ac91b84812ecc5b07933305)
+* ignore coverage dir [View](https://github.com/esatterwhite/skyring/commit/f15446c5097059fdb3a461dae3c5ba3fa58ff00b)
+* including code coverage data [View](https://github.com/esatterwhite/skyring/commit/c3652f9d4e7660230024912db8aa21457fc6b549)
+* update docker ignore [View](https://github.com/esatterwhite/skyring/commit/7eea779b6c7ec696ea6890f5d3d0901359fd621a)
+* CHANGELOG file [View](https://github.com/esatterwhite/skyring/commit/eeba2d8487cb30e6324e1b59bea247d311428363)
+* update README and License [View](https://github.com/esatterwhite/skyring/commit/601e9031137cfa11b6db56910bff21e8d3f3f226)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/bcbaa012c5cb53237caa6ee31aee146455205a7e)
+* update readme with instructiosn on running [View](https://github.com/esatterwhite/skyring/commit/7abdad528ed50400506d0d88489ad4f0d380850a)
+* updating docs [View](https://github.com/esatterwhite/skyring/commit/fa50affde0ba59e2634f017faf02e882902ef50d)
+* drop the debug from test runs [View](https://github.com/esatterwhite/skyring/commit/ef744b4ed25bdc49d40e288f189b56d76a5f4c14)
+* integration tests for invalid requests [View](https://github.com/esatterwhite/skyring/commit/6e75776a22c06c5141305cdc87104a91cdceb076)
+* include a payload validator for modification routes [View](https://github.com/esatterwhite/skyring/commit/5dc488eebd9cb53d07d02cbdc8a2db6a1dc45cbf)
+* errors should just set a reason header [View](https://github.com/esatterwhite/skyring/commit/2f38bc7901a881a1cc6767d70b912173d9fe2502)
+* update test compose file to start a nats cluster [View](https://github.com/esatterwhite/skyring/commit/1493c7076ecf23de2d448eab8a2a68a5c659b22c)
+* linting timers file [View](https://github.com/esatterwhite/skyring/commit/ecf7c67df8b7c459ed67722076add7b06cac7cb6)
+* Test wrapper [View](https://github.com/esatterwhite/skyring/commit/0386397eb60307796d57084f34b9e4089f6440a6)
+* Some tests around rebalancing [View](https://github.com/esatterwhite/skyring/commit/4fe51cee1d8499a1d265e9405b63877be8aa27c3)
+* pass the timers instance to the transport [View](https://github.com/esatterwhite/skyring/commit/ed900a7981bdef7f4d35ec5b7c4afbb93ee52e7f)
+* spit out any route errors before forwarding [View](https://github.com/esatterwhite/skyring/commit/8691b6e2c6f9e4b76a3b3534eb3e29f0ecefdcc2)
+* Server instance uses the internal name of it's ring node for nats groups [View](https://github.com/esatterwhite/skyring/commit/5d65f007a15d6a0e1db8ffdabdaa0477be71cf12)
+* Make timers lib a class [View](https://github.com/esatterwhite/skyring/commit/9b4dd90424b1f0a3ce3a1aadb4a6c77071daae79)
+* start of some integration testing [View](https://github.com/esatterwhite/skyring/commit/225d09228b58be74baad445a032710aa367b74b2)
+* some linting [View](https://github.com/esatterwhite/skyring/commit/2f30ba3746c1445761af53e441d29f7d3b719060)
+* when a new node enters the ring [View](https://github.com/esatterwhite/skyring/commit/91049104dc99460cdadf0cbff8aed8aa3835c65a)
+
+
+## v2.0.1 (2016-12-28)
+
+* 2.0.1 [View](https://github.com/esatterwhite/skyring/commit/377daada9561563cab924d97570be06d65c42e2e)
+* default the options to an empty object [View](https://github.com/esatterwhite/skyring/commit/a2abf0f92337b11170018b4e493908f3355d062b)
+* fix docker file [View](https://github.com/esatterwhite/skyring/commit/cb91d298df5c2a2d4e6125f7adc863b6c3a300df)
+* adding some badges [View](https://github.com/esatterwhite/skyring/commit/ec181571dd08c73d601f1aeffa6abaa39a26cabe)
+
+
+## v2.0.0 (2016-12-27)
+
+* 2.0.0 [View](https://github.com/esatterwhite/skyring/commit/c84c4bf29b97a0cfa6ec3d489d4a1804d186ee10)
+* update the readme [View](https://github.com/esatterwhite/skyring/commit/a423db1d25c0177609918c4af18d7eec1c4084fc)
+* fixing readme doc [View](https://github.com/esatterwhite/skyring/commit/553fe2eabaef39fd94c17232d20126698cab0630)
+* update apidoc [View](https://github.com/esatterwhite/skyring/commit/bc0fa14fda40320a49c6e4952a0d103330a31c7a)
+* docs for the node module [View](https://github.com/esatterwhite/skyring/commit/e3e3029dcaa34cc8f386ea67aad43bac4cbab2ac)
+* Adding docs to route module [View](https://github.com/esatterwhite/skyring/commit/26f91d28e40357559e92df6c6ab6d516d8fef6dd)
+* adding more module docs [View](https://github.com/esatterwhite/skyring/commit/dd7429d3a26e39cf44b33b0d755d095d8ea75cc0)
+* adding docs to the main server class [View](https://github.com/esatterwhite/skyring/commit/242e359e11d55e5215498dd4544004df6ea9ee71)
+* make sure rebalanced timers maintain elapsed time [View](https://github.com/esatterwhite/skyring/commit/f3665120b8b4424f24d1fedd12d5e61b8e7def33)
+* adding some start / stop commands to package.json [View](https://github.com/esatterwhite/skyring/commit/165a2e986734b4b12bc3660587ac0dcd0bbd0ed2)
+* fix up rebalance logic for nats [View](https://github.com/esatterwhite/skyring/commit/b6d9f898ecca3a745567b82c3797fa53193b832d)
+* include config for a nats cluster [View](https://github.com/esatterwhite/skyring/commit/985205d03dc0dc32d7bdc35d507be3a348819a99)
+* fix up the rebalance logic for nats [View](https://github.com/esatterwhite/skyring/commit/f5f43e1cbbfb6ed7e7c68abde01cf4367227ca02)
+* Don't double encode strings [View](https://github.com/esatterwhite/skyring/commit/63ff5f994c31bb07dc8cf3c1241fa85834962e4b)
+* update compose files and tests for nats backend [View](https://github.com/esatterwhite/skyring/commit/1488b5cddaad3459f604b63f983c5bbe160468e1)
+* replace redis with nats [View](https://github.com/esatterwhite/skyring/commit/c984a7d6109b594f9702cbc2bd602744071f7ad4)
+* remove nats in favor of ioredis [View](https://github.com/esatterwhite/skyring/commit/1ece4dd8bc3cebfd57409fa7655c37c1f5f0eb6a)
+* cant ignore *.tgz if we want to use it [View](https://github.com/esatterwhite/skyring/commit/5a46309256df6db1169f1178bc464d446b5bf4d6)
+
+
+## v1.0.5 (2016-12-24)
+
+* 1.0.5 [View](https://github.com/esatterwhite/skyring/commit/5b5f7951983661e567a5b20da8b69cb13684a490)
+* Docker file for building smaller images [View](https://github.com/esatterwhite/skyring/commit/a952dffdc0632180ebd09902f338f69c9f751b62)
+* be sure to surface errors from the bootstrap steps [View](https://github.com/esatterwhite/skyring/commit/ec534498e094922c1ee2dcf9f7873f753a11ab5a)
+* fix up package scripts [View](https://github.com/esatterwhite/skyring/commit/058085b949b0c246f0f27a572764584a23dbce67)
+* removing some unused code [View](https://github.com/esatterwhite/skyring/commit/c09c201a1172b8243985717f1b986629272722f2)
+* remove install step from travis [View](https://github.com/esatterwhite/skyring/commit/602758a25c9e8b08426c2ecc947212e75e732d8c)
+* adding compose setup for build process [View](https://github.com/esatterwhite/skyring/commit/4d332cbddd8e0cf45a7943aa60db3943649e7c45)
+* starting a travis build file [View](https://github.com/esatterwhite/skyring/commit/09763014c28100c70d999602e9ec5aef79345be6)
+* Start of some tests [View](https://github.com/esatterwhite/skyring/commit/ed356ea816c4d7b90d512445c5bc22b9de70de78)
+* debug transport [View](https://github.com/esatterwhite/skyring/commit/be78749a870e7098685b13f116612789c97652c5)
+* linting [View](https://github.com/esatterwhite/skyring/commit/c3c7fcc116b291c4b19c31083fe5fb67ba951f5f)
+* doc fixes [View](https://github.com/esatterwhite/skyring/commit/a2a3b99a0916b667714773f254786c68a92edc92)
+* docs update [View](https://github.com/esatterwhite/skyring/commit/7a77e5b32e4b52aa9d204e91606cbd3c0a979c11)
+
+
+## v1.0.4 (2016-12-22)
+
+* 1.0.4 [View](https://github.com/esatterwhite/skyring/commit/ef3c03fbd615c63a82a0ed9ab08d414d88225001)
+* fix bug that prevented server shutdown if cache empty [View](https://github.com/esatterwhite/skyring/commit/394a0f54cf19609672c2c8c424955ba37a8e6d3d)
+* Update README.md [View](https://github.com/esatterwhite/skyring/commit/bc83fc7667a15dbf9efaefdd83f41c40a386d44f)
+* adding api doc for ghpages [View](https://github.com/esatterwhite/skyring/commit/fb6d38f68244a03aeeaba3c7b332665f06827f5f)
+* docs folder for ghpages [View](https://github.com/esatterwhite/skyring/commit/c7adb0d1d22e7ccdc3011914b1683a8e562af887)
+* more README [View](https://github.com/esatterwhite/skyring/commit/8e1d49d51e4b2b4df8eee8c03f01f4fe0792262c)
+* more README [View](https://github.com/esatterwhite/skyring/commit/f73863077c2386e7ec40160b308e03a27c6493eb)
+* updating the Readme [View](https://github.com/esatterwhite/skyring/commit/850f388b28accd342539826a5e58cafd5463cbe0)
+* update readme [View](https://github.com/esatterwhite/skyring/commit/d5c2dd286572bf7dab34127cb6f0a56e7e717a91)
+* Fix up logo image [View](https://github.com/esatterwhite/skyring/commit/6a5e0c663b2689e15d81caa03234bfaa32bcd07f)
+* skyring.png created online with Bitbucket [View](https://github.com/esatterwhite/skyring/commit/1ad2136905369d74de0325a382515619dc0ddd91)
+
+
+## v1.0.3 (2016-12-21)
+
+* 1.0.3 [View](https://github.com/esatterwhite/skyring/commit/a591dc6e8e73b541ac7d8814f812ed17f46ec2d4)
+* server: Make sure ring and http close before rebalanac [View](https://github.com/esatterwhite/skyring/commit/fe7991a8daa1f694f86ba6aebaf0544d7acf93fe)
+
+
+## v1.0.2 (2016-12-20)
+
+* 1.0.2 [View](https://github.com/esatterwhite/skyring/commit/1ae239b2b4161e89a87c52e00fe5620f7c3611c4)
+* remove the debug loop so the node can shutdown [View](https://github.com/esatterwhite/skyring/commit/197ede9462a59191daf8449d3de095defe2b708e)
+
+
+## v1.0.1 (2016-12-20)
+
+* 1.0.1 [View](https://github.com/esatterwhite/skyring/commit/105a2d9a3f7023d287b22f720ec6709167e87a8d)
+* fix shutdown logic ordering [View](https://github.com/esatterwhite/skyring/commit/0bcb67a93e7cfae5b529ea1388c533e7209c14c9)
+
+
