@@ -1,5 +1,4 @@
-/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
+'use strict'
 /**
  * Simple wrapper around the http request object to avoid deopts
  * @module skyring/lib/server/request
@@ -10,10 +9,9 @@
  */
 
 const {Url} = require('url')
-    , qs = require('querystring')
-    , cache = new WeakMap()
-    , pathexp = /^(\/\/?(?!\/)[^\?#\s]*)(\?[^#\s]*)?$/
-    ;
+const qs = require('querystring')
+const cache = new WeakMap()
+const pathexp = /^(\/\/?(?!\/)[^\?#\s]*)(\?[^#\s]*)?$/
 
 /**
  * @constructor

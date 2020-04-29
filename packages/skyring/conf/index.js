@@ -18,4 +18,8 @@ module.exports = conf.defaults({
 , nats: {
     hosts: "127.0.0.1:4222"
   }
+, log: {
+    level: 'info'
+  , pretty: false
+  }
 })

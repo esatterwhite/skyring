@@ -13,8 +13,8 @@
 
 const STATUS_CODES = require('http').STATUS_CODES
 const phin = require('phin').unpromisified
-const debug   = require('debug')('skyring:transport:http')
 const Transport = require('./transport')
+const log = require('../log')
 const {name, version} = require('../../package.json')
 const method_exp = /^(post|put|patch|delete|get|options|head)$/i
 const kType = Symbol.for('SkyringTransport')
@@ -34,7 +34,7 @@ const USER_AGENT = `${name}/${version}`
 class Http extends Transport {
   constructor(options) {
     super(options)
-    this.name = 'http'
+    this.log = log.child({name: 'skyring:transports:http'})
   }
 
   static [Symbol.hasInstance](instance) {
@@ -48,12 +48,12 @@ class Http extends Transport {
       pending && clearTimeout(pending.timer)
       const err = new Error(`Invalid http verb ${method}`)
       err.code = 'ESRHTTP'
+      this.log.error(err, 'unable to execute http transport %s', id)
       cache.failure(id, err)
-      debug('unable to execute http transport', method, id)
       return
     }
 
-    debug('executing http transport %s', id, method)
+    this.log.debug('executing http transport %s', id)
 
     phin({
       url: url
@@ -64,19 +64,18 @@ class Http extends Transport {
       }
     }, (err, res) => {
       if (err) {
-        debug('timer err', err)
+        this.log.error(err, {url, method, id})
         return cache.failure(id, err)
       }
 
       if (res.statusCode > 299) {
-        debug('timer fail', res.statusCode, body)
         const error = new Error(STATUS_CODES[res.statusCode])
         error.code = res.statusCode = res.statusCode
-        console.error(error, body)
+        this.log.error(err, 'timer failure %s', res.statusCode)
         return cache.failure(id, error)
       }
 
-      debug('timer sucess')
+      this.log.debug('timer sucess %s', id)
       return cache.success(id)
     })
   }

@@ -5,20 +5,24 @@
  * @author Eric Satterwhite
  * @tutorial transports
  * @since 1.0.0
- * @requires debug
  * @requires skyring/lib/transports/http
+ * @requires skyring/lib/transports/callback
+ * @requires skyring/lib/log
+ * @requires skyring/lib/lang/array/to-array
  * @requires skyring/conf
  */
 
-const debug     = require('debug')('skyring:transports')
 const Callback  = require('./callback')
 const Http      = require('./http')
+const pino      = require('../log')
 const toArray   = require('../lang/array/to-array')
 const conf      = require('../../conf')
 const kLoad     = Symbol('kLoad')
 const kShutdown = Symbol.for('kShutdown')
 const ENV       = conf.get('node_env')
 const defaults  = toArray(conf.get('transport'))
+
+const log = pino.child({name: pino.namespace(__dirname, 'transports')})
 
 /**
  *
@@ -141,9 +145,10 @@ module.exports = class Transports extends Map {
         throw error
       }
 
-      debug('loading %s transport', name)
+      log.info('loading %s transport', name)
       const instance = new transport(
         conf.get(`transports:${name}`)
+      , pino
       )
 
       this.set(name, instance)
@@ -156,7 +161,7 @@ module.exports = class Transports extends Map {
       if (!keys.length) return cb()
       const transport = keys.pop()
       if (typeof transport.shutdown === 'function') {
-        debug(`shutdown ${transport.name} transport`)
+        log.debug(`shutdown ${transport.name} transport`)
         return transport.shutdown(run)
       }
       run()

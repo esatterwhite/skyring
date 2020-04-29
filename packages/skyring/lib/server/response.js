@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /**
  * Simple wrapper around the http response object to avoid deopts
  * @module skyring/lib/server/response
@@ -6,7 +6,11 @@
  * @since 1.0.0
  * @requires debug
  */
-const debug = require('debug')('skyring:error');
+
+const {STATUS_CODES} = require('http')
+const debug = require('debug')('skyring:error')
+const pino = require('../log')
+const log = pino.child({name: pino.namespace(__dirname, '')})
 
 /**
  * @constructor
@@ -14,9 +18,9 @@ const debug = require('debug')('skyring:error');
  * @param {ServerResponse} res A {@link https://nodejs.org/api/http.html#http_class_http_serverresponse|ServerResponse}
  * from the node http module
  */
-function Response( res ) {
-  this.res = res;
-  this.body = null;
+function Response(res) {
+  this.res = res
+  this.body = null
 }
 
 /**
@@ -27,24 +31,24 @@ function Response( res ) {
  * @param {Error|number} err The error to handle
  * @param {String} [msg] In the case `err` is a number, this will be used as the message
  */
-Response.prototype.error = function error( err, msg ) {
+Response.prototype.error = function error(err, msg) {
   if(typeof err === 'number') {
-    this.res.setHeader('x-skyring-reason', msg || 'Internal Server Error');
-    return this.status(err).json({
-      message: msg
-    });
-  }
-  err.statusCode = err.statusCode || err.code;
-  if(!err.statusCode) {
-    err.statusCode = 500;
-    err.message = 'Internal Server Error';
+    const message = msg || STATUS_CODES[err]
+    this.res.setHeader('x-skyring-reason', message || 'Internal Server Error')
+    return this.status(err).json({message})
   }
 
-  this.status(err.statusCode);
-  debug(err);
-  this.res.setHeader('x-skyring-reason', err.message);
-  return this.end();
-};
+  err.statusCode = err.statusCode || err.code
+  if(!err.statusCode) {
+    err.statusCode = 500
+    err.message = 'Internal Server Error'
+  }
+
+  this.status(err.statusCode)
+  log.error(err)
+  this.res.setHeader('x-skyring-reason', err.message)
+  return this.end()
+}
 
 /**
  * Returns the value of a response header
@@ -52,9 +56,9 @@ Response.prototype.error = function error( err, msg ) {
  * @param {String} header The name of the header to get
  * @returns {String} The header value, if it is set
  */
-Response.prototype.get = function get( key ) {
-  return this.res.getHeader(key);
-};
+Response.prototype.get = function get(key) {
+  return this.res.getHeader(key)
+}
 
 /**
  * Helper for responding with an Object. Will serialize the object, and set the
@@ -64,11 +68,11 @@ Response.prototype.get = function get( key ) {
  * @param {Object} body The object to set as the response body
  * @returns {module:skyring/lib/server/response}
  */
-Response.prototype.json = function json( body ) {
-  this.res.setHeader('Content-Type', 'application/json');
-  this.res.end(JSON.stringify(body));
-  return this;
-};
+Response.prototype.json = function json(body) {
+  this.res.setHeader('Content-Type', 'application/json')
+  this.res.end(JSON.stringify(body))
+  return this
+}
 
 /**
  * Sets a response header
@@ -78,14 +82,14 @@ Response.prototype.json = function json( body ) {
  * @param {String} The header value to set
  * @returns {module:skyring/lib/server/response}
  */
-Response.prototype.set = function set( key, val ) {
+Response.prototype.set = function set(key, val) {
   const value = Array.isArray(val)
     ? val.map(String)
-    : typeof val === 'string' ? val : String(val);
+    : typeof val === 'string' ? val : String(val)
 
-  this.res.setHeader(key, value);
-  return this;
-};
+  this.res.setHeader(key, value)
+  return this
+}
 
 /**
  * Sets the status code on the response object
@@ -94,10 +98,10 @@ Response.prototype.set = function set( key, val ) {
  * @param {Number} code The http Status code to set
  * @returns {module:skyring/lib/server/response}
  */
-Response.prototype.status = function status( code ) {
-  this.res.statusCode = code;
-  return this;
-};
+Response.prototype.status = function status(code) {
+  this.res.statusCode = code
+  return this
+}
 
 /**
  * Writes a chunk to the response stream
@@ -106,10 +110,10 @@ Response.prototype.status = function status( code ) {
  * @param {String} [chunk] The chunk to write
  * @returns {module:skyring/lib/server/response}
  */
-Response.prototype.send = function send( str ) {
-  this.res.write(str);
-  return this;
-};
+Response.prototype.send = function send(str) {
+  this.res.write(str)
+  return this
+}
 
 /**
  * Ends the response
@@ -117,9 +121,9 @@ Response.prototype.send = function send( str ) {
  * @param {String} [chunk] An optional chunk to write be for closing the stream
  * @returns {module:skyring/lib/server/response}
  */
-Response.prototype.end = function end( str ) {
-  this.res.end(str);
-  return this;
-};
+Response.prototype.end = function end(str) {
+  this.res.end(str)
+  return this
+}
 
-module.exports = Response;
+module.exports = Response

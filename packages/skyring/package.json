@@ -34,7 +34,6 @@
     "@esatterwhite/micromock": "^2.0.0",
     "@skyring/ringpop": "^11.1.0",
     "body": "^5.1.0",
-    "debug": "^4.1.1",
     "encoding-down": "^5.0.4",
     "get-port": "^5.1.1",
     "keef": "^5.0.0",

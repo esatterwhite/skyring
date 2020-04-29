@@ -10,7 +10,8 @@ test('server starts when executed directly', (t) => {
   const server = path.join(__dirname, '..', 'index.js')
   const child = spawn(process.execPath, [server], {
     env: Object.assign({}, process.env, {
-      DEBUG: 'skyring:main'
+      log__level: 'info'
+    , log__pretty: 1
     , seeds: '127.0.0.1:2222'
     , channel__port: '2222'
     })
@@ -20,7 +21,7 @@ test('server starts when executed directly', (t) => {
   let buf = ''
   const cases = { listen: false }
   child.once('error', t.threw)
-  child.stderr.on('data', (chunk) => {
+  child.stdout.on('data', (chunk) => {
     buf += chunk.toString()
     if (!cases.listen && LISTEN_EXP.test(buf)) {
       cases.listen = true

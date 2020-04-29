@@ -9,7 +9,6 @@
  * @requires path
  * @requires levelup
  * @requires encoding-down
- * @requires debug
  * @requires skyring/lib/transports
  * @requires skyring/lib/nats
  * @requires skyring/lib/json
@@ -22,10 +21,13 @@ const encode         = require('encoding-down')
 const Transports     = require('./transports')
 const nats           = require('./nats')
 const json           = require('./json')
+const pino           = require('./log')
 const conf           = require('../conf')
-const debug          = require('debug')('skyring:timer')
-const rebalance      = require('debug')('skyring:rebalance')
-const store          = require('debug')('skyring:store')
+
+const log            = pino.child({name: pino.namespace(__dirname, __filename)})
+const rebalance      = pino.child({name: pino.namespace(__dirname, 'rebalance')})
+const store          = pino.child({name: pino.namespace(__dirname, 'storage')})
+
 const storage        = Symbol('storage')
 const shutdown       = Symbol.for('kShutdown')
 const kNode          = Symbol('nodeid')
@@ -85,7 +87,7 @@ class Timer extends Map {
     this._bail = false
     const store_opts = conf.get('storage')
     const opts = Object.assign(store_opts, this.options.storage)
-    store(opts)
+    store.debug('%j', opts)
     if (!opts.path) {
       if (opts.backend === 'memdown') {
         this[kNode] = generateId()
@@ -103,13 +105,13 @@ class Timer extends Map {
       ? new (require(opts.backend))
       : encode(require(opts.backend)(opts.path), {valueEncoding: 'json'})
 
-    debug('storage path', opts)
+    log.debug('storage path', opts)
     this[kNode] = generateId(store_opts.path)
     this.nats = nats.createClient(this.options.nats)
     this.transports = new Transports(this.options.transports)
     this[storage] = levelup(backend, opts, (err) => {
-      store('storage backend ready', store_opts)
-      debug('node id', this[kNode])
+      store.debug('storage backend ready', store_opts)
+      log.debug('node id', this[kNode])
       this.recover(() => {
         this.nats.publish('skyring:node', {
           node: this[kNode]
@@ -176,7 +178,7 @@ timers.create(id, options, (err) => {
     const created = payload.created || now
     const elapsed = now - created
     if(now > created + payload.timeout) {
-      debug('executing stale timer')
+      log.debug('executing stale timer: %s', id)
       setImmediate(
         transport.exec.bind(transport)
       , payload.callback.method
@@ -210,12 +212,12 @@ timers.create(id, options, (err) => {
 
       /* istanbul ignore if */
       if (err) {
-        console.error(err)
+        log.error(err)
         cb(err, null)
         return null
       }
 
-      debug('setting timer', id)
+      log.debug('setting timer %s', id)
       this.nats.publish('skyring:events', {
         type: EVENT_STATUS.CREATED
       , timer: id
@@ -268,7 +270,12 @@ error.code = 'ENOREMOTE'
 timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    **/
   failure(id, error, cb = noop) {
+    log.error(error, `timer failure ${id}`)
     this[kRemove](id, (err) => {
+      if (err) {
+        log.error(err)
+        return cb(err)
+      }
       this.nats.publish('skyring:events', {
         type: EVENT_STATUS.FAIL
       , timer: id
@@ -289,7 +296,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    **/
   cancel(id, cb = noop) {
     this[kRemove](id, (err) => {
-      if (err) return cb(err)
+      if (err) {
+        log.error(err)
+        return cb(err)
+      }
       this.nats.publish('skyring:events', {
         type: EVENT_STATUS.CANCELLED
       , timer: id
@@ -300,23 +310,26 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 
   [kRemove](id, cb = noop) {
     this[storage].del(id, (err) => {
-      if (err) return console.error('unable to purge %s', id, err)
-      store('%s purged from storage', id, this.options.storage)
-    })
-    const rec = this.get(id)
+      if (err) {
+        store.error(err, `unable to purge timer ${id}`)
+        return cb(err)
+      }
 
-    if(!rec) {
-      const err = new Error('Not Found')
-      err.code = 'ENOENT'
-      setImmediate(cb, err)
+      const rec = this.get(id)
+
+      if (!rec) {
+        const err = new Error('Not Found')
+        err.code = 'ENOENT'
+        setImmediate(cb, err)
+        return null
+      }
+
+      clearTimeout(rec.timer)
+      this.delete(id)
+      setImmediate(cb)
+      store.trace('timer purged from storage %s', id)
       return null
-    }
-
-    clearTimeout(rec.timer)
-    this.delete(id)
-    setImmediate(cb)
-    debug('timer cleared', id)
-    return null
+    })
   }
 
   rebalance(opts, node, cb = noop) {
@@ -325,7 +338,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 
     if(!size) return
 
-    rebalance('node %s begin rebalance; timers: %d', this[kNode], size)
+    rebalance.info('node %s begin rebalance; timers: %d', this[kNode], size)
     this.nats.publish('skyring:node', {
       node: this[kNode]
     , type: EVENT_STATUS.REBALANCE
@@ -345,7 +358,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       , created: obj.created
       })
 
-      rebalance('node %s no longer the owner of %s', this[kNode], obj.id)
+      rebalance.debug('node %s no longer the owner of %s', this[kNode], obj.id)
 
       this.nats.publish('skyring:events', {
         node: this[kNode]
@@ -361,7 +374,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     }
 
     batch.write(() => {
-      store('node %s rebalance batch delete complete', this[kNode])
+      rebalance.info('node %s rebalance batch delete complete', this[kNode])
     })
   }
 
@@ -372,12 +385,13 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     }, noop)
 
     const fn = (data) => {
-      store('recover', data.key)
+      store.trace('recover timer %s', data.key)
       const out = Object.assign({}, data.value.payload, {
         id: data.value.id
       , created: data.value.created
       })
-      this.create(data.key, out, debug)
+      // pass noop to `create` so the single callback isn't called multiple times
+      this.create(data.key, out, noop)
     }
 
     const stream = this[storage].createReadStream()
@@ -385,9 +399,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     stream
     .on('data', fn)
     .once('close', function () {
-      debug('recover stream close')
+      store.trace('recover stream close')
       stream.removeListener('data', fn)
-      cb && cb()
+      // call the callback when the stream is processed + complete
+      cb()
     })
   }
 
@@ -416,7 +431,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
   update(id, body, cb) {
     this[kRemove](id, (err) => {
       if (err) return cb(err)
-      debug('updating timer', id)
+      log.debug('updating timer', id)
       this.create(id, body, cb)
     })
   }
@@ -483,11 +498,11 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       this.nats.request(REBALANCE_SUB, data, (reply) => {
         if (++acks === size) {
           return batch.write(() => {
-            store('batch delete finished')
+            store.trace('batch delete finished')
             this.disconnect(cb)
           })
         }
-        rebalance( '%s of %s processed', acks, data.count, data.id)
+        rebalance.trace( '%s of %s processed', acks, data.count, data.id)
       })
     }
 
