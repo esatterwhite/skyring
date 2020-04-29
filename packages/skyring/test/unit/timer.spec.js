@@ -17,6 +17,9 @@ function clearAll(timers, cb) {
     clearTimeout(t.timer)
   }
   timers.clear()
+  for(const t of timers.values()){
+    clearTimeout(t.timer)
+  }
   timers.nats.quit(() => {
     timers.close(cb)
   })
@@ -272,6 +275,7 @@ test('timers', (t) => {
   })
 
   t.test('recovery', (tt) => {
+    tt.plan(4)
     const state = {
       timers: null
     , server: null
@@ -290,7 +294,6 @@ test('timers', (t) => {
         state.server = http.createServer((req, res) => {
           let body = ''
           tt.pass('recovered timer called')
-          debugger;
           req.on('data', (chunk) => {
             body += chunk
           })
@@ -298,12 +301,13 @@ test('timers', (t) => {
           req.once('end', (chunk) => {
             body += (chunk || '')
             const out = JSON.parse(body)
-            tt.match(out, {
-              foo: {bar: 100}
-            })
             res.writeHead(204)
             res.end()
-            setTimeout(tt.end, 50)
+            setTimeout(() => {
+              tt.match(out, {
+                foo: {bar: 100}
+              })
+            }, 50)
           })
         }).listen(0, cb)
       }
@@ -318,7 +322,7 @@ test('timers', (t) => {
     , (cb) => {
         tt.comment(`setting timer ${state.id}`)
         state.timers.create(state.id, {
-          timeout: 500
+          timeout: 1000
         , data: {foo: {bar: 100}}
         , callback: {
             transport: 'http'

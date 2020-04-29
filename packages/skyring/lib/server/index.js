@@ -15,13 +15,12 @@ const {isFunction} = require('util')
 const http         = require('http')
 const mock         = require('@esatterwhite/micromock')
 const util         = require('util')
-const Debug        = require('debug')
 const routes       = require('./api')
 const Node         = require('./node')
 const Router       = require('./router')
 const Timer        = require('../timer')
 const conf         = require('../../conf')
-const debug        = Debug('skyring:server')
+const log          = require('../log').child({name: 'server'})
 
 /**
  * @constructor
@@ -96,7 +95,7 @@ class Server extends http.Server {
   route(opts) {
     const route = this._router.route(opts.path, opts.method, opts.handler)
     opts.middleware && route.before( opts.middleware )
-    debug('loaded: %s %s', opts.method, opts.path)
+    log.debug('loaded: %s %s', opts.method, opts.path)
   }
 
   /**
@@ -112,7 +111,7 @@ class Server extends http.Server {
     const callback = args[args.length - 1]
     if (this.listening) return isFunction(callback) ? callback() : null
 
-    debug('seed nodes', this.options.seeds)
+    log.debug('seed nodes', this.options.seeds)
 
     this._timers = new Timer({
       nats: this.options.nats
@@ -128,7 +127,7 @@ class Server extends http.Server {
         , item.method
         , item.handler
         )
-        debug('loaded: %s %s', item.method, item.path)
+        log.debug('route loaded: %s %s', item.method, item.path)
 
         item.middleware && route.before( item.middleware )
       }
@@ -160,7 +159,7 @@ class Server extends http.Server {
         this._timers.watch(`skyring:${this._group}`, (err, data) => {
           this.proxy(data)
         })
-        debug('binding to port', port)
+        log.debug('binding to port %d', port)
         super.listen(port, ...args)
       })
     })
@@ -174,7 +173,7 @@ class Server extends http.Server {
   }
 
   proxy(data) {
-    debug('fabricating request', data.id)
+    log.trace('fabricating request', data.id)
     const opts = {
       url: '/timer'
     , method: 'POST'
@@ -185,10 +184,11 @@ class Server extends http.Server {
     }
     const res = new mock.Response()
     const req = new mock.Request(opts)
-    debug('routing fabricated request', data.id)
+    log.trace('routing fabricated request', data.id)
     this._router.handle(req, res)
     this.emit('proxy', data)
   }
+
   /**
    * Removes a server from the ring, closes the http server and redistributes
    * any pending timers
@@ -205,15 +205,15 @@ class Server extends http.Server {
 
         if (active.length) {
           return this._timers.shutdown(() => {
-            debug('closing server')
+            log.info('closing server')
             this.closed = true
             cb && cb()
           })
         }
 
-        debug('Last node in cluster - skipping rebalanace')
+        log.debug('Last node in cluster - skipping rebalanace')
         this._timers.disconnect(() => {
-          debug('closing server')
+          log.debug('closing server')
           this.closed = true
           cb && cb()
         })

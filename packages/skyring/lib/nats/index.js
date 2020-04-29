@@ -18,11 +18,11 @@ client.publish('foobar', JSON.stringify({'foo':'bar'}), () => {
  */
 
 const nats        = require('nats')
-    , parseHosts  = require('./parse-hosts')
-    , config      = require('../../conf')
-    , debug       = require('debug')('skyring:nats')
-    , nats_hosts  = config.get('nats:hosts')
-
+const parseHosts  = require('./parse-hosts')
+const pino        = require('../log')
+const config      = require('../../conf')
+const log = pino.child({name: pino.namespace(__dirname, '')})
+const nats_hosts  = config.get('nats:hosts')
 /**
  * Creates a new nats client
  * @method module:skyring/lib/nats#createClient
@@ -40,36 +40,36 @@ function createClient(options) {
   const hosts = (options && options.hosts) || nats_hosts;
   const servers = parseHosts(hosts);
   const opts = Object.assign({json: true}, options, {servers});
-  debug('creating nats client', opts);
+  log.debug(opts, 'creating nats client');
   const client = nats.connect(opts);
 
   /* istanbul ignore next*/
   client.on('error', (err) => {
-    console.error('nats error', err);
+    log.error('nats error', err);
   });
 
   client.on('connect', () => {
-    debug('nats connection successful');
+    log.debug('nats connection successful');
   });
 
   /* istanbul ignore next*/
   client.on('close', () => {
-    debug('nats connection closed');
+    log.debug('nats connection closed');
     client.removeAllListeners();
   });
 
   /* istanbul ignore next*/
   client.on('disconnect', () => {
-    debug('nats connection disconnected');
+    log.debug('nats connection disconnected');
   });
 
   /* istanbul ignore next*/
   client.on('reconnecting', () => {
-    debug('nats client reconnecting');
+    log.warn('nats client reconnecting');
   });
 
   client.quit = (cb) => {
-    debug('closing nats', client.info.server_id);
+    log.debug('closing nats %s', client.info.server_id);
     client.close();
     client.once('disconnect', cb);
   };

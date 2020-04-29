@@ -10,10 +10,32 @@
  * @requires skyring/lib/server/response
  */
 
+const path = require('path')
+const pinoHTTP = require('pino-http')
 const Route    = require('./route')
 const Request  = require('./request')
 const Response = require('./response')
-const debug    = require('debug')('skyring:server:router')
+const pino     = require('../log')
+const log_name = pino.namespace(__dirname, __filename)
+
+const NOT_FOUND_MSG = 'Not Found'
+const REQUEST_COMPLETE_MSG = 'Request Complete'
+
+const log      = pino.child({name: log_name})
+const http = pinoHTTP({
+  logger: pino
+, name: pino.namespace(__dirname, __filename)
+, level: pino.level
+, customLogLevel: function(res, err) {
+    if (res.statusCode >= 400 && res.statusCode < 500) return 'warn'
+    if (res.statusCode >= 500 || err) return 'error'
+    return 'trace'
+  }
+, customSuccessMessage: (res) => {
+    if (res.statusCode === 404) return `${res.$.method} ${res.$.path} ${NOT_FOUND_MSG}`
+    return REQUEST_COMPLETE_MSG
+  }
+})
 
 /**
  * @constructor
@@ -120,8 +142,11 @@ http.createServer((req, res) => {
 })
  **/
 Router.prototype.handle = function handle(req, res) {
+  http(req, res)
   req.$ = new Request(req)
   res.$ = new Response(res)
+  res.$.path = req.$.path
+  res.$.method = req.method
   req.$.timers = this.timers
 
   const path = req.$.path
@@ -154,7 +179,7 @@ Router.prototype.handle = function handle(req, res) {
  * @param {http.ServerResponse} res
  **/
 Router.prototype.handleRoute = function handleRoute(route, req, res) {
-  debug('routing ', route.method, route.path)
+  log.debug('%s %s', req.method, req.$.path)
   route.process(req, res, this.node, (err) => {
     if (err) return res.$.error(err)
     if (res.$.body) return res.$.json(res.$.body)
@@ -163,10 +188,10 @@ Router.prototype.handleRoute = function handleRoute(route, req, res) {
 }
 
 function notFound( req, res ) {
-  res.writeHead(404,{
-    'Content-Type': 'application/json'
-  })
-  res.end(JSON.stringify({message: 'Not Found' }))
+  res.$.status(404)
+  res.$.set('Content-Type', 'application/json')
+  res.$.set('x-skyring-reason', NOT_FOUND_MSG)
+  res.end(JSON.stringify({message: NOT_FOUND_MSG }))
 }
 
 module.exports = Router

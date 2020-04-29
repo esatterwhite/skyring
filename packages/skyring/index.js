@@ -15,6 +15,7 @@ const conf       = require('./conf')
     , Server     = require('./lib/server')
     , Transports = require('./lib/transports')
     , Transport  = require('./lib/transports/transport')
+    , log        = require('./lib/log')
     , debug      = require('debug')('skyring:main')
     ;
 
@@ -35,12 +36,13 @@ if(require.main === module){
       console.error(err);
       throw err;
     }
-    debug('server listening', conf.get('port'));
+    log.info('server listening on port %d', server.address().port);
   });
 
   function onSignal() {
+    log.info('shutdown signal received');
     server.close(()=>{
-      debug('shutting down');
+      log.info('server shutdown complete')
     });
   }
   process.once('SIGINT', onSignal);

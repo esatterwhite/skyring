@@ -18,12 +18,14 @@ const EventEmitter = require('events').EventEmitter
 const dns = require('dns')
 const Ringpop = require('@skyring/ringpop')
 const TChannel = require('tchannel')
+const pino = require('../log')
 const debug = require('debug')('skyring:ring')
-const conf = require(path.join(__dirname, '..', '..', 'conf'))
+const conf = require('../../conf')
 const host = conf.get('channel:host')
-const port = ~~conf.get('channel:port')
-let ring_seeds = conf.get('seeds')
+const port = parseInt(conf.get('channel:port'), 10)
 
+const log = pino.child({name: pino.namespace(__dirname, __filename)})
+let ring_seeds = conf.get('seeds')
 ring_seeds = !Array.isArray(ring_seeds) ? ring_seeds.split(',') : ring_seeds
 
 function resolve(tasks, cb) {
@@ -77,7 +79,7 @@ if (err) throw err
 
     const addrs = [this._host].concat(nodes)
     resolve(addrs, (err, seeds) => {
-      debug('seed nodes', seeds)
+      log.info('contacting seed nodes %j', seeds)
       if (err) return cb(err)
       const host = seeds.shift()
       this._ring = new Ringpop({
@@ -91,17 +93,17 @@ if (err) throw err
       this._ring.setupChannel()
       this._ring.on('ringChanged', (evt) => {
         const added = evt.added
-        if (!added.length) return debug('node removed', evt.removed)
+        if (!added.length) return log.debug('node removed', evt.removed)
         if (added.length === 1 && added.indexOf(`${host}:${this._port}`) !== -1) return
-        debug('node added', added)
+        log.debug('node added', added)
         this.emit('ringchange', evt)
       })
       this._tchannel.listen(this._port, host, (er) => {
         if (er) return cb(er)
-        debug('tchannel listening on ', host, this._port)
+        log.debug('tchannel listening on ', host, this._port)
         this._ring.bootstrap(seeds, (er) => {
           if (er) return cb(er)
-          debug('ring bootstraped', seeds)
+          log.info('ring bootstraped')
           this.emit('bootstrap', seeds)
           cb(null)
         })
