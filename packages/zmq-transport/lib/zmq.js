@@ -1,6 +1,7 @@
 'use strict'
 
 const Zmq = require('zeromq')
+const {Transport} = require('skyring')
 const debug = require('debug')('skyring:transports:zmq')
 const monitor = require('debug')('skyring:transports:zmq:monitor')
 const connections = new Map()
@@ -27,9 +28,9 @@ const noop = () => {}
 function has(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop)
 }
-module.exports = class ZMQ {
+module.exports = class ZMQ extends Transport {
   constructor(opts = {}) {
-    this.name = TRANSPORT
+    super(opts)
     this.connections = new Map()
     this.bind = has(opts, 'bind')
       ? !!opts.bind
@@ -57,16 +58,18 @@ module.exports = class ZMQ {
     if (!socket) {
       const err = new Error(`unable to create connection for ${method} - ${url}`)
       err.code = 'ENOZMQCONN'
+      this.log.error(err)
       storage.failure(id, err)
       return
     }
 
     if (error) {
+      this.log.error(error)
       storage.failure(id, error)
       return
     }
 
-    debug('execute zmq timer', 'timeout', payload)
+    this.log.trace('execute zmq timer %s', id)
     socket
       .send('timeout', Zmq.ZMQ_SNDMORE)
       .send(payload)
@@ -74,9 +77,10 @@ module.exports = class ZMQ {
   }
 
   shutdown(cb = noop) {
+    this.log.debug('shutdowning zmq transport')
     const connections = this.connections
     for (const [addr, socket] of connections.entries()) {
-      debug('shutdown - %s', addr)
+      this.log.trace('shutdown - %s', addr)
       socket.removeAllListeners()
       socket.disconnect(addr)
       socket.close()
@@ -97,21 +101,21 @@ module.exports = class ZMQ {
       return {socket: null, error: err}
     }
 
-    debug(`creating ${type} socket to ${addr}`)
+    this.log.debug(`creating ${type} socket to ${addr}`)
     socket = Zmq.socket(type)
-    if (this.debug) startMonitor(socket)
+    if (this.debug) startMonitor(socket, this.log)
 
     if (this.bind) {
-      debug('binding to %s', addr)
+      this.log.debug('binding to %s', addr)
       const err = tryBind(socket, addr)
       if (err) return {socket: null, error: err}
     } else {
-      debug('connecting to %s', addr)
+      this.log.debug('connecting to %s', addr)
       socket.connect(addr)
     }
 
     socket.on('error', (err) => {
-      console.error('zmq error: destroying socket %s', addr, err.message)
+      this.log.error(err, 'zmq error: destroying socket %s', addr)
       socket.removeAllListeners()
       socket.disconnect(addr)
       socket.close()
@@ -122,11 +126,10 @@ module.exports = class ZMQ {
   }
 }
 
-function startMonitor(socket) {
+function startMonitor(socket, log) {
   for (const evt of MONITOR_EVENTS) {
-    debug(`adding monitor event ${evt} for socket`)
     socket.on(evt, (fd, addr) => {
-      monitor(`socket ${evt}: ${addr}`)
+      log.trace(`socket ${evt}: ${addr}`)
     })
   }
 }
