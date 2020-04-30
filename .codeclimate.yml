@@ -8,7 +8,7 @@ engines:
       languages:
       - javascript
   eslint:
-    enabled: true
+    enabled: false
   fixme:
     enabled: true
 ratings:
@@ -33,4 +33,4 @@ exclude_paths:
 - tutorials/
 - packages/ringpop/
 - packages/**/test/
-- packages/skyring/lib/server/api/validators/timer.js 
+- packages/skyring/lib/server/api/validators/timer.js
