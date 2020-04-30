@@ -3,22 +3,24 @@
 const Url = require('url')
 const net = require('net')
 const Pool = require('generic-pool')
+const {Transport} = require('skyring')
 const debug = require('debug')('skyring:transports:tcp')
 const kType = Symbol.for('SkyringTransport')
 const connections = new Map()
 const TRANSPORT = 'tcptransport'
 const noop = () => {}
 
-module.exports = class TCP {
+module.exports = class TCP extends Transport {
   constructor(opts) {
-    this.name = TRANSPORT
+    super(opts)
     this.opts = opts
   }
 
   exec(method, url, payload, id, storage) {
-    const pool = getPool(url, this.opts)
+    const pool = this.getPool(url)
     pool.acquire().then((conn) => {
       const out = typeof payload === 'object' ? JSON.stringify(payload) : payload
+      this.log.trace('execute timer %s', id)
       conn.write(out + '\n', 'utf8', () => {
         storage.success(id)
         pool.release(conn)
@@ -28,7 +30,7 @@ module.exports = class TCP {
       const err = new Error(`Unable to exeute tcp transport for timer ${id}`)
       err.name = 'ETCPERR'
       storage.failure(id, err)
-      console.error(err)
+      this.log.error(err)
     })
   }
 
@@ -38,10 +40,10 @@ module.exports = class TCP {
       const next = entries.next()
       if (next.done) return cb()
       const [key, value] = next.value
-      debug('disconnecting %s', key)
+      this.log.trace('disconnecting %s', key)
       value.drain().then(() => {
         value.clear()
-        debug(`removing tcp connection to ${key}`)
+        this.log.trace('pool tranined removing tcp connection to %s', key)
         connections.delete(key)
         run()
       })
@@ -49,38 +51,44 @@ module.exports = class TCP {
 
     run()
   }
+
+  getPool(addr) {
+    if (connections.has(addr)) return connections.get(addr)
+    const opts = this.opts
+    const log = this.log
+    const pool = Pool.createPool({
+      create: () => {
+        log.debug('creating new tcp connection', addr)
+        const url = Url.parse(addr)
+        let conn =  net.connect(url.port, url.hostname)
+        conn.setNoDelay(true)
+        conn.setKeepAlive(true)
+        conn.once('error', (err) => {
+          log.error(err, 'destroying tcp connection for %s', addr)
+          pool.destroy(conn).catch(()=>{})
+          connections.delete(addr)
+        })
+        return Promise.resolve(conn)
+      }
+    , destroy: (client, cb) => {
+        return new Promise((resolve) => {
+          client.on('end', () => {
+            log.trace('connection closed %s', client.remoteAddress)
+            resolve()
+          })
+          client.destroy()
+        })
+      }
+    , validate: (conn) => {
+        return Promise.resolve(!conn.destroyed)
+      }
+    }, {
+      min: 1
+    , max: 100
+    , testOnBorrow: true
+    })
+    connections.set(addr, pool)
+    return pool
+  }
 }
 
-function getPool(addr, opts) {
-  if (connections.has(addr)) return connections.get(addr)
-  const pool = Pool.createPool({
-    create: () => {
-      debug('creating new tcp connection', addr)
-      const url = Url.parse(addr)
-      let conn =  net.connect(url.port, url.hostname)
-      conn.setNoDelay(true)
-      conn.setKeepAlive(true)
-      conn.once('error', (err) => {
-        debug('error: destroying connection', err.message)
-        pool.destroy(conn).catch(()=>{})
-        connections.delete(addr)
-      })
-      return conn
-    }
-  , destroy: (client, cb) => {
-      client.on('end', () => {
-        debug('connection closed')
-      })
-      client.destroy()
-    }
-  , validate: (conn) => {
-      return Promise.resolve(conn.destroyed)
-    }
-  }, {
-    min: 1
-  , max: 100
-  , testOnBorrow: true
-  })
-  connections.set(addr, pool)
-  return pool
-}

@@ -79,16 +79,16 @@ test('timeouts', async (t) => {
 test('pool', async (t) => {
   let request, server, handler
   const [node_port, callback_port] = await sys.ports(2)
-  function doRequest(t) {
+  function doRequest(t, data) {
     request
       .post('/timer')
       .send({
         timeout: 500
-      , data: 'fake'
+      , data: data
       , callback: {
           transport: 'tcp'
-        , uri: `http://${hostname}:${callback_port}`
-        , method: 'post'
+        , uri: `tcp://${hostname}:${callback_port}`
+        , method: 'tcp'
         }
       })
       .expect(201)
@@ -115,27 +115,23 @@ test('pool', async (t) => {
     })
   })
 
-  t.test('start saturate pool - no connection', (tt) => {
-    tt.plan(151)
-    for (var x = 0; x < 150; x++ ) {
-      doRequest(tt)
-    }
-    setTimeout(() => {
-      tt.pass('saturated')
-    }, 2000)
-  })
-
   t.test('success - should deliver payload', (tt) => {
     tt.plan(151)
+    let executed = 0
     handler = net.createServer((socket) => {
       socket.setEncoding('utf8')
-      socket.once('data', (data) => {
-        tt.match(data, /fake/)
+      socket.on('data', (data) => {
+        for (const chunk of data.split('\n')) {
+          if (chunk) {
+            const bits = /(fake) (\d+)/.exec(chunk)
+            tt.ok(bits, `timer ${bits[2]} executed ${++executed} of 150`)
+          }
+        }
       })
     }).listen(callback_port, (err) => {
       tt.error(err)
       for (var x = 0; x < 150; x++ ) {
-        doRequest({error: () => {}})
+        doRequest({error: () => {}}, `fake ${x}`)
       }
     })
   })
