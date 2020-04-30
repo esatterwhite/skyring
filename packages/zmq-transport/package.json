@@ -20,9 +20,12 @@
     "debug": "^4.1.1",
     "zeromq": "^5.0.0"
   },
+  "peerDependencies": {
+    "skyring": "^10.1.0"
+  },
   "devDependencies": {
     "sinon": "^9.0.2",
-    "skyring": "^10.0.0",
+    "skyring": "^10.1.0",
     "supertest": "^3.0.0",
     "tap": "^14.10.7"
   }
