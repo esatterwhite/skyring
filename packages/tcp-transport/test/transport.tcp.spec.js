@@ -8,13 +8,13 @@ const supertest = require('supertest')
 const Skyring = require('skyring')
 const {sys} = require('../../../test')
 
-let hostname = null;
+let hostname = null
 
-if(!process.env.TEST_HOST) {
-  hostname =  os.hostname()
+if (!process.env.TEST_HOST) {
+  hostname = os.hostname()
   console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
 } else {
-  hostname = process.env.TEST_HOST;
+  hostname = process.env.TEST_HOST
 }
 
 test('timeouts', async (t) => {
@@ -30,7 +30,7 @@ test('timeouts', async (t) => {
       transports: [path.resolve(__dirname, '../')]
     , seeds: [`${hostname}:${node_port}`]
     , node: {port: node_port}
-    });
+    })
     server.listen(0, null, null, (err) => {
       tt.error(err, 'server listen should not error')
       const {port} = server.address()
@@ -107,7 +107,7 @@ test('pool', async (t) => {
       transports: [require(path.resolve(__dirname, '../'))]
     , seeds: [`${hostname}:${node_port}`]
     , node: {port: node_port}
-    });
+    })
     server.listen(0, (err) => {
       tt.error(err)
       request = supertest(`http://localhost:${server.address().port}`)
@@ -130,13 +130,10 @@ test('pool', async (t) => {
       })
     }).listen(callback_port, (err) => {
       tt.error(err)
-      for (var x = 0; x < 150; x++ ) {
+      for (var x = 0; x < 150; x++) {
         doRequest({error: () => {}}, `fake ${x}`)
       }
     })
   })
   t.end()
 })
-
-
-

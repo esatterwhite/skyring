@@ -13,40 +13,39 @@
  * @requires skyring/lib/nats
  * @requires skyring/lib/json
  */
-const os             = require('os')
-const crypto         = require('crypto')
-const path           = require('path')
-const levelup        = require('levelup')
-const encode         = require('encoding-down')
-const Transports     = require('./transports')
-const nats           = require('./nats')
-const json           = require('./json')
-const pino           = require('./log')
-const conf           = require('../conf')
+const os = require('os')
+const crypto = require('crypto')
+const path = require('path')
+const levelup = require('levelup')
+const encode = require('encoding-down')
+const Transports = require('./transports')
+const nats = require('./nats')
+const pino = require('./log')
+const conf = require('../conf')
 
-const log            = pino.child({name: pino.namespace(__dirname, __filename)})
-const rebalance      = pino.child({name: pino.namespace(__dirname, 'rebalance')})
-const store          = pino.child({name: pino.namespace(__dirname, 'storage')})
+const log = pino.child({name: pino.namespace(__dirname, __filename)})
+const rebalance = pino.child({name: pino.namespace(__dirname, 'rebalance')})
+const store = pino.child({name: pino.namespace(__dirname, 'storage')})
 
-const storage        = Symbol('storage')
-const shutdown       = Symbol.for('kShutdown')
-const kNode          = Symbol('nodeid')
-const kRemove        = Symbol('remove')
-const noop           = () => {}
-const REBALANCE_SUB  = 'skyring.rebalance'
+const storage = Symbol('storage')
+const shutdown = Symbol.for('kShutdown')
+const kNode = Symbol('nodeid')
+const kRemove = Symbol('remove')
+const noop = () => {}
+const REBALANCE_SUB = 'skyring.rebalance'
 const EVENT_STATUS = {
-  CREATED:   'create'
-, UPDATED:   'replace'
-, EXEC:      'execute'
+  CREATED: 'create'
+, UPDATED: 'replace'
+, EXEC: 'execute'
 , CANCELLED: 'cancel'
-, FAIL:      'fail'
-, SUCCESS:   'success'
-, SHUTDOWN:  'shutdown'
-, READY:     'ready'
-, RECOVERY:  'recover'
+, FAIL: 'fail'
+, SUCCESS: 'success'
+, SHUTDOWN: 'shutdown'
+, READY: 'ready'
+, RECOVERY: 'recover'
 , REBALANCE: 'rebalance'
-, PURGE:     'purge'
-, EVICT:     'evict'
+, PURGE: 'purge'
+, EVICT: 'evict'
 }
 
 function generateId(id) {
@@ -102,14 +101,15 @@ class Timer extends Map {
       }
     }
     const backend = opts.backend === 'memdown'
-      ? new (require(opts.backend))
+      ? new (require(opts.backend))()
       : encode(require(opts.backend)(opts.path), {valueEncoding: 'json'})
 
     log.debug('storage path', opts)
     this[kNode] = generateId(store_opts.path)
-    this.nats = nats.createClient(this.options.nats)
-    this.transports = new Transports(this.options.transports)
     this[storage] = levelup(backend, opts, (err) => {
+      if (err) return cb(err)
+      this.nats = nats.createClient(this.options.nats)
+      this.transports = new Transports(this.options.transports)
       store.debug('storage backend ready', store_opts)
       log.debug('node id', this[kNode])
       this.recover(() => {
@@ -119,7 +119,6 @@ class Timer extends Map {
         }, cb)
       })
     })
-
   }
 
   get id() {
@@ -168,7 +167,7 @@ timers.create(id, options, (err) => {
       setImmediate(cb, err)
       return null
     }
-    if (this.has( id )) {
+    if (this.has(id)) {
       const err = new Error(`Timer with id ${id} already exists`)
       err.code = 'EKEYEXISTS'
       setImmediate(cb, err)
@@ -177,7 +176,7 @@ timers.create(id, options, (err) => {
     const now = Date.now()
     const created = payload.created || now
     const elapsed = now - created
-    if(now > created + payload.timeout) {
+    if (now > created + payload.timeout) {
       log.debug('executing stale timer: %s', id)
       setImmediate(
         transport.exec.bind(transport)
@@ -209,7 +208,6 @@ timers.create(id, options, (err) => {
     }
 
     this[storage].put(id, data, (err) => {
-
       /* istanbul ignore if */
       if (err) {
         log.error(err)
@@ -224,9 +222,9 @@ timers.create(id, options, (err) => {
       , node: this[kNode]
       , created: data.created
       , payload: payload
-       }, noop)
+      }, noop)
 
-       data.timer = setTimeout(
+      data.timer = setTimeout(
         transport.exec.bind(transport)
       , payload.timeout - elapsed
       , payload.callback.method
@@ -250,6 +248,11 @@ timers.create(id, options, (err) => {
    **/
   success(id, cb = noop) {
     this[kRemove](id, (err) => {
+      if (err) {
+        log.error(err)
+        cb(err)
+        return
+      }
       this.nats.publish('skyring:events', {
         type: EVENT_STATUS.SUCCESS
       , timer: id
@@ -336,7 +339,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     const size = this.size
     const batch = this[storage].batch()
 
-    if(!size) return
+    if (!size) return
 
     rebalance.info('node %s begin rebalance; timers: %d', this[kNode], size)
     this.nats.publish('skyring:node', {
@@ -344,9 +347,8 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     , type: EVENT_STATUS.REBALANCE
     }, noop)
 
-
     const records = this.values()
-    const run = ( obj ) => {
+    const run = (obj) => {
       if (node.owns(obj.id)) return
 
       clearTimeout(obj.timer)
@@ -369,7 +371,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       cb(data)
     }
 
-    for(var record of records) {
+    for (var record of records) {
       run(record)
     }
 
@@ -397,13 +399,13 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     const stream = this[storage].createReadStream()
 
     stream
-    .on('data', fn)
-    .once('close', function () {
-      store.trace('recover stream close')
-      stream.removeListener('data', fn)
-      // call the callback when the stream is processed + complete
-      cb()
-    })
+      .on('data', fn)
+      .once('close', function() {
+        store.trace('recover stream close')
+        stream.removeListener('data', fn)
+        // call the callback when the stream is processed + complete
+        cb()
+      })
   }
 
   /**
@@ -436,7 +438,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     })
   }
 
-  close(cb){
+  close(cb) {
     this[storage].close(cb)
   }
 
@@ -502,7 +504,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
             this.disconnect(cb)
           })
         }
-        rebalance.trace( '%s of %s processed', acks, data.count, data.id)
+        rebalance.trace('%s of %s processed', acks, data.count, data.id)
       })
     }
 
@@ -511,7 +513,7 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     , type: EVENT_STATUS.PURGE
     }, noop)
 
-    for(let record of this.values()) {
+    for (const record of this.values()) {
       run(record)
     }
 
@@ -526,10 +528,10 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
    **/
   watch(key, cb) {
     if (this._bail) return
-    const opts = { queue: key }
+    const opts = {queue: key}
     this._sid = this.nats.subscribe(REBALANCE_SUB, opts, (data, reply) => {
       if (reply) this.nats.publish(reply, {node: this[kNode], timer: data.id})
-      if(this._bail) return
+      if (this._bail) return
       cb(null, data)
     })
     return this._sid

@@ -2,7 +2,7 @@
 
 const log = require('../log')
 const kType = Symbol.for('SkyringTransport')
-const noop = new Function()
+const noop = () => {}
 const TRANSPORT = 'transport'
 
 module.exports = class Transport {
@@ -29,5 +29,4 @@ module.exports = class Transport {
   get [Symbol.toStringTag]() {
     return 'SkyringTransport'
   }
-
 }

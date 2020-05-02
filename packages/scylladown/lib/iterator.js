@@ -16,9 +16,11 @@ module.exports = class ScyllaIterator extends AbstractIterator {
     if (this[kCursor]) {
       const item = this[kCursor].next()
       debug('cursor item', item)
-      if(item.done) return cb()
+      if (item.done) return cb()
       const _key = this.keyAsBuffer ? Buffer.from(item.value.id) : item.value.id
-      const _value = this.valueAsBuffer ? Buffer.from(item.value.value) : item.value.value
+      const _value = this.valueAsBuffer
+        ? Buffer.from(item.value.value)
+        : item.value.value
       cb(null, _key, _value)
       return
     }
@@ -27,9 +29,11 @@ module.exports = class ScyllaIterator extends AbstractIterator {
       if (err) return cb(err)
       const item = cursor.next()
       debug('cursor item', item)
-      if(item.done) return cb()
+      if (item.done) return cb()
       const _key = this.keyAsBuffer ? Buffer.from(item.value.id) : item.value.id
-      const _value = this.valueAsBuffer ? Buffer.from(item.value.value) : item.value.value
+      const _value = this.valueAsBuffer
+        ? Buffer.from(item.value.value)
+        : item.value.value
       cb(null, _key, _value)
     })
   }

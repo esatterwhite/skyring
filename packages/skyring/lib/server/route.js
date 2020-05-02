@@ -33,9 +33,9 @@ function Route(path, method) {
   this.keys = new Array(this._keys.length)
   this.params = Object.create(null)
 
-  for( var idx = 0; idx < this._keys.length; idx++ ) {
-    this.keys[ idx ] = this._keys[ idx ].name
-    this.params[ this._keys[ idx ].name ] = undefined
+  for (var idx = 0; idx < this._keys.length; idx++) {
+    this.keys[idx] = this._keys[idx].name
+    this.params[this._keys[idx].name] = undefined
   }
 }
 
@@ -46,7 +46,7 @@ function Route(path, method) {
  **/
 Route.prototype.use = function use(fn) {
   if (Array.isArray(fn)) {
-    for(var idx = 0; idx < fn.length; idx++) {
+    for (var idx = 0; idx < fn.length; idx++) {
       this.stack.push(fn[idx])
     }
   } else {
@@ -87,17 +87,17 @@ Route.prototype.match = function match(path) {
 
 Route.prototype.process = function process(req, res, node, next) {
   const stack = this.stack
-  ;(function run( idx ) {
+;(function run(idx) {
     const fn = stack[idx]
     try {
       fn(req, res, node, (err, body) => {
-         if ( err ) return next( err )
-         if( idx === stack.length -1 ) return next()
-         run(++idx)
+        if (err) return next(err)
+        if (idx === stack.length - 1) return next()
+        run(++idx)
       })
-    } catch ( err ){
+    } catch (err) {
       err.statusCode = err.statusCode || 500
-      return next( err )
+      return next(err)
     }
   })(0)
 }

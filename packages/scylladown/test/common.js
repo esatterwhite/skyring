@@ -10,14 +10,25 @@ module.exports = {
 , lastLocation
 , setUp
 , tearDown
+, collectEntries
 }
 
 function location() {
-  return crypto.createHash('md5').update(now).update(`${++db}`).digest('hex').replace(/[0-9]/g ,'x')
+  return crypto
+    .createHash('md5')
+    .update(now)
+    .update(`${++db}`)
+    .digest('hex')
+    .replace(/[0-9]/g, 'x')
 }
 
 function lastLocation() {
-  return crypto.createHash('md5').update(now).update(`${db}`).digest('hex').replace(/[0-9]/g, 'x')
+  return crypto
+    .createHash('md5')
+    .update(now)
+    .update(`${db}`)
+    .digest('hex')
+    .replace(/[0-9]/g, 'x')
 }
 
 function setUp(t) {
@@ -35,11 +46,11 @@ function collectEntries(iterator, callback) {
     iterator.next((err, key, value) => {
       if (err) return callback(err)
       if (!args.length) {
-        return iterator.end(function (err) {
+        return iterator.end(function(err) {
           callback(err, data)
         })
       }
-      data.push({ key: key, value: value })
+      data.push({key: key, value: value})
       setImmediate(next)
     })
   }

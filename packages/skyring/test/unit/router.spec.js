@@ -90,6 +90,7 @@ test('router', async (t) => {
       route.before([
         (req, res, _, cb) => {
           body(req, res, (err, data) => {
+            ttt.error(err)
             try {
               req.$.body = JSON.parse(data)
               return cb()
@@ -134,7 +135,7 @@ test('router', async (t) => {
       })
     })
 
-    tt.test('/foo/:baz(\w+)', (ttt) => {
+    tt.test('/foo/:baz(\\w+)', (ttt) => {
       const route = router.put('/foo/:baz(\\w+)', (req, res, node, cb) => {
         ttt.match(req.$.body, {
           bar: 'baz'
@@ -151,6 +152,7 @@ test('router', async (t) => {
       route.before([
         (req, res, _, cb) => {
           body(req, res, (err, data) => {
+            ttt.error(err)
             try {
               req.$.body = JSON.parse(data)
               return cb()
@@ -195,7 +197,7 @@ test('router', async (t) => {
       })
     })
 
-    tt.test('/patch/:baz(\w+)', (ttt) => {
+    tt.test('/patch/:baz(\\w+)', (ttt) => {
       const route = router.patch('/patch/:baz(\\w+)', (req, res, node, cb) => {
         ttt.match(req.$.body, {
           bar: 'baz'
@@ -216,6 +218,7 @@ test('router', async (t) => {
       route.before([
         (req, res, _, cb) => {
           body(req, res, (err, data) => {
+            ttt.error(err)
             try {
               req.$.body = JSON.parse(data)
               return cb()
@@ -261,7 +264,7 @@ test('router', async (t) => {
     })
 
     tt.test('/delete/:whiz(\\w+)', (ttt) => {
-      const route = router.delete('/delete/:whiz(\\w+)', (req, res, node, cb) => {
+      router.delete('/delete/:whiz(\\w+)', (req, res, node, cb) => {
         ttt.match(req.$.params, {
           whiz: 'resource'
         })
@@ -302,7 +305,7 @@ test('router', async (t) => {
     })
 
     tt.test('/opts', (ttt) => {
-      const route = router.options('/opts', (req, res, node, cb) => {
+      router.options('/opts', (req, res, node, cb) => {
         res.$.status(204)
         cb()
       })
@@ -402,7 +405,7 @@ test('router', async (t) => {
     }, (ttt) => {
       router.get('/chunks', (req, res, node, cb) => {
         res.$.status(200)
-        res.$.json({"foo": "bar"})
+        res.$.json({'foo': 'bar'})
       })
 
       request
@@ -412,7 +415,7 @@ test('router', async (t) => {
         .end((err, res) => {
           ttt.error(err)
           ttt.match(res, {
-            body: { foo: "bar" }
+            body: {foo: 'bar'}
           })
           ttt.end()
         })
@@ -556,7 +559,7 @@ test('router', async (t) => {
 
     tt.test('/error', (ttt) => {
       router.route('/error', 'GET', (req, res, node, cb) => {
-        res.$.error(503, http.STATUS_CODES['503']) 
+        res.$.error(503, http.STATUS_CODES['503'])
       })
 
       request

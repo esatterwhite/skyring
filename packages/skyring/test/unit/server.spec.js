@@ -1,22 +1,20 @@
 'use strict'
-const url          = require('url')
-const qs           = require('querystring')
-const crypto       = require('crypto')
-const os           = require('os')
-const path         = require('path')
-const http         = require('http')
-const supertest    = require('supertest')
-const async        = require('async')
-const conf         = require('keef')
-const {test, pass} = require('tap')
-const Server       = require('../../lib/server')
-const {sys, rand}  = require('../../../../test')
+
+const qs = require('querystring')
+const os = require('os')
+const path = require('path')
+const http = require('http')
+const supertest = require('supertest')
+const async = require('async')
+const {test, threw} = require('tap')
+const Server = require('../../lib/server')
+const {sys, rand} = require('../../../../test')
 
 test('server', async (t) => {
   let sone, stwo, sthree, sfour
   var hostname
-  if(!process.env.TEST_HOST) {
-    hostname =  os.hostname()
+  if (!process.env.TEST_HOST) {
+    hostname = os.hostname()
     console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
   } else {
     hostname = process.env.TEST_HOST
@@ -38,29 +36,29 @@ test('server', async (t) => {
           , app: 'rebalance'
           }
         , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
-        , storage:{
+        , storage: {
             path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'leveldown'
           }
         , autobalance: true
         })
-        .listen(http_one, cb)
+          .listen(http_one, cb)
       }
     , (cb) => {
         stwo = new Server({
-          node:{
+          node: {
             port: ring_two
           , host: hostname
           , app: 'rebalance'
           }
         , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
-        , storage:{
+        , storage: {
             path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'leveldown'
           }
-      , autobalance: true
+        , autobalance: true
         })
-        .listen(http_two, cb)
+          .listen(http_two, cb)
       }
     , (cb) => {
         sthree = new Server({
@@ -70,12 +68,12 @@ test('server', async (t) => {
           , app: 'rebalance'
           }
         , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
-        , storage:{
+        , storage: {
             path: path.join(os.tmpdir(), rand.bytes())
           , backend: 'memdown'
           }
         })
-        .listen(http_three, cb)
+          .listen(http_three, cb)
       }
     ], (err) => {
       tt.error(err)
@@ -86,7 +84,7 @@ test('server', async (t) => {
         , app: 'rebalance'
         }
       , seeds: [`${hostname}:${ring_one}`, `${hostname}:${ring_two}`]
-      , storage:{
+      , storage: {
           path: path.join(os.tmpdir(), rand.bytes())
         , backend: 'memdown'
         }
@@ -135,19 +133,16 @@ test('server', async (t) => {
     tt.deepEquals(body, {foo: 1})
   })
   t.test('rebalance on shutdown', (tt) => {
-    let count = 0, postback
+    let count = 0; let postback
 
-    tt.on('end',(done) => {
+    tt.on('end', (done) => {
       postback && postback.close(done)
     })
 
     tt.test('should survive a nodes moving', (ttt) => {
-
       const request = supertest(`http://localhost:${http_one}`)
-      const requests = Array.from(Array(100).keys())
       postback = http.createServer((req, res) => {
-        const parsed = url.parse(req.url)
-        const q = qs.parse(parsed.query)
+        const q = qs.parse(req.url.replace(/^[/?]+/, ''))
         ttt.pass(`timer ${q.idx} handled`)
         res.writeHead(200)
         res.end()
@@ -178,7 +173,8 @@ test('server', async (t) => {
         }
       , function exec(err) {
           ttt.comment(`expected timers ${count}`)
-          ttt.plan(count + 1)
+          ttt.plan(count + 2)
+          ttt.error(err)
           // start server 4
           sfour.listen(0, () => {
             // drop server 3
@@ -193,4 +189,4 @@ test('server', async (t) => {
     })
     tt.end()
   })
-})
+}).catch(threw)

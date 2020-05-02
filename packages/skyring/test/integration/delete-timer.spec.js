@@ -1,39 +1,40 @@
-'use strict';
-const os        = require('os')
-const http      = require('http')
-const {test}    = require('tap')
-const uuid      = require('uuid')
+'use strict'
+const os = require('os')
+const http = require('http')
+const {test} = require('tap')
+const uuid = require('uuid')
 const supertest = require('supertest')
-const Server    = require('../../lib')
-const {sys}      = require('../../../../test')
+const Server = require('../../lib')
+const {sys} = require('../../../../test')
 
-let hostname = null;
+let hostname = null
 
 if (!process.env.TEST_HOST) {
-  hostname =  os.hostname()
+  hostname = os.hostname()
   console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
 } else {
-  hostname = process.env.TEST_HOST;
+  hostname = process.env.TEST_HOST
 }
 
 test('skyring:api', async (t) => {
-  let server, request;
+  let server, request
   const [ring_port, callback_port] = await sys.ports(2)
   t.test('set up skyring server', (tt) => {
     server = new Server({
       seeds: [`${hostname}:${ring_port}`]
     , node: {port: ring_port}
-    });
+    })
     server.listen(0, null, null, (err) => {
+      tt.error(err)
       const port = server.address().port
       request = supertest(`http://localhost:${port}`)
       tt.end()
-    });
-  });
+    })
+  })
 
   t.on('end', () => {
-    server.close();
-  });
+    server.close()
+  })
 
   function getLocation(cb) {
     request
@@ -48,7 +49,7 @@ test('skyring:api', async (t) => {
         }
       })
       .expect(201)
-      .end(( err, res ) => {
+      .end((err, res) => {
         if (err) return cb(err)
         cb(null, res.headers.location)
       })
@@ -57,13 +58,13 @@ test('skyring:api', async (t) => {
   t.test('#DELETE /timer/:id', (tt) => {
     tt.test('Should cancel an existing timer -202', (ttt) => {
       const callback_server = http.createServer((req, res) => {
-        res.writeHead(500);
-        res.end();
-        const err = new Error('timer should be deleted')
+        res.writeHead(500)
+        res.end()
         ttt.fail('callback server request')
-      }).listen(callback_port);
+      }).listen(callback_port)
 
       getLocation((err, url) => {
+        ttt.error(err)
         request
           .delete(url)
           .expect(202)
@@ -74,10 +75,10 @@ test('skyring:api', async (t) => {
               callback_server.close(() => {
                 ttt.end()
               })
-            }, 1200);
-          });
+            }, 1200)
+          })
       })
-    }); // end 202
+    }) // end 202
 
     tt.test('should 404 on a time that was previously canceled', (ttt) => {
       getLocation((err, url) => {
@@ -87,7 +88,7 @@ test('skyring:api', async (t) => {
           .expect(202)
           .end((err, res) => {
             err && ttt.fail(res.headers['x-skyring-reason'])
-            ttt.error(err);
+            ttt.error(err)
             ttt.pass(`delete ${url}`)
             request
               .delete(url)
@@ -96,11 +97,11 @@ test('skyring:api', async (t) => {
                 ttt.error(err)
                 setTimeout(() => {
                   ttt.end()
-                }, 1200);
-              });
-          });
+                }, 1200)
+              })
+          })
       })
-    }); // end 404
+    }) // end 404
 
     const id = uuid.v4()
     tt.test('should 404 on a timer that doesn not exist ' + id, (ttt) => {
@@ -111,9 +112,9 @@ test('skyring:api', async (t) => {
           ttt.error(err)
           err && ttt.fail(res.headers['x-skyring-reason'])
           ttt.end()
-        });
+        })
     })
     tt.end()
-  });
+  })
   t.end()
-});
+})

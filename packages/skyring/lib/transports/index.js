@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /**
  * Loads and maintains all transports
  * @module skyring/lib/transports
@@ -12,15 +12,15 @@
  * @requires skyring/conf
  */
 
-const Callback  = require('./callback')
-const Http      = require('./http')
-const pino      = require('../log')
-const toArray   = require('../lang/array/to-array')
-const conf      = require('../../conf')
-const kLoad     = Symbol('kLoad')
+const Callback = require('./callback')
+const Http = require('./http')
+const pino = require('../log')
+const toArray = require('../lang/array/to-array')
+const conf = require('../../conf')
+const kLoad = Symbol('kLoad')
 const kShutdown = Symbol.for('kShutdown')
-const ENV       = conf.get('node_env')
-const defaults  = toArray(conf.get('transport'))
+const ENV = conf.get('node_env')
+const defaults = toArray(conf.get('transport'))
 
 const log = pino.child({name: pino.namespace(__dirname, 'transports')})
 
@@ -31,7 +31,7 @@ const log = pino.child({name: pino.namespace(__dirname, 'transports')})
  * @param {String} uri
  * @param {String} Payload
  * @param {String} id
- * @param {LevelUp} storage A levelup instance container all curring timer data 
+ * @param {LevelUp} storage A levelup instance container all curring timer data
  **/
 
 /**
@@ -70,7 +70,6 @@ class Fizzbuzz extends Skyring.Transport {
   }
 }
 
-
 const server = new Skyring({
   transports: [
     'my-transport-module'
@@ -102,7 +101,7 @@ const t = new Transports([
 , Fizzbuz
 , path.resolve(__dirname, '../transports/fake-transport')
 ])
- **/
+**/
 module.exports = class Transports extends Map {
   constructor(transports) {
     super()
@@ -111,8 +110,8 @@ module.exports = class Transports extends Map {
      * @memberof module:skyring/lib/transports
      * @property {Object} http The default HTTP transport
      **/
-    this.set(Http.name.toLowerCase(),  new Http())
-    if(ENV === 'test') {
+    this.set(Http.name.toLowerCase(), new Http())
+    if (ENV === 'test') {
       this.set('callback', new Callback())
     }
     this[kLoad](toArray(transports))
@@ -121,34 +120,33 @@ module.exports = class Transports extends Map {
   [kLoad](paths) {
     const transports = new Set(defaults.concat(toArray(paths)))
     for (const path of transports) {
-      const transport = typeof path === 'string' ? require(path) : path
-      if (typeof transport !== 'function') {
+      const Constructor = typeof path === 'string' ? require(path) : path
+      if (typeof Constructor !== 'function') {
         throw new TypeError('A Transport must export a function')
       }
 
-      if (typeof transport.prototype.exec !== 'function') {
+      if (typeof Constructor.prototype.exec !== 'function') {
         throw new TypeError('A Transport must have an "exec" function')
       }
 
-      if (transport.prototype.exec.length !== 5) {
+      if (Constructor.prototype.exec.length !== 5) {
         throw new Error('Transports must accept five parameters')
       }
 
-      if (typeof transport.name !== 'string' || transport.name.length <= 0) {
+      if (typeof Constructor.name !== 'string' || Constructor.name.length <= 0) {
         throw new TypeError('transports.name is required and must be a string')
       }
 
-      const name = transport.name.toLowerCase()
+      const name = Constructor.name.toLowerCase()
       if (this.has(name)) {
         const error = new Error(`A transport with name ${name} is already defined`)
         error.name = 'EEXIST'
         throw error
       }
 
-      log.info('loading %s transport', name)
-      const instance = new transport(
+      log.info('loading %s Constructor', name)
+      const instance = new Constructor(
         conf.get(`transports:${name}`)
-      , pino
       )
 
       this.set(name, instance)
@@ -169,4 +167,3 @@ module.exports = class Transports extends Map {
     run()
   }
 }
-

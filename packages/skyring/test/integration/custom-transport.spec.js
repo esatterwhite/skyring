@@ -1,23 +1,19 @@
 'use strict'
 
-const crypto     = require('crypto')
-const os         = require('os')
-const path       = require('path')
-const http       = require('http')
-const supertest  = require('supertest')
-const async      = require('async')
-const conf       = require('keef')
+const os = require('os')
+const path = require('path')
+const supertest = require('supertest')
 const {test, ok} = require('tap')
-const Server     = require('../../lib/server')
-const {sys}      = require('../../../../test')
+const Server = require('../../lib/server')
+const {sys} = require('../../../../test')
 
 test('server', async (t) => {
-  let hostname;
-  if(!process.env.TEST_HOST) {
-    hostname =  os.hostname()
+  let hostname
+  if (!process.env.TEST_HOST) {
+    hostname = os.hostname()
     console.log(`env variable TEST_HOST not set. using ${hostname} as hostname`)
   } else {
-    hostname = process.env.TEST_HOST;
+    hostname = process.env.TEST_HOST
   }
 
   const [ring_port, http_port] = await sys.ports(3)
@@ -25,7 +21,7 @@ test('server', async (t) => {
     let server = null
     tt.test('create server', (ttt) => {
       class Foobar {
-        exec (method, url, payload, id, cache) {
+        exec(method, url, payload, id, cache) {
           ok('foobar', payload)
         }
       }
@@ -41,12 +37,12 @@ test('server', async (t) => {
         }
       , transports: [Foobar]
       })
-      .listen(http_port, (err) => {
-        ttt.error(err)
-        new Promise((resolve) => {
-          setTimeout(resolve, 300)
-        }).then(ttt.end)
-      })
+        .listen(http_port, (err) => {
+          ttt.error(err)
+          new Promise((resolve) => {
+            setTimeout(resolve, 300)
+          }).then(ttt.end)
+        })
     })
 
     tt.test('foobar transport', (ttt) => {
@@ -54,7 +50,7 @@ test('server', async (t) => {
         .post('/timer')
         .send({
           timeout: 250
-        , data: { put: ttt.ok, foobar: 1}
+        , data: {put: ttt.ok, foobar: 1}
         , callback: {
             transport: 'foobar'
           , method: 'put'
@@ -92,12 +88,12 @@ test('server', async (t) => {
           backend: 'memdown'
         }
       })
-      .listen(http_port, null, null, (err) => {
-        ttt.error(err)
-        new Promise((resolve) => {
-          setTimeout(resolve, 300)
-        }).then(ttt.end)
-      })
+        .listen(http_port, null, null, (err) => {
+          ttt.error(err)
+          new Promise((resolve) => {
+            setTimeout(resolve, 300)
+          }).then(ttt.end)
+        })
     })
 
     tt.test('test transport', (ttt) => {
@@ -105,7 +101,7 @@ test('server', async (t) => {
         .post('/timer')
         .send({
           timeout: 250
-        , data: {put: () => {console.log('called')}}
+        , data: {put: () => { console.log('called') }}
         , callback: {
             transport: 'test'
           , method: 'post'

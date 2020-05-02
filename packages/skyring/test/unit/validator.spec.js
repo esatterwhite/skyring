@@ -41,13 +41,17 @@ test('timer payload validation', async (t) => {
     code: '400'
   , description: 'Exceeds maximum value'
   }, (tt) => {
-    const MAX = Math.pow(2, 32 -1) - 1
+    const MAX = Math.pow(2, 32 - 1) - 1
     validator({
       timeout: MAX + 1
     }, (err) => {
       tt.type(err, Error, 'error is of type Error')
       tt.match(err.statusCode, 400, 'error statusCode')
-      tt.match(err.message, new RegExp(`less than or equal to ${MAX}`, 'ig'), 'error message')
+      tt.match(
+        err.message
+      , new RegExp(`less than or equal to ${MAX}`, 'ig')
+      , 'error message pattern'
+      )
       tt.end()
     })
   })

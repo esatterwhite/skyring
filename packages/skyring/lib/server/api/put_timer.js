@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   path: '/timer/:timer_id'
@@ -9,24 +9,24 @@ module.exports = {
   , require('./middleware/validate')
   ]
 , handler: (req, res, node, cb) => {
-    const id = req.$.params.timer_id;
+    const id = req.$.params.timer_id
     req.$.timers.update(id, req.$.body, (err) => {
-      if( err ) {
-        switch(err.code) {
+      if (err) {
+        switch (err.code) {
           case 'ENOENT':
-            res.$.status(404);
-            break;
+            res.$.status(404)
+            break
           default:
-            res.$.status(500);
+            res.$.status(500)
         }
-        return cb();
+        return cb()
       }
 
-      res.$.status(200);
-      cb();
-    });
+      res.$.status(200)
+      cb()
+    })
   }
-};
+}
 
 /**
  * @apiDescription Update a new time on the cluster

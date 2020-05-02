@@ -11,6 +11,8 @@
 const {Url} = require('url')
 const qs = require('querystring')
 const cache = new WeakMap()
+
+/* eslint-disable-next-line no-useless-escape */
 const pathexp = /^(\/\/?(?!\/)[^\?#\s]*)(\?[^#\s]*)?$/
 
 /**
@@ -20,19 +22,18 @@ const pathexp = /^(\/\/?(?!\/)[^\?#\s]*)(\?[^#\s]*)?$/
  * from the node http module
  */
 function Request(req) {
+  this.query = Object.create(null)
+  this.path = null
+  this._body = false
+  this.body = null
+  this.timers = null
+  this.res = null
+  this.headers = req.headers
 
-  this.query   = Object.create(null);
-  this.path    = null;
-  this._body   = false;
-  this.body    = null;
-  this.timers  = null;
-  this.res     = null;
-  this.headers = req.headers;
-
-  const parsed = parseurl(req);
+  const parsed = parseurl(req)
   if (parsed) {
-    this.query = parsed.query;
-    this.path = parsed.pathname;
+    this.query = parsed.query
+    this.path = parsed.pathname
   }
 }
 /**
@@ -40,44 +41,44 @@ function Request(req) {
  * @param {String} header The name of the header to lookup
  * @returns {String} The request header, if set
  */
-Request.prototype.get = function get( key ) {
-  const _key = key.toLowerCase();
-  const headers = this.headers || {};
+Request.prototype.get = function get(key) {
+  const _key = key.toLowerCase()
+  const headers = this.headers || {}
   switch (_key) {
     case 'referrer':
     case 'referer':
-      return headers.referrer || headers.referer;
+      return headers.referrer || headers.referer
     default:
-      return headers[_key];
+      return headers[_key]
   }
-};
-
-function parseurl( req ) {
-  const url = req.url;
-  if (!url) return url;
-
-  if ( cache.has(req) ) return cache.get(req);
-  const parsed = fastparse(url);
-  cache.set(req, parsed);
-  return parsed;
 }
 
-function fastparse( str ) {
-  const simple = typeof str === 'string' && pathexp.exec( str );
+function parseurl(req) {
+  const url = req.url
+  if (!url) return url
 
-  if ( simple ) {
-    const pathname = simple[1];
-    const search = simple[2] || null;
-    const url = new Url();
-    url.path = str;
-    url.href = str;
-    url.pathname = pathname;
-    url.search = search;
-    url.query = url.search ? qs.parse( search.substr( 1 ) ) : Object.create(null);
-    return url;
-  }
-
-  return parseurl( str, true );
+  if (cache.has(req)) return cache.get(req)
+  const parsed = fastparse(url)
+  cache.set(req, parsed)
+  return parsed
 }
 
-module.exports = Request;
+function fastparse(str) {
+  const simple = typeof str === 'string' && pathexp.exec(str)
+
+  if (simple) {
+    const pathname = simple[1]
+    const search = simple[2] || null
+    const url = new Url()
+    url.path = str
+    url.href = str
+    url.pathname = pathname
+    url.search = search
+    url.query = url.search ? qs.parse(search.substr(1)) : Object.create(null)
+    return url
+  }
+
+  return parseurl(str, true)
+}
+
+module.exports = Request

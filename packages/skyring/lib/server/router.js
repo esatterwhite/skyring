@@ -1,4 +1,4 @@
-/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
+/* jshint laxcomma: true, smarttabs: true, node: true, esnext: true */
 'use strict'
 /**
  * Simple router class for directing requests
@@ -10,18 +10,17 @@
  * @requires skyring/lib/server/response
  */
 
-const path = require('path')
 const pinoHTTP = require('pino-http')
-const Route    = require('./route')
-const Request  = require('./request')
+const Route = require('./route')
+const Request = require('./request')
 const Response = require('./response')
-const pino     = require('../log')
+const pino = require('../log')
 const log_name = pino.namespace(__dirname, __filename)
 
 const NOT_FOUND_MSG = 'Not Found'
 const REQUEST_COMPLETE_MSG = 'Request Complete'
 
-const log      = pino.child({name: log_name})
+const log = pino.child({name: log_name})
 const http = pinoHTTP({
   logger: pino
 , name: pino.namespace(__dirname, __filename)
@@ -32,7 +31,9 @@ const http = pinoHTTP({
     return 'trace'
   }
 , customSuccessMessage: (res) => {
-    if (res.statusCode === 404) return `${res.$.method} ${res.$.path} ${NOT_FOUND_MSG}`
+    if (res.statusCode === 404) {
+      return `${res.$.method} ${res.$.path} ${NOT_FOUND_MSG}`
+    }
     return REQUEST_COMPLETE_MSG
   }
 })
@@ -45,11 +46,11 @@ const http = pinoHTTP({
  * @example var x = new Router(node, timers)
 router.handle(req, res)
  */
-function Router( node, timers ) {
-  this.routes        = new Map()
+function Router(node, timers) {
+  this.routes = new Map()
   this.route_options = new Map()
-  this.node          = node
-  this.timers        = timers
+  this.node = node
+  this.timers = timers
 }
 
 /**
@@ -57,8 +58,8 @@ function Router( node, timers ) {
  * @param {String} path The url path to route on
  * @param {Function} handler The handler function to call when the route is matched
  **/
-Router.prototype.get = function get( path, fn ) {
-  return this.route( path, 'GET', fn )
+Router.prototype.get = function get(path, fn) {
+  return this.route(path, 'GET', fn)
 }
 
 /**
@@ -66,8 +67,8 @@ Router.prototype.get = function get( path, fn ) {
  * @param {String} path The url path to route on
  * @param {Function} handler The handler function to call when the route is matched
  **/
-Router.prototype.put = function put( path, fn ) {
-  return this.route( path, 'PUT', fn)
+Router.prototype.put = function put(path, fn) {
+  return this.route(path, 'PUT', fn)
 }
 
 /**
@@ -75,8 +76,8 @@ Router.prototype.put = function put( path, fn ) {
  * @param {String} path The url path to route on
  * @param {Function} handler The handler function to call when the route is matched
  **/
-Router.prototype.post = function post( path, fn ) {
-  return this.route( path, 'POST', fn)
+Router.prototype.post = function post(path, fn) {
+  return this.route(path, 'POST', fn)
 }
 
 /**
@@ -84,8 +85,8 @@ Router.prototype.post = function post( path, fn ) {
  * @param {String} path The url path to route on
  * @param {Function} handler The handler function to call when the route is matched
  **/
-Router.prototype.patch = function patch( path, fn ) {
-  return this.route( path, 'PATCH', fn)
+Router.prototype.patch = function patch(path, fn) {
+  return this.route(path, 'PATCH', fn)
 }
 
 /**
@@ -93,8 +94,8 @@ Router.prototype.patch = function patch( path, fn ) {
  * @param {String} path The url path to route on
  * @param {Function} handler The handler function to call when the route is matched
  **/
-Router.prototype.delete = function( path, fn ) {
-  return this.route( path, 'DELETE', fn )
+Router.prototype.delete = function(path, fn) {
+  return this.route(path, 'DELETE', fn)
 }
 
 /**
@@ -102,8 +103,8 @@ Router.prototype.delete = function( path, fn ) {
  * @param {String} path The url path to route on
  * @param {Function} handler The handler function to call when the route is matched
  **/
-Router.prototype.options = function options( path, fn ) {
-  return this.route( path, 'OPTIONS', fn )
+Router.prototype.options = function options(path, fn) {
+  return this.route(path, 'OPTIONS', fn)
 }
 
 /**
@@ -154,7 +155,7 @@ Router.prototype.handle = function handle(req, res) {
   const map = this.routes.get(method)
 
   if (map) {
-    let rte = map.get(path)
+    const rte = map.get(path)
     if (rte) {
       req.$.params = Object.create(null)
       return this.handleRoute(rte, req, res)
@@ -187,12 +188,11 @@ Router.prototype.handleRoute = function handleRoute(route, req, res) {
   })
 }
 
-function notFound( req, res ) {
+function notFound(req, res) {
   res.$.status(404)
   res.$.set('Content-Type', 'application/json')
   res.$.set('x-skyring-reason', NOT_FOUND_MSG)
-  res.end(JSON.stringify({message: NOT_FOUND_MSG }))
+  res.end(JSON.stringify({message: NOT_FOUND_MSG}))
 }
 
 module.exports = Router
-

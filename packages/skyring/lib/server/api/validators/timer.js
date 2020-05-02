@@ -1,7 +1,6 @@
 'use strict'
 
 const type_exp = /^\[object (.*)\]$/
-const transports = require('../../../transports')
 
 function typeOf(obj) {
   if (obj === null) return 'Null'
@@ -20,7 +19,9 @@ module.exports = function(data = {}, cb) {
   }
 
   if (data.timeout > MAX_TIMEOUT_VALUE) {
-    const err = new TypeError(`timeout must be less than or equal to 2147483647 milliseconds`)
+    const err = new TypeError(
+      'timeout must be less than or equal to 2147483647 milliseconds'
+    )
     err.statusCode = 400
     return setImmediate(cb, err)
   }
@@ -28,7 +29,9 @@ module.exports = function(data = {}, cb) {
   const type = typeOf(data.data)
   if (data.data != null) {
     if (type !== 'String' && type !== 'Object') {
-      const err = new TypeError(`data is required and must be a string or object. Got ${type}`)
+      const err = new TypeError(
+        `data is required and must be a string or object. Got ${type}`
+      )
       err.statusCode = 400
       return setImmediate(cb, err)
     }
@@ -41,19 +44,25 @@ module.exports = function(data = {}, cb) {
   }
 
   if (typeOf(data.callback.transport) !== 'String') {
-    const err = new TypeError(`callback.transport is required and must be a string. Got ${type}`)
+    const err = new TypeError(
+      `callback.transport is required and must be a string. Got ${type}`
+    )
     err.statusCode = 400
     return setImmediate(cb, err)
   }
 
   if (typeOf(data.callback.uri) !== 'String') {
-    const err = new TypeError(`callback.uri is required and must be a string. Got ${type}`)
+    const err = new TypeError(
+      `callback.uri is required and must be a string. Got ${type}`
+    )
     err.statusCode = 400
     return setImmediate(cb, err)
   }
 
   if (typeOf(data.callback.method) !== 'String') {
-    const err = new TypeError(`callback.method is required and must be a string. Got ${type}`)
+    const err = new TypeError(
+      `callback.method is required and must be a string. Got ${type}`
+    )
     err.statusCode = 400
     return setImmediate(cb, err)
   }

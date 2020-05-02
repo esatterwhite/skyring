@@ -8,12 +8,9 @@
  */
 
 const Transport = require('./transport')
-class Callback extends Transport {
-  constructor(options) {
-    super(options)
-  }
 
-  exec( method, url, payload, id, cache ) {
+class Callback extends Transport {
+  exec(method, url, payload, id, cache) {
     setImmediate(() => {
       payload[method](url, id)
       return cache.success(id)

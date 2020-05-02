@@ -8,7 +8,6 @@
  */
 
 const {STATUS_CODES} = require('http')
-const debug = require('debug')('skyring:error')
 const pino = require('../log')
 const log = pino.child({name: pino.namespace(__dirname, '')})
 
@@ -32,14 +31,14 @@ function Response(res) {
  * @param {String} [msg] In the case `err` is a number, this will be used as the message
  */
 Response.prototype.error = function error(err, msg) {
-  if(typeof err === 'number') {
+  if (typeof err === 'number') {
     const message = msg || STATUS_CODES[err]
     this.res.setHeader('x-skyring-reason', message || 'Internal Server Error')
     return this.status(err).json({message})
   }
 
   err.statusCode = err.statusCode || err.code
-  if(!err.statusCode) {
+  if (!err.statusCode) {
     err.statusCode = 500
     err.message = 'Internal Server Error'
   }

@@ -4,7 +4,6 @@
  * @module skyring/lib/server/node
  * @author Eric Satterwhite
  * @since 1.0.0
- * @requires path
  * @requires events
  * @requires dns
  * @requires @skyringringpop
@@ -13,13 +12,11 @@
  * @requires keef
  */
 
-const path = require('path')
 const EventEmitter = require('events').EventEmitter
 const dns = require('dns')
 const Ringpop = require('@skyring/ringpop')
 const TChannel = require('tchannel')
 const pino = require('../log')
-const debug = require('debug')('skyring:ring')
 const conf = require('../../conf')
 const host = conf.get('channel:host')
 const port = parseInt(conf.get('channel:port'), 10)
@@ -30,7 +27,7 @@ ring_seeds = !Array.isArray(ring_seeds) ? ring_seeds.split(',') : ring_seeds
 
 function resolve(tasks, cb) {
   const results = []
-  ;(function next() {
+;(function next() {
     if (!tasks.length) return cb(null, results)
     const task = tasks.shift()
     const [h, p] = task.split(':')
@@ -83,18 +80,22 @@ if (err) throw err
       if (err) return cb(err)
       const host = seeds.shift()
       this._ring = new Ringpop({
-          app: this._app
-        , hostPort: `${host}:${this._port}`
-        , channel: this._tchannel.makeSubChannel({
-            serviceName: this._name
-          , trace: false
-          })
+        app: this._app
+      , hostPort: `${host}:${this._port}`
+      , channel: this._tchannel.makeSubChannel({
+          serviceName: this._name
+        , trace: false
+        })
       })
       this._ring.setupChannel()
       this._ring.on('ringChanged', (evt) => {
         const added = evt.added
-        if (!added.length) return log.debug('node removed', evt.removed)
-        if (added.length === 1 && added.indexOf(`${host}:${this._port}`) !== -1) return
+        if (!added.length) {
+          return log.debug('node removed', evt.removed)
+        }
+        if (added.length === 1 && added.indexOf(`${host}:${this._port}`) !== -1) {
+          return
+        }
         log.debug('node added', added)
         this.emit('ringchange', evt)
       })
@@ -143,7 +144,7 @@ if (!handle) return;
    * @return {Boolean}
    **/
   owns(key) {
-    return this.lookup(key) == this._ring.whoami()
+    return this.lookup(key) === this._ring.whoami()
   }
 
   /**
@@ -166,18 +167,16 @@ if (!handle) return;
     this.close(cb)
   }
 
-
   /**
    * Removes itself from the ring and closes and connections
    * @method module:skyring/lib/server/node#close
    * @param {Function} callback A callback function to call when the ring is closed
    **/
   close(cb) {
-    debug('node close')
     this._ring.selfEvict(() => {
-      debug('draining tchannel')
+      log.trace('draining tchannel')
       this._tchannel.drain('leaving', () => {
-        debug('destroying ring')
+        log.debug('destroying ring')
         this._ring.once('destroyed', () => {
           setTimeout(cb, 100)
         })

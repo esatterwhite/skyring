@@ -12,7 +12,7 @@
  **/
 
 const {inherits, format} = require('util')
-const {Client, types} = require('cassandra-driver')
+const {Client} = require('cassandra-driver')
 const {AbstractLevelDOWN} = require('abstract-leveldown')
 const ScyllaIterator = require('./iterator')
 const slugify = require('./lang/string/slugify')
@@ -21,8 +21,8 @@ const debug = require('debug')('skyring:scylladown')
 const ERR_NAME_NOTFOUND = 'NotFoundError'
 const ERR_NOT_FOUND = 'ENOENT'
 const kQuery = Symbol('queries')
-const q_opts = { prepare: true }
-const JSON_OBJECT = '{}'
+const q_opts = {prepare: true}
+const CSV_SEP_EXP = /\s*,\s*/
 const CREATE_KEYSPACE = `
 
 CREATE KEYSPACE
@@ -32,7 +32,7 @@ WITH REPLICATION = {
 , 'replication_factor': %d
 }
 `
-const CREATE_TABLE  = `
+const CREATE_TABLE = `
 CREATE TABLE IF NOT EXISTS %s.%s (
   id text PRIMARY KEY
 , value BLOB
@@ -50,7 +50,6 @@ module.exports = ScyllaDown
  * the db instance is responsible for
  **/
 function ScyllaDown(location) {
-
   if (!(this instanceof ScyllaDown)) return new ScyllaDown(location)
 
   AbstractLevelDOWN.call(this, location)
@@ -178,7 +177,6 @@ ScyllaDown.prototype._insert = function _insert(key, value, options, cb) {
   this.client.execute(query, values, q_opts, cb)
 }
 
-
 /**
  * Removes a specific record
  * @method module:@skyring/scylladown#del
@@ -201,7 +199,7 @@ ScyllaDown.prototype._del = function _del(key, options, cb) {
  **/
 ScyllaDown.prototype._batch = function _batch(arr, options, cb) {
   const ops = arr.map((op) => {
-    switch(op.type) {
+    switch (op.type) {
       case 'del':
         return {
           query: this[kQuery].del
@@ -247,7 +245,7 @@ ScyllaDown.prototype._table = function _table(cb) {
 function toArray(item) {
   if (!item) return []
   if (Array.isArray(item)) return item
-  return typeof item === 'string' ? item.split(CSV_SEP) : [item]
+  return typeof item === 'string' ? item.split(CSV_SEP_EXP) : [item]
 }
 
 /**

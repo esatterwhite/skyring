@@ -1,7 +1,6 @@
 'use strict'
 
 const http = require('http')
-const supertest = require('supertest')
 const sinon = require('sinon')
 const {test, threw} = require('tap')
 const Router = require('../../lib/server/router')
@@ -72,7 +71,8 @@ test('http transport', async (t) => {
     const addr = `http://localhost:${state.server.address().port}/notfound`
     const mock_store = {
       success: () => {
-        tt.fail('timers.success was called')}
+        tt.fail('timers.success was called')
+      }
     , failure: (id, err) => {
         tt.type(err, Error)
         tt.match(err.message, /not found/ig)
@@ -92,7 +92,8 @@ test('http transport', async (t) => {
     const addr = `http://localhost:${state.server.address().port}/notfound`
     const mock_store = {
       success: () => {
-        tt.fail('timers.success was called')}
+        tt.fail('timers.success was called')
+      }
     , failure: (id, err) => {
         tt.type(err, Error)
         tt.equal(err.code, 'ESRHTTP')
@@ -104,5 +105,4 @@ test('http transport', async (t) => {
     const transport = new HttpTransport()
     transport.exec('fake', addr, {}, 'badverb', mock_store)
   })
-
 }).catch(threw)

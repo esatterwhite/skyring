@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Middleware that determines if the current server should handle the request, and will proxy
@@ -12,10 +12,10 @@
  * @requires skyring/lib/json
  */
 
-const uuid  = require('uuid')
-const body  = require('body')
+const uuid = require('uuid')
+const body = require('body')
 const debug = require('debug')('skyring:proxy')
-const json  = require('../../../json')
+const json = require('../../../json')
 
 /**
  * @function

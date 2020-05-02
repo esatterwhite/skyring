@@ -1,4 +1,4 @@
-/*jshint laxcomma: true, smarttabs: true, node: true, esnext: true*/
+/* jshint laxcomma: true, smarttabs: true, node: true, esnext: true */
 'use strict'
 /**
  * Primary server instance for a skyring app.
@@ -11,16 +11,18 @@
  * @requires skyring/lib/timer
  */
 
-const {isFunction} = require('util')
-const http         = require('http')
-const mock         = require('@esatterwhite/micromock')
-const util         = require('util')
-const routes       = require('./api')
-const Node         = require('./node')
-const Router       = require('./router')
-const Timer        = require('../timer')
-const conf         = require('../../conf')
-const log          = require('../log').child({name: 'server'})
+const http = require('http')
+const mock = require('@esatterwhite/micromock')
+const routes = require('./api')
+const Node = require('./node')
+const Router = require('./router')
+const Timer = require('../timer')
+const conf = require('../../conf')
+const log = require('../log').child({name: 'skyring:server'})
+
+function isFunction(fn) {
+  return typeof fn === 'function'
+}
 
 /**
  * @constructor
@@ -60,7 +62,7 @@ var server = new Server({ node })
 server.listen(5000)
  */
 class Server extends http.Server {
-  constructor(opts = {}){
+  constructor(opts = {}) {
     super((req, res) => {
       this._router.handle(req, res)
     })
@@ -74,15 +76,15 @@ class Server extends http.Server {
     }, opts)
 
     /* istanbul ignore else */
-    if(opts.node) {
+    if (opts.node) {
       this._node = opts.node instanceof Node
         ? opts.node
         : new Node(
-            opts.node.host,
-            opts.node.port,
-            opts.node.name,
-            opts.node.app
-          )
+          opts.node.host,
+          opts.node.port,
+          opts.node.name,
+          opts.node.app
+        )
     } else {
       this._node = new Node()
     }
@@ -94,7 +96,7 @@ class Server extends http.Server {
 
   route(opts) {
     const route = this._router.route(opts.path, opts.method, opts.handler)
-    opts.middleware && route.before( opts.middleware )
+    opts.middleware && route.before(opts.middleware)
     log.debug('loaded: %s %s', opts.method, opts.path)
   }
 
@@ -129,7 +131,7 @@ class Server extends http.Server {
         )
         log.debug('route loaded: %s %s', item.method, item.path)
 
-        item.middleware && route.before( item.middleware )
+        item.middleware && route.before(item.middleware)
       }
 
       // When nodes are added / removed exec a rebalanace of local timers
@@ -150,13 +152,14 @@ class Server extends http.Server {
 
         // delegate mock requests from the ring to the
         // API router
-        this._node.handle(( req, res ) => {
-          this._router.handle( req, res )
+        this._node.handle((req, res) => {
+          this._router.handle(req, res)
         })
 
         // listen for timers being purged over nats when a remote
         // node is evicted or shutdown
         this._timers.watch(`skyring:${this._group}`, (err, data) => {
+          if (err) return log.error(err)
           this.proxy(data)
         })
         log.debug('binding to port %d', port)
@@ -178,7 +181,7 @@ class Server extends http.Server {
       url: '/timer'
     , method: 'POST'
     , headers: {
-        "x-timer-id": data.id
+        'x-timer-id': data.id
       }
     , payload: JSON.stringify(data)
     }
@@ -195,8 +198,8 @@ class Server extends http.Server {
    * @method module:skyring/lib/server#close
    * @param {Function} callback A callback to be called when the server is completely shut down
    **/
-  close( cb ){
-    if(this.closed) return isFunction(cb) ? setImmediate(cb) : null
+  close(cb) {
+    if (this.closed) return isFunction(cb) ? setImmediate(cb) : null
     super.close(() => {
       this._node.close(() => {
         const active = this._node._ring.membership.members.filter((m) => {

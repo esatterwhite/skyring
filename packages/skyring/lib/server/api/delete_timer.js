@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   path: '/timer/:timer_id'
@@ -8,26 +8,26 @@ module.exports = {
   , require('./middleware/proxy')
   ]
 , handler: (req, res, node, cb) => {
-    const id = req.$.params.timer_id;
+    const id = req.$.params.timer_id
     req.$.timers.cancel(id, (err) => {
-      if( err ) {
-        switch(err.code) {
+      if (err) {
+        switch (err.code) {
           case 'ENOENT':
-            res.$.status(404);
-            break;
+            res.$.status(404)
+            break
           default:
-            res.$.status(500);
+            res.$.status(500)
         }
-        return cb();
+        return cb()
       }
-      res.$.status(202);
-      cb();
-    });
+      res.$.status(202)
+      cb()
+    })
   }
-};
+}
 
 /**
- * @apiDescription Deletes a Timer by id from the ring. 
+ * @apiDescription Deletes a Timer by id from the ring.
  * A request can be issued to any server in the ring.
  * @apiGroup timer
  * @apiName delete_timer
