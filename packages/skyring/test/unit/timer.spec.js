@@ -6,18 +6,16 @@ const path = require('path')
 const {series} = require('async')
 const {test} = require('tap')
 const sinon = require('sinon')
-const uuid   = require('uuid')
-const conf   = require('keef')
-const Timer  = require('../../lib/timer')
-const Node   = require('../../lib/server/node')
+const uuid = require('uuid')
+const Timer = require('../../lib/timer')
 const {rand} = require('../../../../test')
 
 function clearAll(timers, cb) {
-  for(const t of timers.values()){
+  for (const t of timers.values()) {
     clearTimeout(t.timer)
   }
   timers.clear()
-  for(const t of timers.values()){
+  for (const t of timers.values()) {
     clearTimeout(t.timer)
   }
   timers.nats.quit(() => {
@@ -30,7 +28,7 @@ test('timers', (t) => {
     let timers = null
     tt.test('options', (ttt) => {
       ttt.throws(() => {
-        new Timer({
+        return new Timer({
           storage: {
             backend: 'leveldown'
           , path: null
@@ -41,7 +39,7 @@ test('timers', (t) => {
     })
 
     tt.test('invalid transport', (ttt) => {
-      timers = new Timer(null, () =>{
+      timers = new Timer(null, () => {
         timers.create('1', {
           callback: {
             transport: 'unknown'
@@ -51,7 +49,6 @@ test('timers', (t) => {
           clearAll(timers, ttt.end)
         })
       })
-
     })
 
     tt.test('immediately execute stale timer', (ttt) => {
@@ -79,7 +76,7 @@ test('timers', (t) => {
           , transport: 'tap'
           , url: '#'
           }
-        }, new Function)
+        }, () => {})
       })
     })
 
@@ -87,7 +84,7 @@ test('timers', (t) => {
       timers = new Timer(undefined, () => {
         series([
           (cb) => {
-            timers.create("1", {
+            timers.create('1', {
               timeout: 1000
             , callback: {
                 transport: 'http'
@@ -97,7 +94,7 @@ test('timers', (t) => {
             }, cb)
           }
         , (cb) => {
-            timers.create("1", {
+            timers.create('1', {
               timeout: 1000
             , callback: {
                 transport: 'http'
@@ -127,14 +124,14 @@ test('timers', (t) => {
     tt.test('Execute the transport on a delay', (ttt) => {
       const id = uuid.v4()
       const foo = (uri, guid) => {
-        ttt.equal( uri, 'helloworld')
+        ttt.equal(uri, 'helloworld')
         ttt.equal(guid, id)
         clearAll(timers, ttt.end)
       }
 
       timers.create(id, {
         timeout: 250
-      , data: { foo: foo }
+      , data: {foo: foo}
       , callback: {
           transport: 'callback'
         , method: 'foo'
@@ -173,7 +170,7 @@ test('timers', (t) => {
 
       timers.create(id, {
         timeout: 100
-      , data: { one: one }
+      , data: {one: one}
       , callback: {
           transport: 'callback'
         , method: 'one'
@@ -183,7 +180,7 @@ test('timers', (t) => {
         ttt.error(err)
         timers.update(id, {
           timeout: 150
-        , data: { two: two }
+        , data: {two: two}
         , callback: {
             transport: 'callback'
           , method: 'two'
@@ -214,7 +211,7 @@ test('timers', (t) => {
       timers.create(id, {
         timeout: 2000
       , data: {
-          "fake 2": (uri, guid) => {
+          'fake 2': (uri, guid) => {
             called = true
             ttt.fail('timer callback called')
           }
@@ -225,6 +222,7 @@ test('timers', (t) => {
         , uri: 'fake 2'
         }
       }, (err) => {
+        ttt.error(err)
         setTimeout(() => {
           timers.cancel(id, () => {
             ttt.ok(!called)
@@ -251,7 +249,7 @@ test('timers', (t) => {
       timers.create(id, {
         timeout: 2000
       , data: {
-          "fake 3": (uri, guid) => {
+          'fake 3': (uri, guid) => {
             called = true
             ttt.fail('timer callback called')
           }
@@ -262,6 +260,7 @@ test('timers', (t) => {
         , uri: 'fake 3'
         }
       }, (err) => {
+        ttt.error(err)
         setTimeout(() => {
           const e = new Error('broke')
           timers.failure(id, e, () => {
@@ -353,4 +352,3 @@ test('timers', (t) => {
   })
   t.end()
 })
-

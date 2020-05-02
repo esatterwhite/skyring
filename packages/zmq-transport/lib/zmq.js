@@ -2,9 +2,6 @@
 
 const Zmq = require('zeromq')
 const {Transport} = require('skyring')
-const debug = require('debug')('skyring:transports:zmq')
-const monitor = require('debug')('skyring:transports:zmq:monitor')
-const connections = new Map()
 const METHODS = new Set(['push', 'pub'])
 const ZMQ_DEBUG = !!process.env.ZMQ_DEBUG
 const ZMQ_BIND = !!process.env.ZMQ_BIND
@@ -28,6 +25,7 @@ const noop = () => {}
 function has(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop)
 }
+
 module.exports = class ZMQ extends Transport {
   constructor(opts = {}) {
     super(opts)
@@ -50,7 +48,7 @@ module.exports = class ZMQ extends Transport {
   }
 
   get [Symbol.toStringTag]() {
-    return 'ZMQTransport';
+    return 'ZMQTransport'
   }
 
   exec(method, url, payload, id, storage) {

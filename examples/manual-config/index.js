@@ -18,13 +18,14 @@ const server = new Skyring({
 })
 
 server.listen(3000, (err) => {
+  if (err) throw err
   console.log('server listening http://0.0.0.0:3000')
 })
 
 function onSignal() {
-  server.close(()=>{
-    console.log('shutting down');
-  });
+  server.close(() => {
+    console.log('shutting down')
+  })
 }
-process.once('SIGINT', onSignal);
-process.once('SIGTERM', onSignal);
+process.once('SIGINT', onSignal)
+process.once('SIGTERM', onSignal)

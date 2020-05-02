@@ -10,20 +10,20 @@ test('transports', async (t) => {
   const defaults = new Transports()
   t.ok(defaults.get('http') instanceof HTTP, 'auto register http transport')
   t.throws(() => {
-    new Transports([
+    return new Transports([
       path.join(__dirname, 'dummy.transport')
     ])
   }, /A Transport must export a function/)
 
   t.throws(() => {
-    new Transports([
+    return new Transports([
       class fake {
       }
     ])
   }, /Transport must have an "exec" function/i)
 
   t.throws(() => {
-    new Transports([
+    return new Transports([
       class fake {
         exec() {}
       }
@@ -31,21 +31,21 @@ test('transports', async (t) => {
   }, /Transports must accept five parameters/)
 
   t.throws(() => {
-    new Transports([
+    return new Transports([
       class {
-        exec (a, b, c, d, e) {}
+        exec(a, b, c, d, e) {}
       }
     ])
   }, /transports.name is required and must be a string/)
 
   t.throws(() => {
-    new Transports([
-       class test {
-         exec (a, b, c, d, e) {}
-       }
-     , class test {
-         exec (a, b, c, d, e) {}
-       }
+    return new Transports([
+      class test {
+        exec(a, b, c, d, e) {}
+      }
+    , class test {
+        exec(a, b, c, d, e) {}
+      }
     ])
   }, /A transport with name test is already defined/)
 

@@ -1,13 +1,13 @@
-'use strict';
+'use strict'
 
 module.exports = {
   path: '/ping'
 , method: 'GET'
 , handler: (req, res, node, cb) => {
-    res.$.status(200);
-    setImmediate(cb, null);
+    res.$.status(200)
+    setImmediate(cb, null)
   }
-};
+}
 
 /**
  * @apiDescription returns a 200 status if the server is up

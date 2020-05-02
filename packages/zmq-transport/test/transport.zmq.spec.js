@@ -21,7 +21,6 @@ if (!process.env.TEST_HOST) {
 }
 
 test('zmq:transport', async (t) => {
-
   t.test('class instance', async (tt) => {
     const transport = new Transport()
     t.ok(transport instanceof Transport, 'is instance of transport')
@@ -52,7 +51,6 @@ test('zmq:transport', async (t) => {
 
     setImmediate(() => {
       tt.ok(mock_store.success.called, 'timer success')
-      const socket = one.connection(addr)
       tt.end()
     })
   })
@@ -145,7 +143,7 @@ test('error case', (t) => {
     success: sinon.spy()
   , failure: sinon.spy()
   }
-  const transport = new (require('../lib/zmq'))
+  const transport = new (require('../lib/zmq'))()
   transport.exec('fake', 'zmq://0.0.0.0:3333', '{}', '1', mock_timers)
   t.ok(mock_timers.failure.called, 'timer.failure() called')
   t.end()

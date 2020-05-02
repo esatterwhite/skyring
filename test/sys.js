@@ -6,7 +6,7 @@ module.exports = {
   genPorts, ports
 }
 const gen = genPorts()
-function* genPorts() {
+function * genPorts() {
   while (true) {
     yield getPort()
   }
@@ -17,7 +17,6 @@ function ports(n = 1) {
   for (let x = 0; x < n; x++) {
     const {value} = gen.next()
     todo[x] = value
-
   }
 
   return Promise.all(todo)

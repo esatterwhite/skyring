@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /**
  * Distributed timers as a service
  * Exports a default server instance. If executed directly, the server will be started automoaticall and configured to auto  rebalance on `SIGINT` and `SIGTERM`
@@ -11,46 +11,41 @@
  * @requires skyring/lib/server
  **/
 
-const conf       = require('./conf')
-    , Server     = require('./lib/server')
-    , Transports = require('./lib/transports')
-    , Transport  = require('./lib/transports/transport')
-    , log        = require('./lib/log')
-    , debug      = require('debug')('skyring:main')
-    ;
+const conf = require('./conf')
+const Server = require('./lib/server')
+const Transports = require('./lib/transports')
+const Transport = require('./lib/transports/transport')
+const log = require('./lib/log')
 
-module.exports = Server;
-module.exports.Transport = Transport;
+module.exports = Server
+module.exports.Transport = Transport
 module.exports.Transports = Transports
 
-if(require.main === module){
-  process.title = 'skyring';
-  process.chdir(__dirname);
+if (require.main === module) {
+  process.title = 'skyring'
+  process.chdir(__dirname)
 
-  const server = new Server();
+  const server = new Server()
 
   server.listen(conf.get('port'), (err) => {
     /* istanbul ignore if */
-    if(err) {
-      process.exitCode = 1;
-      console.error(err);
-      throw err;
+    if (err) {
+      process.exitCode = 1
+      console.error(err)
+      throw err
     }
-    log.info('server listening on port %d', server.address().port);
-  });
+    log.info('server listening on port %d', server.address().port)
+  })
 
-  function onSignal() {
-    log.info('shutdown signal received');
-    server.close(()=>{
+  const onSignal = () => {
+    log.info('shutdown signal received')
+    server.close(() => {
       log.info('server shutdown complete')
-    });
+    })
   }
-  process.once('SIGINT', onSignal);
-  process.once('SIGTERM', onSignal);
+  process.once('SIGINT', onSignal)
+  process.once('SIGTERM', onSignal)
 }
-
-
-
 
 /**
  * Configuration options for skyring. See {@link module:keef} on ways to pass configuration

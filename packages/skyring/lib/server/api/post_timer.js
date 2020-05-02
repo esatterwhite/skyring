@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   path: '/timer'
@@ -8,14 +8,14 @@ module.exports = {
   , require('./middleware/validate')
   ]
 , handler: (req, res, node, cb) => {
-    const id = req.$.headers['x-timer-id'];
+    const id = req.$.headers['x-timer-id']
     req.$.timers.create(id, req.$.body, (err) => {
-      if (err) return cb(err);
-      res.$.status(201);
-      cb();
-    });
+      if (err) return cb(err)
+      res.$.status(201)
+      cb()
+    })
   }
-};
+}
 
 /**
  * @apiDescription Create a new time on the cluster

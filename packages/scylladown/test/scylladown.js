@@ -3,63 +3,72 @@
 const {test, threw} = require('tap')
 const common = require('./common')
 const scylladown = require('../')
-
+const levelDownTest = require('abstract-leveldown/abstract/leveldown-test')
+const openTest = require('abstract-leveldown/abstract/open-test')
+const delTest = require('abstract-leveldown/abstract/del-test')
+const getTest = require('abstract-leveldown/abstract/get-test')
+const putTest = require('abstract-leveldown/abstract/put-test')
+const multiTest = require('abstract-leveldown/abstract/put-get-del-test')
+const batchTest = require('abstract-leveldown/abstract/batch-test')
+const chainedBatchTest = require('abstract-leveldown/abstract/chained-batch-test')
+const closeTest = require('abstract-leveldown/abstract/close-test')
+const iteratorTest = require('abstract-leveldown/abstract/iterator-test')
 test('ScyllaDown', (t) => {
   t.test('levelown', (tt) => {
-    require('abstract-leveldown/abstract/leveldown-test').args(scylladown, tt.test)
+    levelDownTest.args(scylladown, tt.test)
     tt.end()
   })
 
   t.test('leveldown#open', (tt) => {
-    require('abstract-leveldown/abstract/open-test').setUp(scylladown, tt.test, common)
-    require('abstract-leveldown/abstract/open-test').args(scylladown, tt.test, common)
-    require('abstract-leveldown/abstract/open-test').open(scylladown, tt.test, common)
+    openTest.setUp(scylladown, tt.test, common)
+    openTest.args(scylladown, tt.test, common)
+    openTest.open(scylladown, tt.test, common)
     tt.end()
   })
 
   t.test('leveldown#del', (tt) => {
-    require('abstract-leveldown/abstract/del-test').all(scylladown, tt.test, common)
+    delTest.all(scylladown, tt.test, common)
     tt.end()
   })
 
   t.test('leveldown#get', (tt) => {
-    require('abstract-leveldown/abstract/get-test').all(scylladown, tt.test, common)
+    getTest.all(scylladown, tt.test, common)
     tt.end()
   })
 
   t.test('leveldown#put', (tt) => {
-    require('abstract-leveldown/abstract/put-test').all(scylladown, tt.test, common)
+    putTest.all(scylladown, tt.test, common)
     tt.end()
   })
 
   t.test('leveldown#multi-opts', (tt) => {
-    require('abstract-leveldown/abstract/put-get-del-test').setUp(scylladown, tt.test, common)
-    require('abstract-leveldown/abstract/put-get-del-test').errorKeys(tt.test)
+    multiTest.setUp(scylladown, tt.test, common)
+    multiTest.errorKeys(tt.test)
     tt.end()
   })
 
   t.test('leveldown#batch', (tt) => {
-    require('abstract-leveldown/abstract/batch-test').setUp(scylladown, tt.test, common)
-    require('abstract-leveldown/abstract/batch-test').args(tt.test)
+    batchTest.setUp(scylladown, tt.test, common)
+    batchTest.args(tt.test)
     tt.end()
   })
 
   t.test('leveldown#chained-batch', (tt) => {
-    require('abstract-leveldown/abstract/chained-batch-test').setUp(scylladown, tt.test, common)
-    require('abstract-leveldown/abstract/chained-batch-test').args(tt.test)
+    chainedBatchTest.setUp(scylladown, tt.test, common)
+    chainedBatchTest.args(tt.test)
     tt.end()
   })
 
   t.test('leveldown#close', (tt) => {
-    require('abstract-leveldown/abstract/close-test').close(scylladown, tt.test, common)
+    closeTest.close(scylladown, tt.test, common)
     tt.end()
   })
 
   t.test('leveldown#iterator', (tt) => {
-    require('abstract-leveldown/abstract/iterator-test').setUp(scylladown, tt.test, common)
-    require('abstract-leveldown/abstract/iterator-test').args(tt.test)
-    require('abstract-leveldown/abstract/iterator-test').sequence(tt.test)
-    require('abstract-leveldown/abstract/iterator-test').tearDown(tt.test, common)
+    iteratorTest.setUp(scylladown, tt.test, common)
+    iteratorTest.args(tt.test)
+    iteratorTest.sequence(tt.test)
+    iteratorTest.tearDown(tt.test, common)
     tt.end()
   })
 

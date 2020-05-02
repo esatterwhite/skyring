@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * The Http transport backend
@@ -70,7 +70,7 @@ class Http extends Transport {
 
       if (res.statusCode > 299) {
         const error = new Error(STATUS_CODES[res.statusCode])
-        error.code = res.statusCode = res.statusCode
+        error.code = res.statusCode
         this.log.error(err, 'timer failure %s', res.statusCode)
         return cache.failure(id, error)
       }

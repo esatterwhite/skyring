@@ -1,6 +1,5 @@
 'use strict'
 
-const commands = new Map();
+const commands = new Map()
 commands.set('run', require('./run'))
-module.exports = commands;
-
+module.exports = commands

@@ -1,3 +1,3 @@
-'use stict'
+'use strict'
 
 module.exports = require('./lib')

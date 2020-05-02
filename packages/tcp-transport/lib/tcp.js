@@ -1,13 +1,10 @@
 'use strict'
 
-const Url = require('url')
+const {URL} = require('url')
 const net = require('net')
 const Pool = require('generic-pool')
 const {Transport} = require('skyring')
-const debug = require('debug')('skyring:transports:tcp')
-const kType = Symbol.for('SkyringTransport')
 const connections = new Map()
-const TRANSPORT = 'tcptransport'
 const noop = () => {}
 
 module.exports = class TCP extends Transport {
@@ -26,12 +23,12 @@ module.exports = class TCP extends Transport {
         pool.release(conn)
       })
     })
-    .catch((e) => {
-      const err = new Error(`Unable to exeute tcp transport for timer ${id}`)
-      err.name = 'ETCPERR'
-      storage.failure(id, err)
-      this.log.error(err)
-    })
+      .catch((e) => {
+        const err = new Error(`Unable to exeute tcp transport for timer ${id}`)
+        err.name = 'ETCPERR'
+        storage.failure(id, err)
+        this.log.error(err)
+      })
   }
 
   shutdown(cb = noop) {
@@ -54,18 +51,17 @@ module.exports = class TCP extends Transport {
 
   getPool(addr) {
     if (connections.has(addr)) return connections.get(addr)
-    const opts = this.opts
     const log = this.log
     const pool = Pool.createPool({
       create: () => {
         log.debug('creating new tcp connection', addr)
-        const url = Url.parse(addr)
-        let conn =  net.connect(url.port, url.hostname)
+        const url = new URL(addr)
+        const conn = net.connect(url.port, url.hostname)
         conn.setNoDelay(true)
         conn.setKeepAlive(true)
         conn.once('error', (err) => {
           log.error(err, 'destroying tcp connection for %s', addr)
-          pool.destroy(conn).catch(()=>{})
+          pool.destroy(conn).catch(() => {})
           connections.delete(addr)
         })
         return Promise.resolve(conn)
@@ -91,4 +87,3 @@ module.exports = class TCP extends Transport {
     return pool
   }
 }
-

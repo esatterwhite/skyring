@@ -1,5 +1,5 @@
-/*jshint laxcomma: true, smarttabs: true, node:true, esnext:true*/
-'use strict';
+/* jshint laxcomma: true, smarttabs: true, node:true, esnext:true */
+'use strict'
 /**
  * JSON helpers
  * @module skyring/lib/json
@@ -21,11 +21,10 @@
  * @return {module:skyring/lib/json~Result}
  **/
 exports.parse = function parse(json) {
-  if (!json) return {error: null, value: {}};
+  if (!json) return {error: null, value: {}}
   try {
-    return { error: null, value: JSON.parse(json) };
-  } catch( e ) {
-    return { error: e, value: null };
+    return {error: null, value: JSON.parse(json)}
+  } catch (e) {
+    return {error: e, value: null}
   }
-};
-
+}
