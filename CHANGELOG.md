@@ -1,5 +1,34 @@
 # Changelog
 
+## v10.2.0 (2020-06-02)
+
+* v10.2.0 [View](https://github.com/esatterwhite/skyring/commit/f15a1aa9b8747e4331605bf747aacf7e8d8bca86)
+* dep: replaces phin with needle [View](https://github.com/esatterwhite/skyring/commit/105ef86b1e66b78589a2a71b644fffd8235815d3)
+* lint: lint rulels applied [View](https://github.com/esatterwhite/skyring/commit/b87bc477901589d21b11a5cdb3157752dd07a4fa)
+* dep: eslint packages [View](https://github.com/esatterwhite/skyring/commit/c3fc639644ad50dffaad1857df47faf0155abc48)
+* pkg: include an npmignore for zmq-transport [View](https://github.com/esatterwhite/skyring/commit/ab247b1c77315a129e390a3b121e13d3c6ba25b2)
+
+
+## zmq-transport@v3.0.0 (2020-04-30)
+
+* zmq-transport@v3.0.0 [View](https://github.com/esatterwhite/skyring/commit/48dfea720172702c5920dea1a29b5bb6bc1aadde)
+* [BREAKING] zmq: update zmq-transport for latest version of skyring [View](https://github.com/esatterwhite/skyring/commit/4f281ee9629e02597a23b110846065e6f64ac414)
+* dep[zmq-transport]: skyring@10.1.0 [View](https://github.com/esatterwhite/skyring/commit/8d32b1d5ede96330d7fa8ddec0abf9fe176a2e7e)
+
+
+## tcp-tranport@v3.0.0 (2020-04-30)
+
+* tcp-transport@v3.0.0 [View](https://github.com/esatterwhite/skyring/commit/7cc941e69bc82532c9a488821f3914a17c5a4a3f)
+* [BREAKING] tcp: update tcp-transport for latest version of skyring [View](https://github.com/esatterwhite/skyring/commit/869c2201a9559a68b14e0ca50adc4f79d66d159e)
+* dep[tcp]: peer requirement skyring>=10.1.0 [View](https://github.com/esatterwhite/skyring/commit/0c90a13aedd60b8c3b540017468cee407730e2aa)
+
+
+## 10.1.0 (2020-04-29)
+
+* doc: regenerate change log w/ script [View](https://github.com/esatterwhite/skyring/commit/9b27a339171f6f190c752974ca97c298e6c6a98f)
+* scripts: fix change log script [View](https://github.com/esatterwhite/skyring/commit/4f2724543ac5b1cf4fcba161ee9ee56320c368aa)
+
+
 ## v10.1.0 (2020-04-29)
 
 * 10.1.0 [View](https://github.com/esatterwhite/skyring/commit/d37c5e47b01e84fedcccfbc162d55c3cf8b3f126)
