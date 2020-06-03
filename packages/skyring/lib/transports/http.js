@@ -12,7 +12,7 @@
  */
 
 const STATUS_CODES = require('http').STATUS_CODES
-const phin = require('phin').unpromisified
+const needle = require('needle')
 const Transport = require('./transport')
 const log = require('../log')
 const {name, version} = require('../../package.json')
@@ -20,6 +20,9 @@ const method_exp = /^(post|put|patch|delete|get|options|head)$/i
 const kType = Symbol.for('SkyringTransport')
 const TRANSPORT = 'httptransport'
 const USER_AGENT = `${name}/${version}`
+const HEADERS = {
+  'User-Agent': USER_AGENT
+}
 
 /**
  * Dispatches an http request
@@ -43,6 +46,7 @@ class Http extends Transport {
 
   exec(method, url, payload, id, cache) {
     const body = payload || ''
+    const is_json = typeof body === 'object'
     if (!method_exp.test(method)) {
       const pending = cache.get(id)
       pending && clearTimeout(pending.timer)
@@ -55,14 +59,11 @@ class Http extends Transport {
 
     this.log.debug('executing http transport %s', id)
 
-    phin({
-      url: url
-    , data: body
-    , method: method
-    , headers: {
-        'User-Agent': USER_AGENT
-      }
-    }, (err, res) => {
+    const opts = {
+      json: is_json
+    , headers: HEADERS
+    }
+    needle.request(method, url, body, opts, (err, res) => {
       if (err) {
         this.log.error(err, {url, method, id})
         return cache.failure(id, err)
