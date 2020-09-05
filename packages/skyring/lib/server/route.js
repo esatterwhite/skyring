@@ -76,7 +76,7 @@ Route.prototype.match = function match(path) {
   if (!matches) return null
 
   const keys = this.keys
-  const params = Object.assign({}, this.params)
+  const params = {...this.params}
 
   for (var idx = 1; idx < matches.length; idx++) {
     params[keys[idx - 1]] = matches[idx]
@@ -99,7 +99,7 @@ Route.prototype.process = function process(req, res, node, next) {
       err.statusCode = err.statusCode || 500
       return next(err)
     }
-  })(0)
+  }(0))
 }
 
 module.exports = Route

@@ -2,7 +2,7 @@
 
 const {test} = require('tap')
 const validator = require('../../lib/server/api/validators/timer')
-const {testCase} = require('../../../../test')
+const {testCase} = require('@vendor/test-core')
 
 test('timer payload validation', async (t) => {
   testCase(t, {

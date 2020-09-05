@@ -4,7 +4,7 @@
   "description": "A TCP transport for skyring service",
   "main": "index.js",
   "scripts": {
-    "test": "TEST_HOST=localhost tap --coverage-report=text -Rclassic test"
+    "test": "TEST_HOST=localhost tap"
   },
   "keywords": [
     "skyring",
@@ -30,13 +30,36 @@
   "dependencies": {
     "generic-pool": "^3.7.1"
   },
-  "peerDependencies": {
-    "skyring": ">=10.1.0"
+  "optionalDependencies": {
+    "@vendor/test-core": "workspace:^1.0.0"
+  },
+  "tap": {
+    "browser": false,
+    "ts": false,
+    "esm": false,
+    "jsx": false,
+    "timeout": 45,
+    "lines": 80,
+    "functions": 70,
+    "branches": 70,
+    "statements": 80,
+    "check-coverage": true,
+    "coverage-report": [
+      "json",
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "files": [
+      "test/*.js"
+    ]
   },
   "devDependencies": {
+    "eslint": "^7.8.1",
+    "eslint-config-codedependant": "^1.0.0",
     "sinon": "^9.0.0",
     "skyring": "^10.1.0",
     "supertest": "^3.0.0",
-    "tap": "^14.10.7"
+    "tap": "^14.10.8"
   }
 }

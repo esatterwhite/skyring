@@ -1,7 +1,9 @@
-version: '2'
+version: '2.4'
 services:
   node-1:
-    build: ../
+    build:
+      context: ../../../
+      target: test
     hostname: node-1
     environment:
       channel__host: 'node-1'
@@ -11,14 +13,16 @@ services:
       storage__path: /var/data/skyring
       NODE_ENV: test
     networks:
-      - skyring
+      - skyringci
     depends_on:
       - nats-a
       - nats-b
       - nats-c
 
   node-2:
-    build: ../
+    build:
+      context: ../../../
+      target: test
     hostname: node-2
     environment:
       seeds: 'node-1:3455,node-2:3456'
@@ -29,14 +33,16 @@ services:
       storage__path: /var/data/skyring
       NODE_ENV: test
     networks:
-      - skyring
+      - skyringci
     depends_on:
       - nats-a
       - nats-b
       - nats-c
 
   node-3:
-    build: ../
+    build:
+      context: ../../../
+      target: test
     hostname: node-3
     environment:
       seeds: 'node-1:3455,node-2:3456'
@@ -46,7 +52,7 @@ services:
       storage__path: /var/data/skyring
       NODE_ENV: test
     networks:
-      - skyring
+      - skyringci
     depends_on:
       - nats-a
       - nats-b
@@ -55,7 +61,9 @@ services:
       - node-2
 
   node-4:
-    build: ../
+    build:
+      context: ../../../
+      target: test
     hostname: node-4
     environment:
       seeds: 'node-1:3455,node-2:3456'
@@ -65,7 +73,7 @@ services:
       storage__path: /var/data/skyring
       NODE_ENV: test
     networks:
-      - skyring
+      - skyringci
     depends_on:
       - nats-a
       - nats-b
@@ -74,7 +82,9 @@ services:
       - node-2
 
   node-5:
-    build: ../
+    build:
+      context: ../../../
+      target: test
     hostname: node-5
     environment:
       seeds: 'node-1:3455,node-2:3456'
@@ -82,9 +92,8 @@ services:
       channel__host: 'node-5'
       storage__backend: 'leveldown'
       NODE_ENV: test
-      CODECLIMATE_REPO_TOKEN: '248135f96061f77d2e5f78526432fd096785d2914d8f5a73a04c061000939d5d'
     networks:
-      - skyring
+      - skyringci
     depends_on:
       - nats-a
       - nats-b
@@ -102,7 +111,7 @@ services:
     command: >
       -c /tmp/a.conf
     networks:
-      - skyring
+      - skyringci
   nats-b:
     image: nats:latest
     volumes:
@@ -112,7 +121,7 @@ services:
     depends_on:
       - nats-a
     networks:
-      - skyring
+      - skyringci
   nats-c:
     image: nats:latest
     volumes:
@@ -122,8 +131,8 @@ services:
     command: >
       -c /tmp/c.conf
     networks:
-      - skyring
+      - skyringci
 
 networks:
-  skyring:
+  skyringci:
     driver: bridge

@@ -5,8 +5,8 @@ const os = require('os')
 const {test} = require('tap')
 const uuid = require('uuid')
 const supertest = require('supertest')
+const {sys} = require('@vendor/test-core')
 const Server = require('../../lib')
-const {sys} = require('../../../../test')
 
 let hostname = null
 

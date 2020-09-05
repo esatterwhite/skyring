@@ -21,14 +21,13 @@
     "ringpop": "./main.js"
   },
   "scripts": {
-    "test": "npm run jshint && node test/index.js | faucet",
+    "test": "tap",
     "test-debug": "node debug test/index.js",
     "test-integration": "node test/integration/index.js | faucet",
     "test-shared-integration-tests": "test/run-shared-integration-tests",
     "test-unit": "node test/unit/index.js | faucet",
     "cover": "istanbul cover --print detail --report html test/index.js | faucet",
-    "jshint": "jshint --verbose *.js lib/**/*.js server/**/*.js",
-    "travis": "npm run jshint && npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
+    "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
     "view-cover": "opn coverage/index.html"
   },
   "dependencies": {
@@ -41,6 +40,9 @@
     "underscore": "^1.5.2",
     "uuid": "^7.0.2"
   },
+  "optionalDependencies": {
+    "@vendor/test-core": "workspace:^1.0.0"
+  },
   "devDependencies": {
     "after": "^0.8.1",
     "async": "^0.9.0",
@@ -50,17 +52,18 @@
     "commander": "^2.6.0",
     "coveralls": "^2.11.2",
     "debug-logtron": "^2.1.0",
+    "eslint": "^7.8.1",
+    "eslint-config-codedependant": "^1.0.0",
     "express": "^4.13.3",
     "faucet": "^0.0.1",
     "format-stack": "4.1.0",
     "glob": "^4.3.1",
     "istanbul": "^0.3.5",
     "itape": "^1.5.0",
-    "jshint": "^2.9.2",
     "leaked-handles": "^5.1.0",
     "opn": "^1.0.1",
     "pre-commit": "^0.0.9",
-    "tap": "^14.10.7",
+    "tap": "^14.10.8",
     "tape": "^3.0.3",
     "tape-cluster": "2.1.0",
     "tchannel": "^4.0.0",
@@ -73,17 +76,27 @@
   "pre-commit": [
     "test"
   ],
-  "pre-commit.silent": true,
-  "itape": {
-    "trace": {
-      "debuglog": [
-        "ringpop",
-        "tchannel"
-      ],
-      "formatStack": true,
-      "leakedHandles": {
-        "fullStack": false
-      }
-    }
-  }
+  "tap": {
+    "browser": false,
+    "ts": false,
+    "esm": false,
+    "jsx": false,
+    "timeout": 45,
+    "lines": 90,
+    "functions": 90,
+    "branches": 75,
+    "statements": 90,
+    "check-coverage": true,
+    "coverage-report": [
+      "json",
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "files": [
+      "test/integration",
+      "test/unit"
+    ]
+  },
+  "pre-commit.silent": true
 }

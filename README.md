@@ -56,14 +56,13 @@ curl -i -XPOST http://localhost:8080/timer -d '{
 
 ## Contributing
 
-Skyring is a monorepo managed by lerna. Clone the repo and bootstrap the project
+Skyring is a monorepo managed by pnpm. Clone the repo and bootstrap the project
 
 ```bash
 $ git clone https://github.com/esatterwhite/skyring.git project-skyring
-$ npm install
-$ npm run lerna bootstrap
+$ pnpm install -r
 $ docker-compose -f compose/nats.yml up -d
-$ npm test
+$ pnpm test
 ```
 
 ## Packages

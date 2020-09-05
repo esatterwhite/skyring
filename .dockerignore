@@ -1,4 +1,8 @@
 .nyc_output/
+coverage/
+docs/
+examples/
+scripts/
 .eslintignore
 .eslintrc
 .git

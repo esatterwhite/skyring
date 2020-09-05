@@ -1,45 +1,64 @@
 {
   "name": "project-skyring",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
-    "lerna": "lerna",
+    "pnpm": "pnpm",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "tap": "tap",
     "nyc": "nyc",
-    "test": "npm run local tap -- --coverage-report=text --coverage-report=json -Rclassic",
+    "test:all": "npm run local tap -- --coverage-report=text --coverage-report=json -Rclassic",
     "test:coverage": "tap -Rclassic --coverage-report=json",
+    "npm:clean": "rm -rf node_modules/ {packages,vendor,examples}/**/node_modules/",
     "local": "env $(cat local.env)",
     "docs": "jsdoc -c jsdoc.json && apidoc -i packages/skyring/lib/server -o docs/api",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
-    "start": "npm run compose:up",
-    "stop": "npm run compose:down"
+    "start": "docker-compose -f compose/scylla.yml -f compose/base.yml -f compose/dev.yml up",
+    "stop": "docker-compose -f compose/scylla.yml -f compose/base.yml -f compose/dev.yml down"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "eslint-config-codedependant",
+    "parserOptions": {
+      "ecmaVersion": 2019
+    },
+    "ignorePatterns": [
+      "node_modules/",
+      "coverage/"
+    ]
   },
   "devDependencies": {
     "apidoc": "^0.17.6",
     "chalk": "^3.0.0",
     "check-pkg": "^2.1.1",
     "codeclimate-test-reporter": "^0.5.1",
-    "get-port": "^5.1.1",
     "ink-docstrap": "^1.3.2",
     "jsdoc": "^3.5.5",
-    "lerna": "^3.20.2",
     "nats": "^1.4.8",
     "nyc": "^15.0.1",
-    "tap": "^14.10.7"
-  },
-  "dependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-sensible": "^1.0.0",
-    "eslint-plugin-standard": "^4.0.1"
+    "tap": "^14.10.8"
   },
   "tap": {
     "nyc-arg": [
       "--exclude=packages/ringpop/**/*.js"
     ]
-  }
+  },
+  "description": "![skyring](https://github.com/esatterwhite/skyring/raw/master/assets/skyring.png)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esatterwhite/skyring.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esatterwhite/skyring/issues"
+  },
+  "homepage": "https://github.com/esatterwhite/skyring#readme"
 }

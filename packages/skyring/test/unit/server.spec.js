@@ -7,8 +7,8 @@ const http = require('http')
 const supertest = require('supertest')
 const async = require('async')
 const {test, threw} = require('tap')
+const {sys, rand} = require('@vendor/test-core')
 const Server = require('../../lib/server')
-const {sys, rand} = require('../../../../test')
 
 test('server', async (t) => {
   let sone, stwo, sthree, sfour

@@ -4,7 +4,7 @@ const os = require('os')
 const {test} = require('tap')
 const supertest = require('supertest')
 const Server = require('../../lib')
-const {sys} = require('../../../../test')
+const {sys} = require('@vendor/test-core')
 
 let hostname = null
 

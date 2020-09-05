@@ -1,5 +1,6 @@
 {
-  "name": "skyring-manual",
+  "name": "@example/skyring-manual",
+  "private": true,
   "version": "1.0.0",
   "description": "manual configuration example for a small skyring cluster",
   "main": "index.js",
@@ -14,6 +15,6 @@
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
   "dependencies": {
-    "skyring": "^8.0.0"
+    "skyring": "^10.2.0"
   }
 }

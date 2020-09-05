@@ -36,7 +36,7 @@ function resolve(tasks, cb) {
       results.push(`${addr}${p ? ':' + p : ''}`)
       next()
     })
-  })()
+  }())
 }
 
 /**

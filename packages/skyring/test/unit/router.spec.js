@@ -4,8 +4,8 @@ const http = require('http')
 const body = require('body')
 const {test, threw} = require('tap')
 const supertest = require('supertest')
+const {testCase} = require('@vendor/test-core')
 const Router = require('../../lib/server/router')
-const {testCase} = require('../../../../test')
 
 test('router', async (t) => {
   testCase(t, {

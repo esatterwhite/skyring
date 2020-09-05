@@ -4,8 +4,8 @@ const http = require('http')
 const os = require('os')
 const {test} = require('tap')
 const supertest = require('supertest')
+const {sys, testCase} = require('@vendor/test-core')
 const Server = require('../../lib')
-const {sys, testCase} = require('../../../../test')
 
 let hostname = null
 

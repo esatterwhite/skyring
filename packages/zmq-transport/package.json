@@ -19,13 +19,15 @@
   "dependencies": {
     "zeromq": "^5.0.0"
   },
-  "peerDependencies": {
-    "skyring": "^10.1.0"
+  "optionalDependencies": {
+    "@vendor/test-core": "workspace:^1.0.0"
   },
   "devDependencies": {
+    "eslint": "^7.8.1",
+    "eslint-config-codedependant": "^1.0.0",
     "sinon": "^9.0.2",
     "skyring": "^10.1.0",
     "supertest": "^3.0.0",
-    "tap": "^14.10.7"
+    "tap": "^14.10.8"
   }
 }

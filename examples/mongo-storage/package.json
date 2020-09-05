@@ -1,5 +1,6 @@
 {
-  "name": "@skyring/mongodown-example",
+  "name": "@example/mongodown-example",
+  "private": true,
   "version": "1.0.0",
   "description": "Example skyring cluster using mongo db as a storage engine",
   "main": "index.js",
@@ -17,6 +18,6 @@
   "license": "MIT",
   "dependencies": {
     "mongodown": "^1.2.0",
-    "skyring": "^8.0.0"
+    "skyring": "^10.2.0"
   }
 }

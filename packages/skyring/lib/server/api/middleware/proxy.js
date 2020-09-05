@@ -14,8 +14,8 @@
 
 const uuid = require('uuid')
 const body = require('body')
-const debug = require('debug')('skyring:proxy')
 const json = require('../../../json')
+const log = require('../../../log')
 
 /**
  * @function
@@ -30,9 +30,8 @@ module.exports = function proxy(req, res, node, cb) {
   req.headers['x-timer-id'] = timer_id
   res.setHeader('location', `/timer/${timer_id}`)
   const do_handle = node.handleOrProxy(timer_id, req, res)
-  if (!do_handle) return debug('proxing', timer_id)
+  if (!do_handle) return log.debug('proxing', timer_id)
 
-  debug('handle request')
   body(req, res, (err, data) => {
     if (err) return cb(err)
 
