@@ -1,0 +1,5 @@
+dependencies:
+  skyring: 'link:../../packages/skyring'
+lockfileVersion: 5.1
+specifiers:
+  skyring: ^10.2.0

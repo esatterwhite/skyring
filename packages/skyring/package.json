@@ -7,11 +7,11 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "npm run check && tap test",
+    "test": "npm run tap test",
     "tap": "tap",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
-    "test:ci": "docker-compose -f compose/test.yml up --abort-on-container-exit --build",
+    "test:ci": "docker-compose -f compose/test.yml up --exit-code-from node-5 --build",
     "posttest:ci": "docker-compose -f compose/test.yml down",
     "compose:up": "docker-compose -f compose/dev.yml up --build ",
     "compose:down": "docker-compose -f compose/dev.yml down"
@@ -24,18 +24,32 @@
     "url": "https://github.com/esatterwhite/skyring/tree/master/packages/skyring"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   },
   "bugs": {
     "email": "esatterwhite@wi.rr.com",
     "url": "https://github.com/esatterwhite/skyring/issues"
   },
+  "eslintConfig": {
+    "root": true,
+    "extends": "eslint-config-codedependant",
+    "rules": {
+      "sensible/check-require": 0
+    },
+    "parserOptions": {
+      "ecmaVersion": 2019
+    },
+    "ignorePatterns": [
+      "node_modules/",
+      "coverage/"
+    ]
+  },
   "dependencies": {
     "@esatterwhite/micromock": "^2.0.0",
     "@skyring/ringpop": "^11.1.0",
+    "apidoc": "^0.25.0",
     "body": "^5.1.0",
     "encoding-down": "^5.0.4",
-    "get-port": "^5.1.1",
     "keef": "^5.0.0",
     "leveldown": "^5.0.1",
     "levelup": "^4.0.1",
@@ -50,13 +64,40 @@
     "tchannel": "^4.0.0",
     "uuid": "^3.2.1"
   },
+  "optionalDependencies": {
+    "@vendor/test-core": "workspace:^1.0.0"
+  },
   "devDependencies": {
     "async": "^3.2.0",
     "check-pkg": "^2.1.1",
     "codeclimate-test-reporter": "^0.5.1",
+    "eslint": "^7.8.1",
+    "eslint-config-codedependant": "^1.0.0",
     "sinon": "^9.0.2",
     "supertest": "^3.1.0",
-    "tap": "^14.10.7"
+    "tap": "^14.10.8"
+  },
+  "tap": {
+    "browser": false,
+    "ts": false,
+    "esm": false,
+    "jsx": false,
+    "timeout": 45,
+    "lines": 90,
+    "functions": 90,
+    "branches": 75,
+    "statements": 90,
+    "check-coverage": true,
+    "coverage-report": [
+      "json",
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "files": [
+      "test/integration",
+      "test/unit"
+    ]
   },
   "contributors": [
     {

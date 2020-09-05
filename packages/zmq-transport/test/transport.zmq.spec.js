@@ -7,8 +7,8 @@ const {test, threw} = require('tap')
 const sinon = require('sinon')
 const supertest = require('supertest')
 const Skyring = require('skyring')
+const {sys} = require('@vendor/test-core')
 const Transport = require('../lib/zmq')
-const {sys} = require('../../../test')
 const ZMQ_BIND = !!process.env.ZMQ_BIND
 
 let hostname = null

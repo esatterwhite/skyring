@@ -5,7 +5,7 @@ const path = require('path')
 const supertest = require('supertest')
 const {test, ok} = require('tap')
 const Server = require('../../lib/server')
-const {sys} = require('../../../../test')
+const {sys} = require('@vendor/test-core')
 
 test('server', async (t) => {
   let hostname

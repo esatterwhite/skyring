@@ -38,7 +38,11 @@ exports.createClient = createClient
 function createClient(options) {
   const hosts = (options && options.hosts) || nats_hosts
   const servers = parseHosts(hosts)
-  const opts = Object.assign({json: true}, options, {servers})
+  const opts = {
+    json: true
+  , ...options
+  , servers
+  }
   log.debug(opts, 'creating nats client')
   const client = nats.connect(opts)
 

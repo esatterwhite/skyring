@@ -7,8 +7,8 @@ const {series} = require('async')
 const {test} = require('tap')
 const sinon = require('sinon')
 const uuid = require('uuid')
+const {rand} = require('@vendor/test-core')
 const Timer = require('../../lib/timer')
-const {rand} = require('../../../../test')
 
 function clearAll(timers, cb) {
   for (const t of timers.values()) {

@@ -1,34 +1,37 @@
 {
-    "source":{
-       "excludePattern":"\\.spec*",
-       "include": [
-            "./packages/skyring/README.md"
-          , "./packages/skyring/index.js"
-          , "./packages/skyring/lib"
-          , "./packages/skyring/conf"
-          , "./packages/skyring/node_modules/keef/index.js"
-      ],
-       "exclude":["/**/test/", "./**/node_modules/", "./packages/skyring/lib/server/api/"]
-    }
-    ,"tags":{
-        "allowUnknownTags":true
-    }
-    ,"opts":{
-        "recurse":true
-        ,"template":"node_modules/ink-docstrap/template"
-        ,"destination":"docs"
-        ,"tutorials": "tutorials"
-    }
-    ,"plugins":["plugins/markdown", "plugins/partial"]
-    ,"markdown":{"parser":"gfm", "hardwrap":false}
-    ,"templates": {
-        "systemName"            : "Skyring",
-        "syntaxTheme"           : "dark",
-        "copyright"             :  "Eric Satterwhite &copy; 2016",
-        "theme"                 : "slate",
-        "outputSourceFiles"     : true ,
-        "outputSourcePath"      : true,
-        "highlightTutorialCode" : true,
-        "linenums"              : false
-    }
+  "source": {
+    "excludePattern":"\\.spec*"
+  , "include": [
+      "./packages/skyring/README.md"
+    , "./packages/skyring/index.js"
+    , "./packages/skyring/lib"
+    , "./packages/skyring/conf"
+    , "./packages/skyring/node_modules/keef/index.js"
+    ]
+  , "exclude": ["/**/test/", "./**/node_modules/", "./packages/skyring/lib/server/api/"]
+  }
+, "tags": {
+      "allowUnknownTags": true
+  }
+, "opts": {
+    "recurse": true
+  , "template": "node_modules/ink-docstrap/template"
+  , "destination": "docs"
+  , "tutorials": "tutorials"
+  }
+, "plugins": [
+    "plugins/markdown"
+  , "plugins/partial"
+  ]
+, "markdown": {"parser":"gfm", "hardwrap":false}
+, "templates": {
+    "systemName"            : "Skyring"
+  , "syntaxTheme"           : "dark"
+  , "copyright"             : "Eric Satterwhite &copy; 2020"
+  , "theme"                 : "slate"
+  , "outputSourceFiles"     : true
+  , "outputSourcePath"      : true
+  , "highlightTutorialCode" : true
+  , "linenums"              : false
+  }
 }

@@ -49,7 +49,7 @@ class Http extends Transport {
     const is_json = typeof body === 'object'
     if (!method_exp.test(method)) {
       const pending = cache.get(id)
-      pending && clearTimeout(pending.timer)
+      if (pending) clearTimeout(pending.timer)
       const err = new Error(`Invalid http verb ${method}`)
       err.code = 'ESRHTTP'
       this.log.error(err, 'unable to execute http transport %s', id)

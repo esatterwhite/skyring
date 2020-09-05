@@ -1,0 +1,15 @@
+{
+  "name": "@vendor/test-core",
+  "version": "1.0.0",
+  "description": "internal testing functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Eric Satterwhite <esatterwhite@wi.rr.com",
+  "license": "ISC",
+  "dependencies": {
+    "get-port": "^5.1.1"
+  }
+}

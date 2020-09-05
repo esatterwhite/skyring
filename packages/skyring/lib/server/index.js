@@ -19,7 +19,7 @@ const Router = require('./router')
 const Timer = require('../timer')
 const conf = require('../../conf')
 const log = require('../log').child({name: 'skyring:server'})
-
+const noop = () => {}
 function isFunction(fn) {
   return typeof fn === 'function'
 }
@@ -67,13 +67,14 @@ class Server extends http.Server {
       this._router.handle(req, res)
     })
     this.closed = false
-    this.options = Object.assign({}, {
+    this.options = {
       seeds: null
     , nats: null
     , storage: null
     , transports: []
     , autobalance: conf.get('autobalance')
-    }, opts)
+    , ...opts
+    }
 
     /* istanbul ignore else */
     if (opts.node) {
@@ -96,7 +97,7 @@ class Server extends http.Server {
 
   route(opts) {
     const route = this._router.route(opts.path, opts.method, opts.handler)
-    opts.middleware && route.before(opts.middleware)
+    if (opts.middleware) route.before(opts.middleware)
     log.debug('loaded: %s %s', opts.method, opts.path)
   }
 
@@ -131,7 +132,7 @@ class Server extends http.Server {
         )
         log.debug('route loaded: %s %s', item.method, item.path)
 
-        item.middleware && route.before(item.middleware)
+        if (item.middleware) route.before(item.middleware)
       }
 
       // When nodes are added / removed exec a rebalanace of local timers
@@ -198,8 +199,8 @@ class Server extends http.Server {
    * @method module:skyring/lib/server#close
    * @param {Function} callback A callback to be called when the server is completely shut down
    **/
-  close(cb) {
-    if (this.closed) return isFunction(cb) ? setImmediate(cb) : null
+  close(cb = noop) {
+    if (this.closed) return setImmediate(cb)
     super.close(() => {
       this._node.close(() => {
         const active = this._node._ring.membership.members.filter((m) => {
@@ -210,7 +211,7 @@ class Server extends http.Server {
           return this._timers.shutdown(() => {
             log.info('closing server')
             this.closed = true
-            cb && cb()
+            cb()
           })
         }
 
@@ -218,7 +219,7 @@ class Server extends http.Server {
         this._timers.disconnect(() => {
           log.debug('closing server')
           this.closed = true
-          cb && cb()
+          cb()
         })
       })
     })

@@ -77,11 +77,12 @@ function generateId(id) {
 class Timer extends Map {
   constructor(options = {}, cb = noop) {
     super()
-    this.options = Object.assign({}, {
+    this.options = {
       nats: null
     , storage: null
     , transports: []
-    }, options)
+    , ...options
+    }
     this._sid = null
     this._bail = false
     const store_opts = conf.get('storage')
@@ -101,7 +102,7 @@ class Timer extends Map {
       }
     }
     const backend = opts.backend === 'memdown'
-      ? new (require(opts.backend))()
+      ? new(require(opts.backend))()
       : encode(require(opts.backend)(opts.path), {valueEncoding: 'json'})
 
     log.debug('storage path', opts)
@@ -355,10 +356,11 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
       this.delete(obj.id)
       batch.del(obj.id)
 
-      const data = Object.assign({}, obj.payload, {
-        id: obj.id
+      const data = {
+        ...obj.payload
+      , id: obj.id
       , created: obj.created
-      })
+      }
 
       rebalance.debug('node %s no longer the owner of %s', this[kNode], obj.id)
 
@@ -388,10 +390,11 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
 
     const fn = (data) => {
       store.trace('recover timer %s', data.key)
-      const out = Object.assign({}, data.value.payload, {
-        id: data.value.id
+      const out = {
+        ...data.value.payload
+      , id: data.value.id
       , created: data.value.created
-      })
+      }
       // pass noop to `create` so the single callback isn't called multiple times
       this.create(data.key, out, noop)
     }
@@ -491,11 +494,12 @@ timers.failure('2e2f6dad-9678-4caf-bc41-8e62ca07d551', error)
     const run = (obj) => {
       clearTimeout(obj.timer)
       batch.del(obj.id)
-      const data = Object.assign({}, obj.payload, {
-        id: obj.id
+      const data = {
+        ...obj.payload
+      , id: obj.id
       , created: obj.created
       , count: ++sent
-      })
+      }
 
       this.nats.request(REBALANCE_SUB, data, (reply) => {
         if (++acks === size) {

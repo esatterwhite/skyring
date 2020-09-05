@@ -1,40 +1,5 @@
-version: '2.1'
+version: '2.4'
 services:
-  nats-a:
-    image: nats:latest
-    volumes:
-      - ./etc/nats:/tmp
-    ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-    command: >
-      -c /tmp/a.conf -D -m 8222
-    networks:
-      - skyringci
-  nats-b:
-    image: nats:latest
-    ports:
-      - "4223:4222"
-    volumes:
-      - ./etc/nats:/tmp
-    command: >
-      -c /tmp/b.conf -D
-    depends_on:
-      - nats-a
-    networks:
-      - skyringci
-  nats-c:
-    image: nats:latest
-    volumes:
-      - ./etc/nats:/tmp
-    depends_on:
-      - nats-a
-    command: >
-      -c /tmp/c.conf -D
-    networks:
-      - skyringci
-
   scylla-1:
     image: scylladb/scylla
     hostname: scylla-1
@@ -44,20 +9,15 @@ services:
       interval: 10s
       retries: 10
       timeout: 5s
-    ports:
-      - 9160:9160
-      - 9042:9042
     networks:
-      - skyringci
+      - skyring
 
   scylla-2:
     image: scylladb/scylla
     hostname: scylla-2
     command: --seeds scylla-1 --broadcast-address scylla-2 --listen-address scylla-2 --overprovisioned 1 --cpuset 1
     networks:
-      - skyringci
-    ports:
-      - 9043:9042
+      - skyring
     depends_on:
       scylla-1:
         condition: service_healthy
@@ -67,13 +27,7 @@ services:
     hostname: scylla-3
     command: --seeds scylla-1 --broadcast-address scylla-3 --listen-address scylla-3 --overprovisioned 1 --cpuset 1
     networks:
-      - skyringci
-    ports:
-      - 9044:9042
+      - skyring
     depends_on:
       scylla-1:
         condition: service_healthy
-
-networks:
-  skyringci:
-    driver: bridge
