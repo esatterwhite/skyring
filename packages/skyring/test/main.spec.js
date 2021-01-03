@@ -9,12 +9,13 @@ test('server starts when executed directly', (t) => {
   const LISTEN_EXP = /server listen/ig
   const server = path.join(__dirname, '..', 'index.js')
   const child = spawn(process.execPath, [server], {
-    env: Object.assign({}, process.env, {
-      log__level: 'info'
+    env: {
+      ...process.env
+    , log__level: 'info'
     , log__pretty: 1
     , seeds: '127.0.0.1:2222'
     , channel__port: '2222'
-    })
+    }
   , cwd: path.join(__dirname, '..')
   })
 

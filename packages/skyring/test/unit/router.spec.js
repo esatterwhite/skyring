@@ -16,7 +16,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -65,7 +65,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -122,7 +122,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -184,7 +184,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -250,7 +250,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -291,7 +291,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -329,7 +329,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -363,7 +363,7 @@ test('router', async (t) => {
       request
         .get('/stack')
         .set({
-          'Accept': 'application/json'
+          Accept: 'application/json'
         })
         .expect(200)
         .end((err, res) => {
@@ -386,7 +386,7 @@ test('router', async (t) => {
     let server, request
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -405,7 +405,7 @@ test('router', async (t) => {
     }, (ttt) => {
       router.get('/chunks', (req, res, node, cb) => {
         res.$.status(200)
-        res.$.json({'foo': 'bar'})
+        res.$.json({foo: 'bar'})
       })
 
       request
@@ -431,7 +431,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -464,7 +464,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -503,7 +503,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {
@@ -544,7 +544,7 @@ test('router', async (t) => {
     let request = null
     const router = new Router()
     tt.on('end', () => {
-      server && server.close()
+      if (server) server.close()
     })
 
     tt.test('setup http', (ttt) => {

@@ -1,6 +1,6 @@
 dependencies:
   get-port: 5.1.1
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 packages:
   /get-port/5.1.1:
     dev: false

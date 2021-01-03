@@ -7,7 +7,7 @@ devDependencies:
   skyring: 'link:../skyring'
   supertest: 3.4.2
   tap: 14.10.8
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 optionalDependencies:
   '@vendor/test-core': 'link:../../vendor/test-core'
 packages:

@@ -37,7 +37,7 @@ if (require.main === module) {
     log.info('server listening on port %d', server.address().port)
   })
 
-  const onSignal = () => {
+  function onSignal() {
     log.info('shutdown signal received')
     server.close(() => {
       log.info('server shutdown complete')

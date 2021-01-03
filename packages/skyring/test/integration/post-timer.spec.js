@@ -201,7 +201,7 @@ test('skyring:api', async (t) => {
       }
       const {headers} = await request.post('/timer').send(payload).expect(400)
       ttt.match(headers, {
-        location: /\/timer\/(\w+)/
+        'location': /\/timer\/(\w+)/
       , 'x-skyring-reason': /callback is required/ig
       })
     })

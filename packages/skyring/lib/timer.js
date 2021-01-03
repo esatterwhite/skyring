@@ -31,7 +31,6 @@ const storage = Symbol('storage')
 const shutdown = Symbol.for('kShutdown')
 const kNode = Symbol('nodeid')
 const kRemove = Symbol('remove')
-const noop = () => {}
 const REBALANCE_SUB = 'skyring.rebalance'
 const EVENT_STATUS = {
   CREATED: 'create'
@@ -47,6 +46,8 @@ const EVENT_STATUS = {
 , PURGE: 'purge'
 , EVICT: 'evict'
 }
+
+function noop() {}
 
 function generateId(id) {
   if (!id) return crypto.randomBytes(10).toString('hex')

@@ -21,56 +21,56 @@ module.exports = new seeli.Command({
     /* eslint-enable max-len */
   ]
 , flags: {
-    seeds: {
+    'seeds': {
       type: [String, Array]
     , shorthand: 's'
     , required: true
     , description: 'Nodes in the ring to use as seed nodes'
     }
-  , transport: {
+  , 'transport': {
       type: [String, Array]
     , shorthand: 't'
     , description: 'Custom transports to load into the server at start up time'
     }
 
   , 'channel:host': {
-      type: String
+      'type': String
     , 'default': '127.0.0.1'
-    , description: 'Host name or ip this node should bind on'
+    , 'description': 'Host name or ip this node should bind on'
     }
 
   , 'channel:port': {
-      type: Number
+      'type': Number
     , 'default': 3455
-    , description: 'The port this node should bind on'
+    , 'description': 'The port this node should bind on'
     }
 
   , 'storage:backend': {
-      type: String
+      'type': String
     , 'default': 'memdown'
-    , description: 'A levelup compatible module for levelup. Must be requirable'
+    , 'description': 'A levelup compatible module for levelup. Must be requirable'
     }
   , 'storage:path': {
       type: String
     , description: 'A directory path where data can be stored.'
     }
-  , port: {
-      shorthand: 'p'
-    , type: Number
+  , 'port': {
+      'shorthand': 'p'
+    , 'type': Number
     , 'default': 3000
-    , description: 'The port the HTTP Server should listen on'
+    , 'description': 'The port the HTTP Server should listen on'
     }
 
-  , daemon: {
-      shorthand: 'd'
-    , type: Boolean
+  , 'daemon': {
+      'shorthand': 'd'
+    , 'type': Boolean
     , 'default': false
-    , description: 'Run the process in the background as a daemon'
+    , 'description': 'Run the process in the background as a daemon'
     }
   , 'nats:hosts': {
-      type: String
+      'type': String
     , 'default': 'localhost:4222'
-    , description: 'a comma seperated list of nats servers to connect to'
+    , 'description': 'a comma seperated list of nats servers to connect to'
     }
   }
 
@@ -91,15 +91,13 @@ module.exports = new seeli.Command({
       })
     }
 
-    const env = Object.assign({}, process.env, {
-      PORT: data.port
+    const env = {...process.env, PORT: data.port
     , seeds: data.seeds.join(',')
     , nats__hosts: data.nats.hosts
     , channel__host: data.channel.host
     , channel__port: data.channel.port
     , storage__backend: data.storage.backend
-    , storage__path: data.storage.path || ''
-    })
+    , storage__path: data.storage.path || ''}
 
     const skyring = child.spawn(
       process.execPath

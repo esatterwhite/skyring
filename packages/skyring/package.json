@@ -9,6 +9,8 @@
   "scripts": {
     "test": "npm run tap test",
     "tap": "tap",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
     "test:ci": "docker-compose -f compose/test.yml up --exit-code-from node-5 --build",
@@ -29,20 +31,6 @@
   "bugs": {
     "email": "esatterwhite@wi.rr.com",
     "url": "https://github.com/esatterwhite/skyring/issues"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": "eslint-config-codedependant",
-    "rules": {
-      "sensible/check-require": 0
-    },
-    "parserOptions": {
-      "ecmaVersion": 2019
-    },
-    "ignorePatterns": [
-      "node_modules/",
-      "coverage/"
-    ]
   },
   "dependencies": {
     "@esatterwhite/micromock": "^2.0.0",
@@ -65,14 +53,14 @@
     "uuid": "^3.2.1"
   },
   "optionalDependencies": {
-    "@vendor/test-core": "workspace:^1.0.0"
   },
   "devDependencies": {
+    "@vendor/test-core": "workspace:^1.0.0",
     "async": "^3.2.0",
     "check-pkg": "^2.1.1",
     "codeclimate-test-reporter": "^0.5.1",
     "eslint": "^7.8.1",
-    "eslint-config-codedependant": "^1.0.0",
+    "eslint-config-codedependant": "^2.1.0",
     "sinon": "^9.0.2",
     "supertest": "^3.1.0",
     "tap": "^14.10.8"

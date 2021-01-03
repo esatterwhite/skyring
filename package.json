@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "pnpm": "pnpm",
-    "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "pnpm run -r --if-present lint",
+    "lint:fix": "pnpm run -r --if-present lint:fix",
     "tap": "tap",
     "nyc": "nyc",
     "test:all": "npm run local tap -- --coverage-report=text --coverage-report=json -Rclassic",

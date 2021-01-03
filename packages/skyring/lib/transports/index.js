@@ -155,7 +155,7 @@ module.exports = class Transports extends Map {
 
   [kShutdown](cb) {
     const keys = Array.from(this.values())
-    const run = () => {
+    function run() {
       if (!keys.length) return cb()
       const transport = keys.pop()
       if (typeof transport.shutdown === 'function') {

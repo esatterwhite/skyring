@@ -1,7 +1,7 @@
 dependencies:
   '@skyring/scylladown': 1.0.2
   skyring: 'link:../../packages/skyring'
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 packages:
   /@skyring/scylladown/1.0.2:
     dependencies:

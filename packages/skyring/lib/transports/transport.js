@@ -2,8 +2,8 @@
 
 const log = require('../log')
 const kType = Symbol.for('SkyringTransport')
-const noop = () => {}
 const TRANSPORT = 'transport'
+function noop() {}
 
 module.exports = class Transport {
   constructor(opts) {
@@ -30,3 +30,4 @@ module.exports = class Transport {
     return 'SkyringTransport'
   }
 }
+

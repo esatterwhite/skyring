@@ -8,7 +8,7 @@ devDependencies:
   nats: 1.4.12
   nyc: 15.1.0
   tap: 14.10.8
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.10.4:
     dependencies:

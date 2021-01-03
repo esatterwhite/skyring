@@ -70,7 +70,7 @@ test('skyring:api', async (t) => {
           .expect(202)
           .end((err, res) => {
             ttt.error(err)
-            err && console.log(res.headers['x-skyring-reason'])
+            if (err) console.log(res.headers['x-skyring-reason'])
             setTimeout(() => {
               callback_server.close(() => {
                 ttt.end()
@@ -87,7 +87,7 @@ test('skyring:api', async (t) => {
           .delete(url)
           .expect(202)
           .end((err, res) => {
-            err && ttt.fail(res.headers['x-skyring-reason'])
+            if (err) ttt.fail(res.headers['x-skyring-reason'])
             ttt.error(err)
             ttt.pass(`delete ${url}`)
             request
@@ -110,7 +110,7 @@ test('skyring:api', async (t) => {
         .expect(404)
         .end((err, res) => {
           ttt.error(err)
-          err && ttt.fail(res.headers['x-skyring-reason'])
+          if (err) ttt.fail(res.headers['x-skyring-reason'])
           ttt.end()
         })
     })

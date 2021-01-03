@@ -136,7 +136,7 @@ test('server', async (t) => {
     let count = 0; let postback
 
     tt.on('end', (done) => {
-      postback && postback.close(done)
+      if (postback) postback.close(done)
     })
 
     tt.test('should survive a nodes moving', (ttt) => {

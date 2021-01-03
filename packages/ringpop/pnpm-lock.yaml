@@ -36,7 +36,7 @@ devDependencies:
   tmp: 0.0.31
   tryit: 1.0.3
   winston: 1.1.2
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 optionalDependencies:
   '@vendor/test-core': 'link:../../vendor/test-core'
 packages:
@@ -4954,7 +4954,6 @@ packages:
     hasBin: true
     name: tap-out
     resolution:
-      registry: 'https://registry.npmjs.org/'
       tarball: 'https://codeload.github.com/Raynos/tap-out/tar.gz/ba074212dd3da3319e07b4a32807bdd720308a4b'
     version: 1.0.0
 specifiers:

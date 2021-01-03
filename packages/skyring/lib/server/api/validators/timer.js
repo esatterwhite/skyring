@@ -27,7 +27,7 @@ module.exports = function(data = {}, cb) {
   }
 
   const type = typeOf(data.data)
-  if (data.data != null) {
+  if (data.data != null) { // eslint-disable-line no-eq-null
     if (type !== 'String' && type !== 'Object') {
       const err = new TypeError(
         `data is required and must be a string or object. Got ${type}`

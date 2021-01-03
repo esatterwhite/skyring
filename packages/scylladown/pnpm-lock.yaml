@@ -8,7 +8,7 @@ devDependencies:
   levelup: 2.0.2
   skyring: 'link:../skyring'
   tap: 14.10.8
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 optionalDependencies:
   '@vendor/test-core': 'link:../../vendor/test-core'
 packages:

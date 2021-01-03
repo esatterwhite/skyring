@@ -19,7 +19,9 @@ const Router = require('./router')
 const Timer = require('../timer')
 const conf = require('../../conf')
 const log = require('../log').child({name: 'skyring:server'})
-const noop = () => {}
+
+function noop() {}
+
 function isFunction(fn) {
   return typeof fn === 'function'
 }

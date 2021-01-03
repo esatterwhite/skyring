@@ -62,9 +62,6 @@ test('timers', (t) => {
         }
       }
       Object.defineProperty(TapTransport, 'name', {value: 'tap'})
-      ttt.on('end', () => {
-        clearAll(timers)
-      })
       const timers = new Timer({
         transports: [TapTransport]
       }, () => {
@@ -77,6 +74,9 @@ test('timers', (t) => {
           , url: '#'
           }
         }, () => {})
+      })
+      ttt.on('end', () => {
+        clearAll(timers)
       })
     })
 
@@ -123,7 +123,7 @@ test('timers', (t) => {
 
     tt.test('Execute the transport on a delay', (ttt) => {
       const id = uuid.v4()
-      const foo = (uri, guid) => {
+      function foo(uri, guid) {
         ttt.equal(uri, 'helloworld')
         ttt.equal(guid, id)
         clearAll(timers, ttt.end)
@@ -159,11 +159,11 @@ test('timers', (t) => {
 
     tt.test('should replace a timer in place', (ttt) => {
       const id = uuid.v4()
-      const one = () => {
+      function one() {
         ttt.fail('function one called')
       }
 
-      const two = () => {
+      function two() {
         ttt.ok('function two called')
         clearAll(timers, ttt.end)
       }
@@ -284,7 +284,7 @@ test('timers', (t) => {
     }
 
     tt.on('end', () => {
-      state.server && state.server.close()
+      if (state.server) state.server.close()
       clearAll(state.timers)
     })
 
