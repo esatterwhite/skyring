@@ -2,12 +2,20 @@
   "name": "project-skyring",
   "private": true,
   "version": "1.0.0",
+  "workspaces": [
+    "packages/*",
+    "!examples/*",
+    "!test/*",
+    "!vendor"
+  ],
   "scripts": {
     "pnpm": "pnpm",
     "lint": "pnpm run -r --if-present lint",
     "lint:fix": "pnpm run -r --if-present lint:fix",
     "tap": "tap",
     "nyc": "nyc",
+    "release": "multi-release",
+    "release:dry": "multi-release --no-ci --dry-run --branches=${GITHUB_HEAD_REF:-master}",
     "test:all": "npm run local tap -- --coverage-report=text --coverage-report=json -Rclassic",
     "test:coverage": "tap -Rclassic --coverage-report=json",
     "npm:clean": "rm -rf node_modules/ {packages,vendor,examples}/**/node_modules/",
@@ -29,6 +37,8 @@
     ]
   },
   "devDependencies": {
+    "@codedependant/multi-release": "^1.0.6",
+    "@codedependant/release-config-npm": "^1.0.3",
     "apidoc": "^0.17.6",
     "chalk": "^3.0.0",
     "check-pkg": "^2.1.1",
