@@ -3,7 +3,7 @@
 const http = require('http')
 const sinon = require('sinon')
 const {test, threw} = require('tap')
-const {testCase} = require('@vendor/test-core')
+const {testCase} = require('@codedependant/test-core')
 const Router = require('../../lib/server/router')
 const HttpTransport = require('../../lib/transports/http')
 

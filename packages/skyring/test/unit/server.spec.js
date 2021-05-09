@@ -7,7 +7,7 @@ const http = require('http')
 const supertest = require('supertest')
 const async = require('async')
 const {test, threw} = require('tap')
-const {sys, rand} = require('@vendor/test-core')
+const {sys, rand} = require('@codedependant/test-core')
 const Server = require('../../lib/server')
 
 test('server', async (t) => {

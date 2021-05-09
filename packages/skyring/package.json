@@ -7,23 +7,28 @@
     "skyring": "./bin/skyring.js"
   },
   "scripts": {
-    "test": "npm run tap test",
     "tap": "tap",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "coverage": "tap --coverage-report=text-lcov | ./node_modules/.bin/codeclimate-test-reporter",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
-    "test:ci": "docker-compose -f compose/test.yml up --exit-code-from node-5 --build",
-    "posttest:ci": "docker-compose -f compose/test.yml down",
-    "compose:up": "docker-compose -f compose/dev.yml up --build ",
-    "compose:down": "docker-compose -f compose/dev.yml down"
+    "test": "npm run compose:test up -- --exit-code-from node-4 --build",
+    "posttest": "npm run compose:test down",
+    "compose:test": "docker-compose -f compose/nats.yml -f compose/test.yml",
+    "compose": "docker-compose -f compose/nats.yml -f compose/dev.yml",
+    "compose:up": "npm run compose up -- --build ",
+    "compose:down": "npm run compose down"
   },
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
   "homepage": "https://esatterwhite.github.io/skyring/",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring/tree/master/packages/skyring"
+    "url": "git+ssh://git@github.com/esatterwhite/skyring.git",
+    "directory": "packages/skyring"
   },
   "engines": {
     "node": ">=10.0.0"
@@ -32,10 +37,19 @@
     "email": "esatterwhite@wi.rr.com",
     "url": "https://github.com/esatterwhite/skyring/issues"
   },
+  "release": {
+    "extends": "@codedependant/release-config-docker",
+    "branches": [
+      "master"
+    ],
+    "tarballDir": "dist",
+    "npmPublish": true,
+    "dockerFile": "Dockerfile",
+    "dockerLogin": false
+  },
   "dependencies": {
     "@esatterwhite/micromock": "^2.0.0",
     "@skyring/ringpop": "^11.1.0",
-    "apidoc": "^0.25.0",
     "body": "^5.1.0",
     "encoding-down": "^5.0.4",
     "keef": "^5.0.0",
@@ -52,10 +66,11 @@
     "tchannel": "^4.0.0",
     "uuid": "^3.2.1"
   },
-  "optionalDependencies": {
-  },
   "devDependencies": {
-    "@vendor/test-core": "workspace:^1.0.0",
+    "@codedependant/release-config-docker": "^1.0.0",
+    "@codedependant/semantic-release-docker": "^3.1.0",
+    "@codedependant/test-core": "^1.0.0",
+    "apidoc": "^0.27.1",
     "async": "^3.2.0",
     "check-pkg": "^2.1.1",
     "codeclimate-test-reporter": "^0.5.1",

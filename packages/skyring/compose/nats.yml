@@ -1,0 +1,24 @@
+version: '2.4'
+services:
+  nats-a:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/a.conf
+  nats-b:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    command: >
+      -c /tmp/b.conf
+    depends_on:
+      - nats-a
+  nats-c:
+    image: nats:latest
+    volumes:
+      - ./etc/nats:/tmp
+    depends_on:
+      - nats-a
+    command: >
+      -c /tmp/c.conf
