@@ -116,6 +116,7 @@ services:
       nats__hosts: 'nats-a:4222,nats-b:4222,nats-c:4222'
       channel__host: 'node-5'
       storage__backend: 'leveldown'
+      storage__path: /var/data/skyring
       NODE_ENV: test
     networks:
       - skyring
