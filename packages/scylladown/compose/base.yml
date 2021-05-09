@@ -1,0 +1,46 @@
+version: "2.4"
+services:
+  scylla-1:
+    image: scylladb/scylla
+    hostname: scylla-1
+    command: --broadcast-address scylla-1 --listen-address scylla-1 --overprovisioned 1
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - scylla
+
+  scylla-2:
+    image: scylladb/scylla
+    hostname: scylla-2
+    networks:
+      - scylla
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      scylla-1:
+        condition: service_healthy
+
+  scylla-3:
+    image: scylladb/scylla
+    hostname: scylla-3
+    command: --broadcast-address scylla-1 --listen-address scylla-1 --overprovisioned 1
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - scylla
+    depends_on:
+      scylla-1:
+        condition: service_healthy
+
+networks:
+  scylla:
+    driver: bridge

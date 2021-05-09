@@ -7,11 +7,21 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "tap"
+    "tap": "tap",
+    "compose": "docker-compose -f compose/base.yml",
+    "pretest": "npm run compose -- -f compose/dev.yml up -d && sleep 30",
+    "test": "tap",
+    "posttest": "npm run compose -- -f compose/dev.yml down",
+    "start": "npm run compose -- -f compose/dev.yml up",
+    "start": "npm run compose -- -f compose/dev.yml down"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring-scylladown"
+    "url": "git+ssh://git@github.com/esatterwhite/skyring.git",
+    "directory": "packages/scylladown"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "tap": {
     "browser": false,
@@ -19,10 +29,10 @@
     "esm": false,
     "jsx": false,
     "timeout": 45,
-    "lines": 90,
+    "lines": 80,
     "functions": 90,
-    "branches": 75,
-    "statements": 90,
+    "branches": 45,
+    "statements": 80,
     "check-coverage": true,
     "coverage-report": [
       "json",
@@ -49,12 +59,12 @@
   "dependencies": {
     "abstract-leveldown": "^4.0.3",
     "cassandra-driver": "^3.4.1",
-    "debug": "4.1.1"
-  },
-  "optionalDependencies": {
-    "@vendor/test-core": "workspace:^1.0.0"
+    "debug": "4.1.1",
+    "rm": "^0.1.8"
   },
   "devDependencies": {
+    "@codedependant/test-core": "^1.0.0",
+    "add": "^2.0.6",
     "eslint": "^7.8.1",
     "eslint-config-codedependant": "^1.0.0",
     "levelup": "^2.0.2",
