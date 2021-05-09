@@ -11,7 +11,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring-scylladown"
+    "url": "git+ssh://git@github.com/esatterwhite/skyring.git",
+    "directory": "packages/scylladown"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "tap": {
     "browser": false,
