@@ -7,7 +7,7 @@ const {test, threw} = require('tap')
 const sinon = require('sinon')
 const supertest = require('supertest')
 const Skyring = require('skyring')
-const {sys} = require('@vendor/test-core')
+const {sys} = require('@codedependant/test-core')
 const Transport = require('../lib/zmq')
 const ZMQ_BIND = !!process.env.ZMQ_BIND
 
