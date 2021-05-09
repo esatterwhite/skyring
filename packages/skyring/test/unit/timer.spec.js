@@ -7,7 +7,7 @@ const {series} = require('async')
 const {test} = require('tap')
 const sinon = require('sinon')
 const uuid = require('uuid')
-const {rand} = require('@vendor/test-core')
+const {rand} = require('@codedependant/test-core')
 const Timer = require('../../lib/timer')
 
 function clearAll(timers, cb) {

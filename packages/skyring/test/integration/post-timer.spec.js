@@ -4,7 +4,7 @@ const http = require('http')
 const os = require('os')
 const {test} = require('tap')
 const supertest = require('supertest')
-const {sys, testCase} = require('@vendor/test-core')
+const {sys, testCase} = require('@codedependant/test-core')
 const Server = require('../../lib')
 
 let hostname = null
@@ -16,9 +16,9 @@ if (!process.env.TEST_HOST) {
   hostname = process.env.TEST_HOST
 }
 
-function toServer(port, expect = 'hello', method = 'post', time = 1000, t) {
+function toServer(expect = 'hello', method = 'post', time = 1000, t) {
   const start = Date.now()
-  const s = http.createServer((req, res) => {
+  const server = http.createServer((req, res) => {
     const now = Date.now()
     let data = ''
 
@@ -31,12 +31,12 @@ function toServer(port, expect = 'hello', method = 'post', time = 1000, t) {
     req.on('end', () => {
       t.ok(now - start > time, `expected > ${time} got ${now - start}`)
       t.equal(data, expect)
-      s.close(() => {
+      server.close(() => {
         t.pass('server close')
       })
     })
-  }).listen(port)
-  return s
+  }).listen(0)
+  return {server: server, port: server.address().port}
 }
 
 test('skyring:api', async (t) => {
@@ -51,7 +51,7 @@ test('skyring:api', async (t) => {
     })
     server.listen(0, (err) => {
       tt.error(err, 'starting the server should not error')
-      request = supertest(`http://localhost:${server.address().port}`)
+      request = supertest(server)
       tt.end()
     })
   })
@@ -62,14 +62,14 @@ test('skyring:api', async (t) => {
     , description: 'should set a timer postback'
     }, (ttt) => {
       ttt.plan(6)
-      toServer(8989, 'hello', 'post', 1000, ttt)
+      const {port} = toServer('hello', 'post', 1000, ttt)
       request
         .post('/timer')
         .send({
           timeout: 1000
         , data: 'hello'
         , callback: {
-            uri: `http://${hostname}:8989`
+            uri: `http://${hostname}:${port}`
           , method: 'post'
           , transport: 'http'
           }
@@ -86,13 +86,13 @@ test('skyring:api', async (t) => {
     , description: 'should allow request with no data'
     }, (ttt) => {
       ttt.plan(6)
-      toServer(8989, '', 'post', 2000, ttt)
+      const {port} = toServer('', 'post', 2000, ttt)
       request
         .post('/timer')
         .send({
           timeout: 2000
         , callback: {
-            uri: `http://${hostname}:8989`
+            uri: `http://${hostname}:${port}`
           , method: 'post'
           , transport: 'http'
           }
@@ -112,7 +112,7 @@ test('skyring:api', async (t) => {
         .post('/timer')
         .send({
           callback: {
-            uri: `http://${hostname}:8989`
+            uri: `http://${hostname}:11111`
           , data: 'fake'
           , method: 'post'
           , transport: 'http'
@@ -252,6 +252,10 @@ test('skyring:api', async (t) => {
   })
 
   t.test('close server', (tt) => {
+    tt.on('end', () => {
+      tt.comment('test complete')
+    })
     server.close(tt.end)
+
   })
 })
