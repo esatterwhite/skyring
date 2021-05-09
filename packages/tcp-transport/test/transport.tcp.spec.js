@@ -6,7 +6,7 @@ const path = require('path')
 const {test} = require('tap')
 const supertest = require('supertest')
 const Skyring = require('skyring')
-const {sys} = require('@vendor/test-core')
+const {sys} = require('@codedependant/test-core')
 
 let hostname = null
 

@@ -15,23 +15,25 @@
   ],
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
-  "homepage": "https://github.com/esatterwhite/skyring/tree/master/packages/skyring-tcp-transport",
+  "homepage": "https://github.com/esatterwhite/skyring/tree/master/packages/tcp-transport#readme",
   "engines": {
     "node": ">= 8.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring/tree/master/packages/skyring-tcp-transport"
+    "url": "git+ssh://git@github.com/esatterwhite/skyring.git",
+    "directory": "packages/tcp-transport"
   },
   "bugs": {
     "email": "esatterwhite@wi.rr.com",
     "url": "https://github.com/esatterwhite/skyring/issues"
   },
   "dependencies": {
-    "generic-pool": "^3.7.1"
-  },
-  "optionalDependencies": {
-    "@vendor/test-core": "workspace:^1.0.0"
+    "generic-pool": "^3.7.1",
+    "rm": "^0.1.8"
   },
   "tap": {
     "browser": false,
@@ -55,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@codedependant/test-core": "^1.0.0",
     "eslint": "^7.8.1",
     "eslint-config-codedependant": "^1.0.0",
     "sinon": "^9.0.0",
