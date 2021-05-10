@@ -16,7 +16,15 @@
   "engines": {
     "node": ">=8.0"
   },
-  "repository": "https://github.com/esatterwhite/skyring/packages/ringpop",
+  "homepage": "https://github.com/esatterwhite/skyring/packages/ringpop#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/esatterwhite/skyring.git",
+    "directory": "packages/ringpop"
+  },
   "bin": {
     "ringpop": "./main.js"
   },

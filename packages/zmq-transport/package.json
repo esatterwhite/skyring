@@ -8,10 +8,14 @@
   },
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
-  "homepage": "https://github.com/esatterwhite/skyring/tree/master/packages/zmq-transport#readme",
+  "homepage": "https://github.com/esatterwhite/skyring/packages/zmq-transport#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esatterwhite/skyring/tree/master/packages/zmq-transport"
+    "url": "git+ssh://git@github.com/esatterwhite/skyring.git",
+    "directory": "packages/zmq-transport"
   },
   "engines": {
     "node": ">=8.0.0"
