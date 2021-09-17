@@ -1,0 +1,27 @@
+name: Release (dry-run)
+on:
+  push:
+    branches:
+      - '!master'
+
+
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npx pnpm install -r
+
+      - name: Publish
+        run: npm run release:dry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GIT_AUTHOR_NAME: 'Dependant Bot'
+          GIT_AUTHOR_EMAIL: 'release-bot@codedependant.net'
+          GIT_COMMITTER_NAME: 'Dependant Bot'
+          GIT_COMMITTER_EMAIL: 'release-bot@codedependant.net'
