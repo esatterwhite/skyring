@@ -10,8 +10,6 @@ services:
       - ./etc/nats:/tmp
     command: >
       -c /tmp/a.conf -D -m 8222
-    networks:
-      - skyring
 
   nats-b:
     image: nats:latest
@@ -21,8 +19,6 @@ services:
       -c /tmp/b.conf -D
     depends_on:
       - nats-a
-    networks:
-      - skyring
 
   nats-c:
     image: nats:latest
@@ -32,5 +28,3 @@ services:
       - nats-a
     command: >
       -c /tmp/c.conf -D
-    networks:
-      - skyring

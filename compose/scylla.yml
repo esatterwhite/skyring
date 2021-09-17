@@ -9,25 +9,18 @@ services:
       interval: 10s
       retries: 10
       timeout: 5s
-    networks:
-      - skyring
 
   scylla-2:
     image: scylladb/scylla
     hostname: scylla-2
     command: --seeds scylla-1 --broadcast-address scylla-2 --listen-address scylla-2 --overprovisioned 1 --cpuset 1
-    networks:
-      - skyring
     depends_on:
-      scylla-1:
-        condition: service_healthy
+      - scylla-1
 
   scylla-3:
     image: scylladb/scylla
     hostname: scylla-3
     command: --seeds scylla-1 --broadcast-address scylla-3 --listen-address scylla-3 --overprovisioned 1 --cpuset 1
-    networks:
-      - skyring
     depends_on:
-      scylla-1:
-        condition: service_healthy
+      - scylla-1
+      

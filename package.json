@@ -22,8 +22,9 @@
     "local": "env $(cat local.env)",
     "docs": "jsdoc -c jsdoc.json && apidoc -i packages/skyring/lib/server -o docs/api",
     "check": "check-pkg -d !docs -d !node_modules -d !examples -d !.git",
-    "start": "docker-compose -f compose/scylla.yml -f compose/base.yml -f compose/dev.yml up",
-    "stop": "docker-compose -f compose/scylla.yml -f compose/base.yml -f compose/dev.yml down"
+    "compose": "docker-compose -f compose/scylla.yml -f compose/base.yml -f compose/dev.yml",
+    "start": "npm run compose up -- --build",
+    "stop": "npm run compose down"
   },
   "eslintConfig": {
     "root": true,
