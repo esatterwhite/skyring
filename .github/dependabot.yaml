@@ -1,0 +1,106 @@
+version: 2
+registries:
+updates:
+   # root
+  - package-ecosystem: "npm"
+    directory: "/" # Location of package manifests
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps):"
+    pull-request-branch-name:
+      separator: "-"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - "esatterwhiet"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/skyring"
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps):"
+    pull-request-branch-name:
+      separator: "-"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - "esatterwhite"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/ringpop"
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps):"
+    pull-request-branch-name:
+      separator: "-"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - "esatterwhite"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/tcp-transport"
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps):"
+    pull-request-branch-name:
+      separator: "-"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - "esatterwhite"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/zmq-transport"
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps):"
+    pull-request-branch-name:
+      separator: "-"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - "esatterwhite"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/scylladown"
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps):"
+    pull-request-branch-name:
+      separator: "-"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - "esatterwhite"
+
