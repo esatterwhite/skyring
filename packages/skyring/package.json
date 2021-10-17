@@ -67,7 +67,7 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@codedependant/release-config-docker": "^1.0.0",
+    "@codedependant/release-config-docker": "^1.0.1",
     "@codedependant/semantic-release-docker": "^3.1.0",
     "@codedependant/test-core": "^1.0.0",
     "apidoc": "^0.27.1",
