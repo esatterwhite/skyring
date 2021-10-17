@@ -1,3 +1,18 @@
+## @skyring/scylladown [3.0.1](https://github.com/esatterwhite/skyring/compare/@skyring/scylladown@3.0.0...@skyring/scylladown@3.0.1) (2021-10-17)
+
+
+### Bug Fixes
+
+* **package**: fix packge files definition [b3504bd](https://github.com/esatterwhite/skyring/commit/b3504bd6f76d94523040d0399357e48ad3ad6aba) - Eric Satterwhite
+
+
+
+
+
+### Dependencies
+
+* **skyring:** upgraded to 11.1.0
+
 # @skyring/scylladown [3.0.0](https://github.com/esatterwhite/skyring/compare/@skyring/scylladown@2.0.0...@skyring/scylladown@3.0.0) (2021-10-17)
 
 

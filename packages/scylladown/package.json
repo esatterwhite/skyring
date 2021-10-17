@@ -1,6 +1,6 @@
 {
   "name": "@skyring/scylladown",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "SyllaDB leveldown backend for Skyring",
   "main": "index.js",
   "files": [
@@ -70,7 +70,7 @@
     "eslint": "^7.8.1",
     "eslint-config-codedependant": "^1.0.0",
     "levelup": "^2.0.2",
-    "skyring": "11.0.0",
+    "skyring": "11.1.0",
     "tap": "^14.10.8"
   }
 }
