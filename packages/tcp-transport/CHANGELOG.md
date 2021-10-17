@@ -1,3 +1,18 @@
+## @skyring/tcp-transport [4.0.1](https://github.com/esatterwhite/skyring/compare/@skyring/tcp-transport@4.0.0...@skyring/tcp-transport@4.0.1) (2021-10-17)
+
+
+### Bug Fixes
+
+* **package**: fix package files definition [5978cea](https://github.com/esatterwhite/skyring/commit/5978ceadcb4d14dc58bacb119f84722c325b0515) - Eric Satterwhite
+
+
+
+
+
+### Dependencies
+
+* **skyring:** upgraded to 11.1.0
+
 # @skyring/tcp-transport [4.0.0](https://github.com/esatterwhite/skyring/compare/@skyring/tcp-transport@3.0.0...@skyring/tcp-transport@4.0.0) (2021-10-17)
 
 
