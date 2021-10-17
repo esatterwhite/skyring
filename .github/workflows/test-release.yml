@@ -4,7 +4,6 @@ on:
     branches:
       - '!main'
 
-
 jobs:
   release:
     name: Test Release
@@ -22,6 +21,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_REGISTRY_USER }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
           GIT_AUTHOR_NAME: 'Dependant Bot'
           GIT_AUTHOR_EMAIL: 'release-bot@codedependant.net'
           GIT_COMMITTER_NAME: 'Dependant Bot'
