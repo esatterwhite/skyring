@@ -3938,6 +3938,6 @@ specifiers:
   generic-pool: ^3.7.1
   rm: ^0.1.8
   sinon: ^9.0.0
-  skyring: ^10.1.0
+  skyring: 11.0.0
   supertest: ^3.0.0
   tap: ^14.10.8

@@ -6,6 +6,12 @@
   "scripts": {
     "test": "TEST_HOST=localhost tap"
   },
+  "files": [
+    "lib/",
+    "index.js",
+    "CHANGELOG.md",
+    "README.md"
+  ],
   "keywords": [
     "skyring",
     "timers",
