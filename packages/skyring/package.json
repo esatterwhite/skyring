@@ -1,6 +1,6 @@
 {
   "name": "skyring",
-  "version": "10.2.0",
+  "version": "11.0.0",
   "description": "Distributed timers as a service",
   "main": "index.js",
   "bin": {
@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@esatterwhite/micromock": "^2.0.0",
-    "@skyring/ringpop": "^11.1.0",
+    "@skyring/ringpop": "11.1.1",
     "body": "^5.1.0",
     "encoding-down": "^5.0.4",
     "keef": "^5.0.0",
