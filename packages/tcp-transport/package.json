@@ -1,6 +1,6 @@
 {
   "name": "@skyring/tcp-transport",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "A TCP transport for skyring service",
   "main": "index.js",
   "scripts": {
@@ -61,7 +61,7 @@
     "eslint": "^7.8.1",
     "eslint-config-codedependant": "^1.0.0",
     "sinon": "^9.0.0",
-    "skyring": "^10.1.0",
+    "skyring": "11.0.0",
     "supertest": "^3.0.0",
     "tap": "^14.10.8"
   }
