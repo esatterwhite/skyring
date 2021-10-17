@@ -45,7 +45,7 @@
     "tarballDir": "dist",
     "npmPublish": true,
     "dockerFile": "Dockerfile",
-    "dockerLogin": false
+    "dockerLogin": true
   },
   "dependencies": {
     "@esatterwhite/micromock": "^2.0.0",
