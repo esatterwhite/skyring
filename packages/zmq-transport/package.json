@@ -6,6 +6,12 @@
   "scripts": {
     "test": "ZMQ_DEBUG=1 tap --coverage-report=text -Rclassic test"
   },
+  "files": [
+    "lib/",
+    "index.js",
+    "CHANGELOG.md",
+    "README.md"
+  ],
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
   "homepage": "https://github.com/esatterwhite/skyring/packages/zmq-transport#readme",
