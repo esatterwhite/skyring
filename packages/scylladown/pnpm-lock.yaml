@@ -3868,5 +3868,5 @@ specifiers:
   eslint-config-codedependant: ^1.0.0
   levelup: ^2.0.2
   rm: ^0.1.8
-  skyring: ^10.0.0
+  skyring: 11.0.0
   tap: ^14.10.8

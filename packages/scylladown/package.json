@@ -3,9 +3,12 @@
   "version": "3.0.0",
   "description": "SyllaDB leveldown backend for Skyring",
   "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "files": [
+    "lib/",
+    "index.js",
+    "CHANGELOG.md",
+    "README.md"
+  ],
   "scripts": {
     "tap": "tap",
     "compose": "docker-compose -f compose/base.yml",
