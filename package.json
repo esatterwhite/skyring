@@ -15,7 +15,7 @@
     "tap": "tap",
     "nyc": "nyc",
     "release": "multi-release",
-    "release:dry": "multi-release --no-ci --dry-run --branches=${GITHUB_HEAD_REF:-master}",
+    "release:dry": "multi-release --no-ci --dry-run --branches=${GITHUB_HEAD_REF:-main}",
     "test:all": "npm run local tap -- --coverage-report=text --coverage-report=json -Rclassic",
     "test:coverage": "tap -Rclassic --coverage-report=json",
     "npm:clean": "rm -rf node_modules/ {packages,vendor,examples}/**/node_modules/",

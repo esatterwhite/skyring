@@ -1,7 +1,7 @@
 
-![skyring](https://github.com/esatterwhite/skyring/raw/master/assets/skyring.png)
+![skyring](https://github.com/esatterwhite/skyring/raw/main/assets/skyring.png)
 
-[![Travis branch](https://img.shields.io/travis/esatterwhite/skyring/master.svg?style=flat-square)](skyring)
+[![Travis branch](https://img.shields.io/travis/esatterwhite/skyring/main.svg?style=flat-square)](skyring)
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![npm](https://img.shields.io/npm/l/skyring.svg?style=flat-square)](https://github.com/esatterwhite/skyring)
 [![David](https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square)](https://david-dm.org/esatterwhite/skyring)
@@ -18,7 +18,7 @@ A distributed reliable timer service providing `setTimeout` functionality in a d
 
 # Architecture Overview
 
-<img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch.png" width="100%" max-width="800px">
+<img src="https://raw.githubusercontent.com/esatterwhite/skyring/main/assets/skyring-arch.png" width="100%" max-width="800px">
 
 # Install
 
@@ -104,7 +104,7 @@ Thats it, you have 2 instances running w/ HTTP servers running on ports `3000` a
 
 #### Run via Docker Compose
 
-The Easiest way to run a small cluster is to use the included [compose files](https://github.com/esatterwhite/skyring/blob/master/compose/dev.yml). It is also a good way to see how to quickly configure a cluster
+The Easiest way to run a small cluster is to use the included [compose files](https://github.com/esatterwhite/skyring/blob/main/compose/dev.yml). It is also a good way to see how to quickly configure a cluster
 
 - Install [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -190,8 +190,8 @@ skyring run --storage:backend=leveldown --storage:path='/var/data/skyring'
 ### Custom Storage
 
 In situations when the local disk is not reliable enough, you can install and use any levelup backend to suite your needs.
-If, for example you want to off load data storage to a [mongo](https://github.com/esatterwhite/skyring/tree/master/examples/mongo-storage)
-or [scylladb](https://github.com/esatterwhite/skyring/tree/master/examples/scylla-storage) cluster, you would just include the backend package
+If, for example you want to off load data storage to a [mongo](https://github.com/esatterwhite/skyring/tree/main/examples/mongo-storage)
+or [scylladb](https://github.com/esatterwhite/skyring/tree/main/examples/scylla-storage) cluster, you would just include the backend package
 as a dependency in your project and specify it by name as the storage package. Options for the backend can be passed via the `storage` attribute
 
 ```bash
