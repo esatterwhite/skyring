@@ -1,6 +1,6 @@
 devDependencies:
   '@codedependant/multi-release': 1.0.6
-  '@codedependant/release-config-npm': 1.0.3
+  '@codedependant/release-config-npm': 1.0.4
   apidoc: 0.17.7
   chalk: 3.0.0
   check-pkg: 2.1.1
@@ -471,19 +471,19 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-7QuOmeKZVDzxP2Ciuf4JiXKQSgmv6ax9yTHyvMyNK02QMyq0JlIJlXxQgBavSap/ADRsQyVVwbVrVhaGvCL+gg==
-  /@codedependant/release-config-core/1.0.2:
+  /@codedependant/release-config-core/1.1.0:
     dependencies:
       '@semantic-release/changelog': 5.0.1
-      '@semantic-release/git': 9.0.0
+      '@semantic-release/git': 9.0.1
     dev: true
     resolution:
-      integrity: sha512-q7MKrorZZMNTts0l/2REMeXRjNeJ6al1YZH3DrFnW9AW3Bgswg6iMONkAOD3POuhl8RuZCzcTcgJ7OtYjdxrTg==
-  /@codedependant/release-config-npm/1.0.3:
+      integrity: sha512-zhZBY0A/4IWoMx+EjKF9Ayn2/pWZgijbPUqDWXDIgdOAaZ4w5K9eYGk7qlY/zVFNnVwi2S8scAshty/JrQJtIw==
+  /@codedependant/release-config-npm/1.0.4:
     dependencies:
-      '@codedependant/release-config-core': 1.0.2
+      '@codedependant/release-config-core': 1.1.0
     dev: true
     resolution:
-      integrity: sha512-IuWNKticm7sSwhJKDzi1KjBCteAU1qEsLJyChJI+dn+YKkNr8NQf9Z9ot+BtEdL/eFs+1i6pReaXTYSzZo5oyg==
+      integrity: sha512-ygM55gPFu6UIkm13pQ0+B6UXYvhSfkfbRGcsK+6NhViVXeT2WhWIv+6z+pmh9k9j0K8Iy+kcSnPjMBztEKsoaQ==
   /@dabh/diagnostics/2.0.2:
     dependencies:
       colorspace: 1.1.2
@@ -702,13 +702,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-9Tj/qn+y2j+sjCI3Jd+qseGtHjOAeg7dU2/lVcqIQ9TV3QDaDXDYXcoOHU+7o2Hwh8L8ymL4gfuO7KxDs3q2zg==
-  /@semantic-release/git/9.0.0:
+  /@semantic-release/git/9.0.1:
     dependencies:
       '@semantic-release/error': 2.2.0
       aggregate-error: 3.1.0
-      debug: 4.3.1
+      debug: 4.3.2
       dir-glob: 3.0.1
-      execa: 4.1.0
+      execa: 5.1.1
       lodash: 4.17.21
       micromatch: 4.0.4
       p-reduce: 2.1.0
@@ -718,7 +718,7 @@ packages:
     peerDependencies:
       semantic-release: '>=16.0.0 <18.0.0'
     resolution:
-      integrity: sha512-AZ4Zha5NAPAciIJH3ipzw/WU9qLAn8ENaoVAhD6srRPxTpTzuV3NhNh14rcAo8Paj9dO+5u4rTKcpetOBluYVw==
+      integrity: sha512-75P03s9v0xfrH9ffhDVWRIX0fgWBvJMmXhUU0rMTKYz47oMXU5O95M/ocgIKnVJlWZYoC+LpIe4Ye6ev8CrlUQ==
   /@semantic-release/github/7.2.3_semantic-release@17.4.2:
     dependencies:
       '@octokit/rest': 18.5.3
@@ -1681,6 +1681,19 @@ packages:
         optional: true
     resolution:
       integrity: sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
+  /debug/4.3.2:
+    dependencies:
+      ms: 2.1.2
+    dev: true
+    engines:
+      node: '>=6.0'
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    resolution:
+      integrity: sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
   /decamelize-keys/1.1.0:
     dependencies:
       decamelize: 1.2.0
@@ -2089,6 +2102,22 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-ov6w/2LCiuyO4RLYGdpFGjkcs0wMTgGE8PrkTHikeUy5iJekXyPIKUjifk5CsE0pt7sMCrMZ3YNqoCj6idQOnQ==
+  /execa/5.1.1:
+    dependencies:
+      cross-spawn: 7.0.3
+      get-stream: 6.0.1
+      human-signals: 2.1.0
+      is-stream: 2.0.1
+      merge-stream: 2.0.0
+      npm-run-path: 4.0.1
+      onetime: 5.1.2
+      signal-exit: 3.0.5
+      strip-final-newline: 2.0.0
+    dev: true
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==
   /extend/3.0.2:
     dev: true
     resolution:
@@ -2364,7 +2393,7 @@ packages:
   /fs-extra/9.1.0:
     dependencies:
       at-least-node: 1.0.0
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.8
       jsonfile: 6.1.0
       universalify: 2.0.0
     dev: true
@@ -2555,6 +2584,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==
+  /graceful-fs/4.2.8:
+    dev: true
+    resolution:
+      integrity: sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==
   /graceful-readlink/1.0.1:
     dev: true
     resolution:
@@ -2920,6 +2953,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-XCoy+WlUr7d1+Z8GgSuXmpuUFC9fOhRXglJMx+dwLKTkL44Cjd4W1Z5P+BQZpr+cR93aGP4S/s7Ftw6Nd/kiEw==
+  /is-stream/2.0.1:
+    dev: true
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==
   /is-text-path/1.0.1:
     dependencies:
       text-extensions: 1.9.0
@@ -3225,7 +3264,7 @@ packages:
       universalify: 2.0.0
     dev: true
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.8
     resolution:
       integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==
   /jsonparse/1.3.1:
@@ -3550,7 +3589,7 @@ packages:
   /micromatch/4.0.4:
     dependencies:
       braces: 3.0.2
-      picomatch: 2.2.3
+      picomatch: 2.3.0
     dev: true
     engines:
       node: '>=8.6'
@@ -4229,6 +4268,12 @@ packages:
       node: '>=8.6'
     resolution:
       integrity: sha512-KpELjfwcCDUb9PeigTs2mBJzXUPzAuP2oPcA989He8Rte0+YUAjw1JVedDhuTKPkHjSYzMN3npC9luThGYEKdg==
+  /picomatch/2.3.0:
+    dev: true
+    engines:
+      node: '>=8.6'
+    resolution:
+      integrity: sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==
   /pify/3.0.0:
     dev: true
     engines:
@@ -4780,6 +4825,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
+  /signal-exit/3.0.5:
+    dev: true
+    resolution:
+      integrity: sha512-KWcOiKeQj6ZyXx7zq4YxSMgHRlod4czeBQZrPb8OKcohcqAXShm7E20kEMle9WBt26hFcAf0qLOcp5zmY7kOqQ==
   /signale/1.4.0:
     dependencies:
       chalk: 2.4.2
@@ -5851,7 +5900,7 @@ packages:
       integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 specifiers:
   '@codedependant/multi-release': ^1.0.6
-  '@codedependant/release-config-npm': ^1.0.3
+  '@codedependant/release-config-npm': ^1.0.4
   apidoc: ^0.17.6
   chalk: ^3.0.0
   check-pkg: ^2.1.1
