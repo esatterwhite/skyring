@@ -6,6 +6,14 @@
   "bin": {
     "skyring": "./bin/skyring.js"
   },
+  "files": [
+    "bin/",
+    "lib/",
+    "conf/",
+    "index.js",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "tap": "tap",
     "lint": "eslint .",
