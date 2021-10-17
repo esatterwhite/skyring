@@ -12,7 +12,7 @@
     "Mark Yen <mark@uber.com>",
     "Eric Satterwhite <esatterwhite@wi.rr.com>"
   ],
-  "version": "11.1.0",
+  "version": "11.1.1",
   "engines": {
     "node": ">=8.0"
   },
