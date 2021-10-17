@@ -1,3 +1,18 @@
+## @skyring/zmq-transport [4.0.1](https://github.com/esatterwhite/skyring/compare/@skyring/zmq-transport@4.0.0...@skyring/zmq-transport@4.0.1) (2021-10-17)
+
+
+### Bug Fixes
+
+* **package**: fix package files definition [9d78e81](https://github.com/esatterwhite/skyring/commit/9d78e81c3f15c8787ba4d790fcb7b54ca4c24afb) - Eric Satterwhite
+
+
+
+
+
+### Dependencies
+
+* **skyring:** upgraded to 11.1.0
+
 # @skyring/zmq-transport [4.0.0](https://github.com/esatterwhite/skyring/compare/@skyring/zmq-transport@3.0.0...@skyring/zmq-transport@4.0.0) (2021-10-17)
 
 
