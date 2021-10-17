@@ -40,7 +40,7 @@
   "release": {
     "extends": "@codedependant/release-config-docker",
     "branches": [
-      "master"
+      "main"
     ],
     "tarballDir": "dist",
     "npmPublish": true,

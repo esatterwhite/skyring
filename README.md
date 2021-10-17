@@ -1,6 +1,6 @@
-![skyring](https://github.com/esatterwhite/skyring/raw/master/assets/skyring.png)
+![skyring](https://github.com/esatterwhite/skyring/raw/main/assets/skyring.png)
 
-[![Travis branch](https://img.shields.io/travis/esatterwhite/skyring/master.svg?style=flat-square)](skyring)
+[![Travis branch](https://img.shields.io/travis/esatterwhite/skyring/main.svg?style=flat-square)](skyring)
 [![npm](https://img.shields.io/npm/v/skyring.svg?style=flat-square)](https://www.npmjs.com/package/skyring)
 [![npm](https://img.shields.io/npm/l/skyring.svg?style=flat-square)](https://github.com/esatterwhite/skyring)
 [![David](https://img.shields.io/david/esatterwhite/skyring.svg?style=flat-square)](https://david-dm.org/esatterwhite/skyring)
@@ -23,7 +23,7 @@ A distributed reliable timer service providing `setTimeout` functionality in a d
 
 # Architecture Overview
 
-<img src="https://raw.githubusercontent.com/esatterwhite/skyring/master/assets/skyring-arch.png" width="100%" max-width="800px">
+<img src="https://raw.githubusercontent.com/esatterwhite/skyring/main/assets/skyring-arch.png" width="100%" max-width="800px">
 
 ## Examples
 A request can be issued to any active node in the cluster. If that node is not responsible for the timer in question,

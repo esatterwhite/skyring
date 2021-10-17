@@ -1,12 +1,13 @@
 name: Release (dry-run)
 on:
-  push:
+  pull_request:
     branches:
-      - '!master'
+      - '!main'
 
 
+jobs:
   release:
-    name: release
+    name: Test Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
