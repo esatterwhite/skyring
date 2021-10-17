@@ -45,7 +45,8 @@ jobs:
         with:
           node-version: 12
       - run: npx pnpm install -r
-
+      - name: env
+        run: printenv
       - name: Publish
         run: npm run release
         env:

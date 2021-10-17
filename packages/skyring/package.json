@@ -17,7 +17,8 @@
     "compose:test": "docker-compose -f compose/nats.yml -f compose/test.yml",
     "compose": "docker-compose -f compose/nats.yml -f compose/dev.yml",
     "compose:up": "npm run compose up -- --build ",
-    "compose:down": "npm run compose down"
+    "compose:down": "npm run compose down",
+    "env": "printenv"
   },
   "author": "Eric Satterwhite <esatterwhite@wi.rr.com>",
   "license": "MIT",
